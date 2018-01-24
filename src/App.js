@@ -13,30 +13,10 @@ var forceUpdate;
 class App extends Component {
   constructor(args) {
     super(args);
-
-    // this.render = this.render.bind(this);
-    this.updateRoster = this.updateRoster.bind(this);
-    this.updateGroups = this.updateGroups.bind(this);
-    this.students = data.students;
-    this.groups = data.groups;
     forceUpdate = this.forceUpdate.bind(this);
   }
 
-  updateRoster () {
-    this.students = data.students;
-    this.forceUpdate();
-  }
-
-  updateGroups () {
-    this.groups = data.groups;
-    this.forceUpdate();
-  }
-
   render() {
-    var groups = this.groups;
-    var students = this.students;
-    var updateGroups = this.updateGroups;
-
     return (
       <div className="App">
         <header className="App-header">
@@ -49,13 +29,13 @@ class App extends Component {
         <div className="container">
           <div className="col-md-9">
             <Groups>
-              {groups.map(function (group) {
-                return <Group group={group} key={group.id} updateGroups={updateGroups} />;
+              {data.groups.map(function (group) {
+                return <Group group={group} key={group.id} />;
               })}
             </Groups>
           </div>
           <div className="col-md-3">
-            <Roster students={students} />
+            <Roster students={data.students} />
           </div>
         </div>
       </div>
