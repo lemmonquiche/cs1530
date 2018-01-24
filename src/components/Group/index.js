@@ -1,33 +1,37 @@
 import React, { Component } from 'react';
 
 import data from '../../data';
+import { forceUpdate } from '../../App';
 
-function makeStudentRemover(studentId, groupId, update) {
+function makeStudentRemover(studentId, groupId) {
   return function (event) {
-    // console.log(event, studentId, groupId);
+    // delete from groups_students where group = ? and students = ?;
     data.groups.forEach(function (group) {
       if (group.id === groupId) {
         group.students.splice(group.students.indexOf(studentId), 1);
       }
     });
 
+    // delete from students where id = ?;
     data.students.forEach(function (student) {
       if (student.id === studentId) {
         student.grouped = false;
       }
     });
 
-    update();
+    forceUpdate();
   }
 }
 
 function addStudentToGroup(studentId, groupId) {
+  // update students set grouped = true where id = ?;
   data.students.forEach(function (student) {
     if (student.id === studentId) {
       student.grouped = true;
     }
   });
 
+  // insert into groups_students (sid, gid) values (?, ?);
   data.groups.forEach(function (group) {
     if (group.id === groupId) {
       group.students.push(studentId);
@@ -49,13 +53,12 @@ class Group extends Component {
   onDrop(event) {
     var studentId = parseInt(event.dataTransfer.getData("text/plain"), 10);
     addStudentToGroup(studentId, this.props.group.id);
-    this.props.updateGroups();
+    forceUpdate();
     event.preventDefault();
   }
 
   render() {
     var group = this.props.group;
-    var updateGroups = this.props.updateGroups;
     return (
       <div className="panel panel-default" onDragOver={this.onDragOver} onDrop={this.onDrop}>
         <div className="panel-heading">
@@ -71,14 +74,15 @@ class Group extends Component {
               </tr>
             </thead>
             <tbody>
-              {data.students.filter(function (student) {
+              {// select * from students join ...
+              data.students.filter(function (student) {
                 return group.students.indexOf(student.id) > -1;
               }).map(function (student) {
                 var dragStart = function (event) {
                   event.dataTransfer.setData('text/plain', student.id);
                 };
 
-                var onClick = makeStudentRemover(student.id, group.id, updateGroups);
+                var onClick = makeStudentRemover(student.id, group.id);
                 student = student || {};
 
                 return <tr key={student.id}>
