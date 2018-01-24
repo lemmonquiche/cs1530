@@ -3,6 +3,18 @@ import React, { Component } from 'react';
 import data from '../../data';
 import { forceUpdate } from '../../App';
 
+function makeStudentGroupRemover(studentId, groupId) {
+  return function () {
+    data.groups.forEach(function (group) {
+      if (group.id === groupId) {
+        group.students.splice(group.students.indexOf(studentId), 1);
+      }
+    });
+
+    forceUpdate();
+  };
+}
+
 function makeStudentRemover(studentId, groupId) {
   return function (event) {
     // delete from groups_students where group = ? and students = ?;
@@ -83,6 +95,7 @@ class Group extends Component {
                 };
 
                 var onClick = makeStudentRemover(student.id, group.id);
+                var dragEnd = makeStudentGroupRemover(student.id, group.id);
                 student = student || {};
 
                 return <tr key={student.id}>
@@ -93,7 +106,7 @@ class Group extends Component {
                   </td>
                   <td>{student.name}</td>
                   <td>
-                    <button draggable="true" onDragStart={dragStart} type="button" className="btn btn-success btn-sm">
+                    <button draggable="true" onDragStart={dragStart} onDragEnd={dragEnd} type="button" className="btn btn-success btn-sm">
                       <span className="glyphicon glyphicon-move"></span>
                     </button>
                   </td>
