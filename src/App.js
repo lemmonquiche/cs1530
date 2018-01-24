@@ -4,7 +4,7 @@ import Roster from './components/Roster';
 import Group, { Groups } from './components/Group';
 import data from './data';
 
-import logo from './logo.svg';
+import logo from './logo.jpg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
 
