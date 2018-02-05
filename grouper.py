@@ -36,9 +36,10 @@ def email_get():
 
 @app.route('/email', methods=['POST'])
 def email_post():
-    email(request.form.get('from'),
-          request.form.get('to'),
-          request.form.get('message'))
+    email(email_from=request.form.get('from'),
+          email_to=request.form.get('to'),
+          subject="This is a default subject",
+          message=request.form.get('message'))
     return redirect(url_for(email_get.__name__, success=['true']))
 
 
