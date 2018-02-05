@@ -1,3 +1,5 @@
 react_app/node_modules/
 react_app/build/
 __pycache__/
+*.pyc
+.env

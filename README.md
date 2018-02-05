@@ -29,3 +29,13 @@
 7.  export FLASK_APP=cater.py
 8.  python -m flask initdb (not yet)
 9.  python -m flask run --host 0.0.0.0
+
+## Sengrid API Setup
+
+make `.env` file:
+
+```bash
+cp template.env .env
+```
+
+and edit the value of `sengrid_api_key` to be a valid Sendgrid API Key.
