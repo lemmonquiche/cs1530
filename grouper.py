@@ -1,9 +1,50 @@
 from flask import Flask, send_from_directory, redirect, url_for, request
+from flask_restful import Api
+from flask_sqlalchemy import SQLAlchemy
 
-from util.email import send_email as email
+from  util.email import  *
 
 app = Flask(__name__, static_folder='react_app/build')
 
+
+#===============================================================================
+# Resource API AUTH
+#===============================================================================
+
+app = Flask(__name__)
+api = Api(app)
+db = SQLAlchemy(app)
+
+from  API import resources
+from models import models 
+from flask_jwt_extended import JWTManager
+app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
+jwt = JWTManager(app)
+
+
+
+@app.before_first_request
+def create_tables():
+    db.create_all()
+    new_user = resources.StudentModel(
+            username = 'username',
+            password = resources.StudentModel.generate_hash('password')
+        )   
+    new_user.save_to_db()
+
+api.add_resource(resources.UserLogin, '/login')
+api.add_resource(resources.SecretResource, '/secret')
+api.add_resource(resources.UserLogoutAccess, '/logout/access')
+api.add_resource(resources.UserLogoutRefresh, '/logout/refresh')
+api.add_resource(resources.TokenRefresh, '/token/refresh')
+
+app.config['JWT_BLACKLIST_ENABLED'] = True
+app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
+
+@jwt.token_in_blacklist_loader
+def check_if_token_in_blacklist(decrypted_token):
+    jti = decrypted_token['jti']
+    return models.RevokedTokenModel.is_jti_blacklisted(jti)
 
 ############################################
 # Routes
@@ -36,7 +77,7 @@ def email_get():
 
 @app.route('/email', methods=['POST'])
 def email_post():
-    email(email_from=request.form.get('from'),
+    send_email(email_from=request.form.get('from'),
           email_to=request.form.get('to'),
           subject="This is a default subject",
           message=request.form.get('message'))

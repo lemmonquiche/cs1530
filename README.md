@@ -39,3 +39,15 @@ cp template.env .env
 ```
 
 and edit the value of `sengrid_api_key` to be a valid Sendgrid API Key.
+
+
+# Login/Logou API
+* mostly fallowed this tutorial https://codeburst.io/jwt-authorization-in-flask-c63c1acf4eeb
+* export for postman grouper-login-logout-api.postman_collection.json
+* unittest are writen in apitest.py run the grouper.py before running the test
+* token based jwt lib used. Basic flow
+	1. login and get refresh_token + access_token  
+	2. use access_token untill it's expires, refresh access_token refresh_tolken 
+	3. when at the logout 
+		3.1. logout/access with access_token in the header
+		3.2. logout/refresh with refresh_token in the header  
