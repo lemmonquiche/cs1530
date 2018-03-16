@@ -11,6 +11,7 @@
 3. Install/Build react app 
    - sudo apt install npm 
    - cd [react_app_dir] 
+   - npm install
    - npm run build 
 4. Add the `FLASK_APP` variable to your path. 
    - cd [app-root-dir]
