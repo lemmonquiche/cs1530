@@ -1,7 +1,7 @@
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Email, Content, Mail
 
-import config
+#import config
 
 
 def send_email(email_from, email_to, subject, message):
