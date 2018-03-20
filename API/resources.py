@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
-from ..models.models import StudentModel, RevokedTokenModel
+from ..models.models import Student, Instructor, RevokedTokenModel
 
 parser = reqparse.RequestParser()
 parser.add_argument('username', help = 'This field cannot be blank', required = True)
@@ -10,16 +10,19 @@ parser.add_argument('password', help = 'This field cannot be blank', required = 
 class UserLogin(Resource):
     def post(self):
         data = parser.parse_args()
-        current_user = StudentModel.find_by_username(data['username'])
+        current_user = Student.find_by_username(data['username'])
+        if not current_user:
+            current_user = Instructor.find_by_username(data['username'])
 
         if not current_user:
             return {'message': 'User {} doesn\'t exist'.format(data['username'])}
         
-        if StudentModel.verify_hash(data['password'], current_user.password):
+        if Student.verify_hash(data['password'], current_user.password):
             access_token = create_access_token(identity = data['username'])
             refresh_token = create_refresh_token(identity = data['username'])
             return {
                 'message': 'Logged in as {}'.format(current_user.username),
+                'user_type': '{}'.format(type(current_user).__name__),
                 'access_token': access_token,
                 'refresh_token': refresh_token
                 }

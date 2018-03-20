@@ -1,36 +1,72 @@
 from flask import Flask, send_from_directory, redirect, url_for, request
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
-
+import os
+from models.models import db, RevokedTokenModel, Student, Instructor 
 from  util.email import  *
 
 app = Flask(__name__, static_folder='react_app/build')
 
+api = Api(app)
+app.config.update(dict(SEND_FILE_MAX_AGE_DEFAULT=0))
+
+# configuration
+DEBUG = True
+SECRET_KEY = 'secret_key'
+
+SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(app.root_path, 'grouper.db')
+
+app.config.from_object(__name__)
+app.config.from_envvar('CHAT_CONFIG', silent=True)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # to get rid of some warning 
+db.init_app(app)
+
+
+@app.cli.command('initdb')
+def initdb_command():
+    """Creates the database tables."""
+    db.drop_all()
+    db.create_all()
+    # add for debuggin 
+    new_user = Instructor(
+        username = 'prof',
+        password = Instructor.generate_hash('password'),
+        lname = 'Rahimov',
+        fname = 'Daler'
+    )   
+    new_user.save_to_db()
+    new_user = Student(
+        username = 'username',
+        password = Student.generate_hash('password'),
+        lname = 'Rahimov',
+        fname = 'Daler'
+    )   
+    new_user.save_to_db()
+    db.session.commit()
+    print('Initialized the database.')
+ 
 
 #===============================================================================
 # Resource API AUTH
 #===============================================================================
-
-app = Flask(__name__)
 api = Api(app)
-db = SQLAlchemy(app)
-
 from  API import resources
-from models import models 
 from flask_jwt_extended import JWTManager
 app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
 jwt = JWTManager(app)
 
 
 
-@app.before_first_request
-def create_tables():
-    db.create_all()
-    new_user = resources.StudentModel(
-            username = 'username',
-            password = resources.StudentModel.generate_hash('password')
-        )   
-    new_user.save_to_db()
+# @app.before_first_request
+# def create_tables():
+#     db.create_all()
+#     new_user = resources.Student(
+#             username = 'username',
+#             password = resources.Student.generate_hash('password'),
+#             lname = 'Rahimov',
+#             fname = 'Daler'
+#         )   
+#     new_user.save_to_db()
 
 api.add_resource(resources.UserLogin, '/login')
 api.add_resource(resources.SecretResource, '/secret')
