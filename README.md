@@ -17,6 +17,7 @@
    - cd [app-root-dir]
    - export FLASK_APP=grouper.py
 5. Running Flask App
+   - python -m flask initdb
    - flask run --host 0.0.0.0 -p 5000 (Runs the service on `http://localhost:5000`)
 
 
