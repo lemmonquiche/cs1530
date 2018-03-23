@@ -23,7 +23,7 @@ def gen_groups(course_id):
 
     #get schedules for all students
     for s in students:
-        ss.append(students.student_id)
+        ss.append(s.student_id)
         #not sure if this query is formated correctly...
         sched = Schedule.bitstring_to_matrix(db.session.query(Schedule).filter(Schedule.schedule_id == s.schedule_id))
         sched_matrix.append(sched)
