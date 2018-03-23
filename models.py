@@ -158,7 +158,16 @@ class Schedule(db.Model):
     def matrix_to_bitstring(matrix):
     	bitstring = ''.join([''.join(row) for row in matrix])
     	return bitstring
-    	
+    
+    @staticmethod
+	def bitstring_to_matrix(bitstring):
+    	matrix = []
+    	n = 7
+    	rows = [bitstring[i:i+n] for i in range(0, len(bitstring), n)]
+    	char_matrix = list(map(list, rows))
+    	matrix = [[int(y) for y in row] for row in char_matrix]
+    	return matrix
+    		
     def save_to_db(self):
     	db.session.add(self)
     	db.session.commit()
