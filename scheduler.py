@@ -33,7 +33,7 @@ def gen_groups(course_id):
     query = text("""SELECT max(group_id) FROM group""")
     group_id = db.execute(query) + 1
     #change
-    times = [[i] for i in range(336)]
+    times = [[i] for i in range(196)]
     shuffle(times)
 
     for t in times:
