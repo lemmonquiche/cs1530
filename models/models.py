@@ -37,16 +37,25 @@ course_pending = db.Table('course_pending',
 )
 
 class Course_Registration(db.Model):
+    __tablename__='course_registration' # if the table name is not set and class has _ than SQLAlchemy will add 2x_ 
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('student.student_id'))
-    course = db.Column(db.Integer, db.ForeignKey('course.course_id'))
+    course_id = db.Column(db.Integer, db.ForeignKey('course.course_id'))
     schedule_id = db.Column(db.Integer, db.ForeignKey('schedule.schedule_id'))
+    
+    def __init__(self, student_id, course_id, schedule_id):
+        self.student_id = student_id
+        self.course_id = course_id
+        self.schedule_id = schedule_id 
+        
+    def __repr__(self):
+        return '<Course Registration {}>'.format(self.id)
       
 class Student(db.Model):
     student_id = db.Column(db.Integer, primary_key=True)
     groups = db.relationship('Group', secondary=group_membership, backref=db.backref("student", lazy="dynamic"))
     pending_registrations_courses = db.relationship('Course', secondary=course_pending, backref=db.backref("student", lazy="dynamic")) 
-         
+    course_registrations = db.relationship("Course_Registration", backref="student")     
     lname = db.Column(db.Text, nullable=False)
     fname = db.Column(db.Text, nullable=False)
     is_reg_confirmed = db.Column(db.Boolean, nullable=False)
@@ -78,7 +87,12 @@ class Student(db.Model):
             }
         return {'students': list(map(lambda x: to_json(x), Student.query.all()))}
     
-    def __init__(self, lname, fname, username, password, is_reg_confirmed = False):
+    def __init__(self, lname, fname, username, password, is_reg_confirmed = False , groups = [], pending_registrations_courses = []):
+        for group in groups:
+            self.groups.append(group)
+        for pending in pending_registrations_courses:
+            self.pending_registrations_courses.append(pending)
+        
         self.username = username
         self.password = password
         self.lname = lname
@@ -86,7 +100,7 @@ class Student(db.Model):
         self.is_reg_confirmed = is_reg_confirmed
     
     def __repr__(self):
-        return '<Student {}>'.format(self.id)
+        return '<Student {}>'.format(self.student_id)
         
 
         
@@ -124,51 +138,76 @@ class Instructor(db.Model):
             }
         return {'Instractor': list(map(lambda x: to_json(x), Instructor.query.all()))}
     
-    def __init__(self, lname, fname,username, password, is_reg_confirmed = False):
+    def __init__(self, lname, fname,username, password, is_reg_confirmed = False, courses = []):
         self.lname = lname
         self.fname = fname
         self.username = username 
         self.password = password
         self.is_reg_confirmed = is_reg_confirmed
+        for course in courses:
+            self.courses.append(course)
                 
     def __repr__(self):
-        return '<Instructor {}>'.format(self.id)
+        return '<Instructor {}>'.format(self.instructor_id)
 
 class Schedule(db.Model):
     schedule_id = db.Column(db.Integer, primary_key=True)
     available_hour_week = db.Column(db.Text, nullable=False)
-     
+    
+    @staticmethod
+    def matrix_to_bitstring(matrix):
+        bitstring = ''.join([''.join(row) for row in matrix])
+        return bitstring
+    
+    @staticmethod
+    def bitstring_to_matrix(bitstring):
+        matrix = []
+        n = 7
+        rows = [bitstring[i:i+n] for i in range(0, len(bitstring), n)]
+        char_matrix = list(map(list, rows))
+        matrix = [[int(y) for y in row] for row in char_matrix]
+        return matrix
+            
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+         
     def __init__(self, available_hour_week):
         self.available_hour_week = available_hour_week
      
     def __repr__(self):
-        return '<Schedule {}>'.format(self.id)
+        return '<Schedule {}>'.format(self.schedule_id)
          
 class Group(db.Model):
     group_id = db.Column(db.Integer, primary_key=True)
     students = db.relationship('Student', secondary=group_membership, backref=db.backref("group", lazy="dynamic"))
-     
-    def __init__(self, students):
-        self.students = students
-         
+    course_id = db.Column(db.Integer, db.ForeignKey('course.course_id'))
+    
+    def __init__(self, students = []):
+        for student in students:
+            self.students.append(student)
+  
     def __repr__(self):
-        return '<Group {}>'.format(self.id)
+        return '<Group {}>'.format(self.group_id)
          
  
 class Course(db.Model):
     course_id = db.Column(db.Integer, primary_key=True)
     course_name = db.Column(db.Text, nullable=False)
-    group_id = db.Column(db.Integer, db.ForeignKey("group.group_id"))
-    groups = db.relationship("Group", backref="course")
+    groups = db.relationship("Group")
     pending_students = db.relationship('Student', secondary=course_pending, backref=db.backref("course", lazy="dynamic"))
     instructors = db.relationship('Instructor', secondary=instructs_course, backref=db.backref("course", lazy="dynamic"))
      
-    def __init__(self, course_name):
+    def __init__(self, course_name, groups = [], pending_students = [], instructors = []):
         self.course_name = course_name
+        for group in groups:
+            self.groups.append(group)
+        for student in pending_students:
+            self.pending_students.append(student)
+        for instructor in instructors:
+            self.instructors.append(instructor)
+        
      
          
     def __repr__(self):
-        return '<Course {}>'.format(self.id)
-
-    
-        
+        return '<Course {}>'.format(self.course_id)
