@@ -1,11 +1,12 @@
-from flask import Flask, send_from_directory, redirect, url_for, request
+from flask import Flask, send_from_directory, redirect, url_for, request, g
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 import os
 from models.models import db, RevokedTokenModel, Student, Instructor 
 from  util.email import  *
 
-app = Flask(__name__, static_folder='react_app/build')
+react_app_folder  = 'expert-octo-guacamole/build'
+app = Flask(__name__, static_folder=react_app_folder)
 
 api = Api(app)
 app.config.update(dict(SEND_FILE_MAX_AGE_DEFAULT=0))
@@ -73,6 +74,8 @@ api.add_resource(resources.SecretResource, '/secret')
 api.add_resource(resources.UserLogoutAccess, '/logout/access')
 api.add_resource(resources.UserLogoutRefresh, '/logout/refresh')
 api.add_resource(resources.TokenRefresh, '/token/refresh')
+api.add_resource(resources.LoginUser, '/api/login/user')
+api.add_resource(resources.LoginCridentials, '/api/login/credentials')
 
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
@@ -94,7 +97,7 @@ def main_page():
 
 @app.route('/grouper')
 def grouper():
-    return send_from_directory('react_app/build', 'index.html')
+    return send_from_directory(react_app_folder, 'index.html')
 
 
 @app.route('/email', methods=['GET'])
@@ -120,10 +123,10 @@ def email_post():
     return redirect(url_for(email_get.__name__, success=['true']))
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    """Logs the user in."""
-    pass
+# @app.route('/login', methods=['GET', 'POST'])
+# def login():
+#     """Logs the user in."""
+#     pass
 
 
 @app.route('/register', methods=['GET', 'POST'])
