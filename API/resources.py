@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from flask import g, session
+from flask import g, session, jsonify
 from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
 from ..models.models import Student, Instructor, RevokedTokenModel
 from ..scheduler import *
@@ -43,7 +43,12 @@ class GroupGenerate(Resource):
     def post(self):
         if not session['instructor_id']:
             return{'err':'Not an instructor'}
-        return {'test': 'testing'}
+        else:
+            cid = course_parser.parse_args()
+            groups = scheduler.gen_groups(cid)
+            for g in groups:
+                jgroups += jsonify(g)
+            return {jgroups}
 
 class AddSchedule(Resouce):
     def post(self):
