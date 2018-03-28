@@ -3,6 +3,7 @@ from flask import g, session, jsonify
 from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
 from ..models.models import Student, Instructor, RevokedTokenModel
 from ..scheduler import *
+from sqlalchemy.sql import text
 
 parser = reqparse.RequestParser()
 parser.add_argument('username', help = 'This field cannot be blank', required = True)
@@ -16,7 +17,7 @@ course_parser.add_argument('course_id', help = 'This field cannot be blank', req
 
 schedule_parser = reqparse.RequestParser()
 schedule_parser.add_argument('schedule_id', help = 'This field cannot be blank', required = True)
-schedule_parser.add_argument('course_id', help = 'This field cannot be blank', required = True)
+schedule_parser.add_argument('schedule', help = 'This field cannot be blank', required = True)
 
 registration_parser = reqparse.RequestParser()
 registration_parser.add_argument('user_type', help = 'This field cannot be blank', required = True)
@@ -55,12 +56,16 @@ class AddSchedule(Resource):
         if not session['student_id']:
             return{'err': 'Not a student'}
         else:
-            student = session['student_id']
             data = schedule_parser.parse_args()
-            course = data['course_id']
             course = data['schedule_id']
-            
-            current_schedule = #see if student has a schedule
+            schedule = data['schedule']
+
+            sched = Schedule.matrix_to_bitstring(schedule)
+
+            s = ({"schedule_id":sched})
+            statement = text("""UPDATE schedule SET available_hour_week=:schedule WHER schedule_id=:schedule_id""")
+            db.execute(statement)
+
             #update/insert
             return{'test':'testing'}
 
