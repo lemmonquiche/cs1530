@@ -2,7 +2,7 @@ from flask import Flask, send_from_directory, redirect, url_for, request, g
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 import os
-from models.models import db, RevokedTokenModel, Student, Instructor 
+from models.models import db, RevokedTokenModel, Student, Instructor
 from  util.email import  *
 
 react_app_folder  = 'expert-octo-guacamole/build'
@@ -19,7 +19,7 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(app.root_path, 'grouper.db
 
 app.config.from_object(__name__)
 app.config.from_envvar('CHAT_CONFIG', silent=True)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # to get rid of some warning 
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # to get rid of some warning
 db.init_app(app)
 
 
@@ -28,24 +28,24 @@ def initdb_command():
     """Creates the database tables."""
     db.drop_all()
     db.create_all()
-    # add for debuggin 
+    # add for debuggin
     new_user = Instructor(
         username = 'prof',
         password = Instructor.generate_hash('password'),
         lname = 'Rahimov',
         fname = 'Daler'
-    )   
+    )
     new_user.save_to_db()
     new_user = Student(
         username = 'username',
         password = Student.generate_hash('password'),
         lname = 'Rahimov',
         fname = 'Daler'
-    )   
+    )
     new_user.save_to_db()
     db.session.commit()
     print('Initialized the database.')
- 
+
 
 #===============================================================================
 # Resource API AUTH
@@ -66,7 +66,7 @@ jwt = JWTManager(app)
 #             password = resources.Student.generate_hash('password'),
 #             lname = 'Rahimov',
 #             fname = 'Daler'
-#         )   
+#         )
 #     new_user.save_to_db()
 
 api.add_resource(resources.UserLogin, '/login')
@@ -76,6 +76,7 @@ api.add_resource(resources.UserLogoutRefresh, '/logout/refresh')
 api.add_resource(resources.TokenRefresh, '/token/refresh')
 api.add_resource(resources.LoginUser, '/api/login/user')
 api.add_resource(resources.LoginCridentials, '/api/login/credentials')
+api.add_resource(resources.GroupGenerate, '/api/group')
 
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']

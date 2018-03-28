@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from flask import g, session 
+from flask import g, session
 from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
 from ..models.models import Student, Instructor, RevokedTokenModel
 
@@ -9,7 +9,10 @@ parser.add_argument('password', help = 'This field cannot be blank', required = 
 
 user_parser = reqparse.RequestParser()
 user_parser.add_argument('username', help = 'This field cannot be blank', required = True)
-   
+
+class GroupGenerate(Resource):
+    def post(self):
+        return {'test': 'testing'}
 
 class LoginUser(Resource):
     def post(self):
@@ -28,14 +31,14 @@ class LoginUser(Resource):
                 }
         else:
             return {'err' : 'User not recongnized'}
-        
-        
+
+
 
 
 class LoginCridentials (Resource):
     def post(self):
         data = parser.parse_args()
-        ## studnet and instruct table have unique username cross table 
+        ## studnet and instruct table have unique username cross table
         current_student = Student.find_by_username(data['username'])
         current_instruc = Instructor.find_by_username(data['username'])
 
@@ -65,7 +68,7 @@ class LoginCridentials (Resource):
             else:
                 return {'message': 'Wrong credentials',
                         'err' : 'Incorrect Password'}
-      
+
 
 class UserLogin(Resource):
     def post(self):
@@ -76,7 +79,7 @@ class UserLogin(Resource):
 
         if not current_user:
             return {'message': 'User {} doesn\'t exist'.format(data['username'])}
-        
+
         if Student.verify_hash(data['password'], current_user.password):
             access_token = create_access_token(identity = data['username'])
             refresh_token = create_refresh_token(identity = data['username'])
@@ -112,20 +115,20 @@ class UserLogoutRefresh(Resource):
         except:
             return {'message': 'Something went wrong'}, 500
 
-        
+
 class TokenRefresh(Resource):
     @jwt_refresh_token_required
     def post(self):
         current_user = get_jwt_identity()
         access_token = create_access_token(identity = current_user)
         return {'access_token': access_token}
-        
+
 class SecretResource(Resource):
-    try: 
+    try:
         @jwt_required
         def get(self):
             return {
                 'secretMsg': "You are logged in :-)"
             }
     except Exception as e:
-        print (e)    
+        print (e)
