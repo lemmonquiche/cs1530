@@ -16,10 +16,11 @@ course_parser.add_argument('course_id', help = 'This field cannot be blank', req
 
 schedule_parser = reqparse.RequestParser()
 schedule_parser.add_argument('schedule_id', help = 'This field cannot be blank', required = True)
+schedule_parser.add_argument('course_id', help = 'This field cannot be blank', required = True)
 
 registration_parser = reqparse.RequestParser()
-registration_parser.add_argument('user_type', help = 'This field cannot be blank', required = True) 
-registration_parser.add_argument('', help = 'This field cannot be blank', required = True) 
+registration_parser.add_argument('user_type', help = 'This field cannot be blank', required = True)
+registration_parser.add_argument('', help = 'This field cannot be blank', required = True)
 
 class Registration(Resource):
     def post(self):
@@ -29,7 +30,7 @@ class Registration(Resource):
 #     var body = JSON.parse(request.requestBody);
 #     var email = body.email;
 #     console.log("New User", body.username);
-# 
+#
 #     return new Promise((resolve, reject) => {
 #       setTimeout(function() {
 #         resolve([200, null, JSON.stringify({ msg: 'Emailed ' + email })]);
@@ -51,7 +52,17 @@ class GroupGenerate(Resource):
 
 class AddSchedule(Resource):
     def post(self):
-        return{'test':'testing'}
+        if not session['student_id']:
+            return{'err': 'Not a student'}
+        else:
+            student = session['student_id']
+            data = schedule_parser.parse_args()
+            course = data['course_id']
+            course = data['schedule_id']
+            
+            current_schedule = #see if student has a schedule
+            #update/insert
+            return{'test':'testing'}
 
 class LoginUser(Resource):
     def post(self):
