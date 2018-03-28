@@ -27,10 +27,6 @@ instructs_course = db.Table('instructs_course',
     db.Column('course_id', db.Integer, db.ForeignKey('course.course_id'))
 )
 
-group_membership = db.Table('group_membership',
-    db.Column('student_id', db.Integer, db.ForeignKey('student.student_id')),
-    db.Column('group_id', db.Integer, db.ForeignKey('group.group_id'))
-)
 
 course_pending = db.Table('course_pending',
     db.Column('student_id', db.Integer, db.ForeignKey('student.student_id')),
@@ -53,7 +49,6 @@ class Course_Registration(db.Model):
       
 class Student(db.Model):
     student_id = db.Column(db.Integer, primary_key=True)
-    groups = db.relationship('Group', secondary=group_membership, backref=db.backref("student", lazy="dynamic"))
     pending_registrations_courses = db.relationship('Course', secondary=course_pending, backref=db.backref("student", lazy="dynamic")) 
     course_registrations = db.relationship("Course_Registration", backref="student")     
     lname = db.Column(db.Text, nullable=False)
@@ -87,9 +82,7 @@ class Student(db.Model):
             }
         return {'students': list(map(lambda x: to_json(x), Student.query.all()))}
     
-    def __init__(self, lname, fname, username, password, is_reg_confirmed = False , groups = [], pending_registrations_courses = []):
-        for group in groups:
-        	self.groups.append(group)
+    def __init__(self, lname, fname, username, password, is_reg_confirmed = False, pending_registrations_courses = []):
         for pending in pending_registrations_courses:
         	self.pending_registrations_courses.append(pending)
         
@@ -160,13 +153,8 @@ class Schedule(db.Model):
     	return bitstring
     
     @staticmethod
-	def bitstring_to_matrix(bitstring):
-    	matrix = []
-    	n = 7
-    	rows = [bitstring[i:i+n] for i in range(0, len(bitstring), n)]
-    	char_matrix = list(map(list, rows))
-    	matrix = [[int(y) for y in row] for row in char_matrix]
-    	return matrix
+    def bitstring_to_matrix(bitstring):
+    	return list(bitstring)
     		
     def save_to_db(self):
     	db.session.add(self)
@@ -180,16 +168,31 @@ class Schedule(db.Model):
          
 class Group(db.Model):
     group_id = db.Column(db.Integer, primary_key=True)
-    students = db.relationship('Student', secondary=group_membership, backref=db.backref("group", lazy="dynamic"))
     course = db.Column(db.Integer, db.ForeignKey('course.course_id'))
     
     def __init__(self, students = []):
-    	for student in students:
-    		self.students.append(student)
+    	pass
   
     def __repr__(self):
         return '<Group {}>'.format(self.group_id)
          
+class GroupMembership(db.Model):
+	__tablename__ = 'group_membership'
+	
+	id = db.Column('id', db.Integer, primary_key = True)
+	student_id = db.Column(db.Integer, db.ForeignKey("student.student_id"))
+	group_id = db.Column(db.Integer, db.ForeignKey("group.group_id"))
+	randomized = db.Column(db.Boolean)
+	student = db.relationship(Student, backref="group_membership")
+	group = db.relationship(Group, backref="group_membership")
+	
+	def __init__(self, student_id, group_id, randomized = 0):
+		self.student_id = student_id
+		self.group_id = group_id
+		self.randomized = randomized 
+    
+	def __repr__(self):
+		return '<Group Membership {}>'.format(self.id)
  
 class Course(db.Model):
     course_id = db.Column(db.Integer, primary_key=True)
