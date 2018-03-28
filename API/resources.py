@@ -17,6 +17,28 @@ course_parser.add_argument('course_id', help = 'This field cannot be blank', req
 schedule_parser = reqparse.RequestParser()
 schedule_parser.add_argument('schedule_id', help = 'This field cannot be blank', required = True)
 
+registration_parser = reqparse.RequestParser()
+registration_parser.add_argument('user_type', help = 'This field cannot be blank', required = True) 
+registration_parser.add_argument('user_type', help = 'This field cannot be blank', required = True) 
+
+class Registration(Resource):
+    def post(self):
+        pass
+        
+#           this.post('/api/login/signup', function (request) {
+#     console.log("API CALL: /api/login/signup");
+#     var body = JSON.parse(request.requestBody);
+#     var email = body.email;
+#     console.log("New User", body.username);
+# 
+#     return new Promise((resolve, reject) => {
+#       setTimeout(function() {
+#         resolve([200, null, JSON.stringify({ msg: 'Emailed ' + email })]);
+#       }, 400);
+#     });
+#   });
+
+
 class GroupGenerate(Resource):
     def post(self):
         if not session['instructor_id']:
