@@ -19,12 +19,11 @@ schedule_parser.add_argument('schedule_id', help = 'This field cannot be blank',
 
 registration_parser = reqparse.RequestParser()
 registration_parser.add_argument('user_type', help = 'This field cannot be blank', required = True) 
-registration_parser.add_argument('user_type', help = 'This field cannot be blank', required = True) 
+registration_parser.add_argument('', help = 'This field cannot be blank', required = True) 
 
 class Registration(Resource):
     def post(self):
         pass
-        
 #           this.post('/api/login/signup', function (request) {
 #     console.log("API CALL: /api/login/signup");
 #     var body = JSON.parse(request.requestBody);
@@ -50,7 +49,7 @@ class GroupGenerate(Resource):
                 jgroups += jsonify(g)
             return {jgroups}
 
-class AddSchedule(Resouce):
+class AddSchedule(Resource):
     def post(self):
         return{'test':'testing'}
 

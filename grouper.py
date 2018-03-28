@@ -77,7 +77,7 @@ api.add_resource(resources.TokenRefresh, '/token/refresh')
 api.add_resource(resources.LoginUser, '/api/login/user')
 api.add_resource(resources.LoginCridentials, '/api/login/credentials')
 api.add_resource(resources.GroupGenerate, '/api/group')
-app.add_resource(resources.AddSchedule, '/api/schedule/add')
+api.add_resource(resources.AddSchedule, '/api/schedule/add')
 
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
