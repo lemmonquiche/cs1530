@@ -5,8 +5,7 @@ import os
 from models.models import db, RevokedTokenModel, Student, Instructor
 from  util.email import  *
 
-react_app_folder  = 'expert-octo-guacamole/build'
-app = Flask(__name__, static_folder=react_app_folder)
+app = Flask(__name__)
 app.register_blueprint(Blueprint('static_bp', __name__, static_folder='assets', static_url_path=''), url_prefix='/assets')
 
 api = Api(app)
@@ -98,14 +97,29 @@ def main_page():
     return make_response(render_template('homepage.html'))
 
 @app.route('/signin')
-def signin_page():
+def function1():
     return send_from_directory('signin/build', 'index.html')
 
 app.register_blueprint(Blueprint('signin', __name__, static_folder='signin/build/static', static_url_path=''), url_prefix='/signin/static')
 
-@app.route('/grouper')
-def grouper():
-    return send_from_directory(react_app_folder, 'index.html')
+@app.route('/student')
+def function2():
+    return send_from_directory('student/build', 'index.html')
+
+app.register_blueprint(Blueprint('student', __name__, static_folder='student/build/static', static_url_path=''), url_prefix='/student/static')
+
+@app.route('/instructor')
+def function3():
+    return send_from_directory('instructor/build', 'index.html')
+
+app.register_blueprint(Blueprint('instructor', __name__, static_folder='instructor/build/static', static_url_path=''), url_prefix='/instructor/static')
+
+@app.route('/example')
+def function4():
+    return send_from_directory('example/build', 'index.html')
+
+app.register_blueprint(Blueprint('example', __name__, static_folder='example/build/static', static_url_path=''), url_prefix='/example/static')
+
 
 
 @app.route('/email', methods=['GET'])
