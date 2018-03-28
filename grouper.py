@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory, redirect, url_for, request, g
+from flask import Flask, send_from_directory, redirect, url_for, request, g, render_template, make_response, Blueprint
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 import os
@@ -7,6 +7,7 @@ from  util.email import  *
 
 react_app_folder  = 'expert-octo-guacamole/build'
 app = Flask(__name__, static_folder=react_app_folder)
+app.register_blueprint(Blueprint('static_bp', __name__, static_folder='assets', static_url_path=''), url_prefix='/assets')
 
 api = Api(app)
 app.config.update(dict(SEND_FILE_MAX_AGE_DEFAULT=0))
@@ -94,8 +95,13 @@ def check_if_token_in_blacklist(decrypted_token):
 def main_page():
     """ This is the seleton page
     """
-    return redirect(url_for('grouper'))
+    return make_response(render_template('homepage.html'))
 
+@app.route('/signin')
+def signin_page():
+    return send_from_directory('signin/build', 'index.html')
+
+app.register_blueprint(Blueprint('signin', __name__, static_folder='signin/build/static', static_url_path=''), url_prefix='/signin/static')
 
 @app.route('/grouper')
 def grouper():
