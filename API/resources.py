@@ -2,6 +2,7 @@ from flask_restful import Resource, reqparse
 from flask import g, session
 from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
 from ..models.models import Student, Instructor, RevokedTokenModel
+from ..scheduler import *
 
 parser = reqparse.RequestParser()
 parser.add_argument('username', help = 'This field cannot be blank', required = True)
@@ -10,9 +11,21 @@ parser.add_argument('password', help = 'This field cannot be blank', required = 
 user_parser = reqparse.RequestParser()
 user_parser.add_argument('username', help = 'This field cannot be blank', required = True)
 
+course_parser = reqparse.RequestParser()
+course_parser.add_argument('course_id', help = 'This field cannot be blank', required = True)
+
+schedule_parser = reqparse.RequestParser()
+schedule_parser.add_argument('schedule_id', help = 'This field cannot be blank', required = True)
+
 class GroupGenerate(Resource):
     def post(self):
+        if not session['instructor_id']:
+            return{'err':'Not an instructor'}
         return {'test': 'testing'}
+
+class AddSchedule(Resouce):
+    def post(self):
+        return{'test':'testing'}
 
 class LoginUser(Resource):
     def post(self):
