@@ -1,4 +1,5 @@
 from flask_restful import Resource, reqparse
+from flask import g, session 
 from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
 from ..models.models import Student, Instructor, RevokedTokenModel
 
@@ -6,6 +7,65 @@ parser = reqparse.RequestParser()
 parser.add_argument('username', help = 'This field cannot be blank', required = True)
 parser.add_argument('password', help = 'This field cannot be blank', required = True)
 
+user_parser = reqparse.RequestParser()
+user_parser.add_argument('username', help = 'This field cannot be blank', required = True)
+   
+
+class LoginUser(Resource):
+    def post(self):
+        data = user_parser.parse_args()
+        current_student = Student.find_by_username(data['username'])
+        current_instruc = Instructor.find_by_username(data['username'])
+        if current_student:
+            return {
+                'username': data['username'],
+                'name' : current_student.fname
+                }
+        elif current_instruc:
+            return {
+                'username': data['username'],
+                'name' : current_instruc.fname
+                }
+        else:
+            return {'err' : 'User not recongnized'}
+        
+        
+
+
+class LoginCridentials (Resource):
+    def post(self):
+        data = parser.parse_args()
+        ## studnet and instruct table have unique username cross table 
+        current_student = Student.find_by_username(data['username'])
+        current_instruc = Instructor.find_by_username(data['username'])
+
+        if (not current_student and not current_instruc):
+            return {'err': 'User {} doesn\'t exist'.format(data['username']) }
+        if current_student:
+            if Student.verify_hash(data['password'], current_student.password):
+                session['student_id'] = current_student.student_id
+#                 print (current_student.student_id)
+                return {
+                    'message': 'Logged in as {}'.format(current_user.username),
+                    'user_type': '{}'.format(type(current_student).__name__),
+                    'student_id': '{}'.format(current_student.student_id)
+                    }
+            else:
+                return {'message': 'Wrong credentials',
+                        'err' : 'Incorrect Password'}
+        elif current_instruc:
+            if Student.verify_hash(data['password'], current_instruc.password):
+                session['instructor_id'] = current_instruc.instructor_id
+#                 print (current_student.student_id)
+                return {
+                    'message': 'Logged in as {}'.format(current_instruc.username),
+                    'user_type': '{}'.format(type(current_instruc).__name__),
+                    'instructor_id': '{}'.format(current_instruc.instructor_id)
+                    }
+            else:
+                return {'message': 'Wrong credentials',
+                        'err' : 'Incorrect Password'}
+      
 
 class UserLogin(Resource):
     def post(self):
