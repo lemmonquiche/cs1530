@@ -30,7 +30,7 @@ def gen_groups(course_id):
 
 
     #generate groups
-    query = text("""SELECT max(group_id) FROM group""")
+    query = text("""SELECT max(group_id) FROM 'group' group by course""")
     group_id = db.engine.execute(query)
     groups = []
 
