@@ -4,7 +4,7 @@ import numpy as np
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import os
-from models.models import db,  Course_Registration, Student, Schedule, Course
+from models.models import db,  Course_Registration, Student, Schedule, Course, Group
 from sqlalchemy.sql import text
 
 def sumColumn(m, column):
@@ -53,7 +53,7 @@ def gen_groups(course_id):
             group_id += 1
             groups.append(group_id)
             group = ({"group_id":group_id, "course_id":course_id})
-            statement = text("""INSERT INTO group VALUES(:group_id, :course_id)""")
+            statement = text("""INSERT INTO 'group' VALUES(:group_id, :course_id)""")
             db.engine.execute(statement)
 
             #initialize values needed to create groups
@@ -84,7 +84,7 @@ def gen_groups(course_id):
             group_id += 1
             groups.append(group_id)
             group = ({"group_id":group_id, "course_id":course_id})
-            statement = text("""INSERT INTO group VALUES(:group_id, :course_id)""")
+            statement = text("""INSERT INTO 'group' VALUES(:group_id, :course_id)""")
             db.engine.execute(statement)
 
             #generate the group with first 5 students
