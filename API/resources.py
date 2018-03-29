@@ -83,7 +83,7 @@ class GroupGenerate(Resource):
             # jgroups += "]"
             # # return {jgroups}
 
-            return {row_json}
+            return {"group_ids": row_json}
         else:
             return{'err':'could not generate group'}
 
