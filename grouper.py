@@ -42,20 +42,18 @@ def initdb_command():
                         1,
                         'test',
                         '$pbkdf2-sha256$29000$X6sVIiREaG0NQSjl3BtjzA$WhUNyD7BYxY.fHbbpppVxrj.NRbYm1w1F7LHXb6eavQ'
-                    );
-
-                    INSERT INTO student
+                    );"""
+    con.execute("""INSERT INTO student
                     VALUES (
-                        2,
-                        'Rahimov',
-                        'Daler',
-                        'daler@gmail.com',
-                        1,
-                        'username',
-                        '$pbkdf2-sha256$29000$uxdCaE3p3TvHOOe8FyIkxA$vRSdCk8XP3BqXAkr18bph.gwTKxte3.ZwdBNHvzhVi4'
-                    );
-
-                    INSERT INTO student
+                    2,
+                    'Rahimov',
+                    'Daler',
+                    'daler@gmail.com',
+                    1,
+                    'username',
+                    '$pbkdf2-sha256$29000$uxdCaE3p3TvHOOe8FyIkxA$vRSdCk8XP3BqXAkr18bph.gwTKxte3.ZwdBNHvzhVi4'
+                    );""")
+    con.execute("""INSERT INTO student
                     VALUES (
                         3,
                         'Allicock',
@@ -64,9 +62,8 @@ def initdb_command():
                         1,
                         'ballicock2',
                         'ssQlhEMIDB1'
-                    );
-
-                    INSERT INTO student
+                    );""")
+                    con.execute("""INSERT INTO student
                     VALUES (
                         4,
                         'Keeri',
@@ -75,9 +72,8 @@ def initdb_command():
                         1,
                         'lkeeri3',
                         'QP8jmAy'
-                    );
-
-                    INSERT INTO student
+                    );""")
+    con.execute("""INSERT INTO student
                     VALUES (
                         5,
                         'Solan',
@@ -86,9 +82,8 @@ def initdb_command():
                         1,
                         'vsolan4',
                         '9R6ckxgf'
-                    );
-
-                    INSERT INTO student
+                    );""")
+    con.execute("""INSERT INTO student
                     VALUES (
                         6,
                         'Craythorn',
@@ -97,9 +92,8 @@ def initdb_command():
                         1,
                         'mcraythorn5',
                         'vzQCn0jPQm36'
-                    );
-
-                    INSERT INTO student
+                    );""")
+    con.execute("""INSERT INTO student
                     VALUES (
                         7,
                         'Bahls',
@@ -108,9 +102,8 @@ def initdb_command():
                         1,
                         'abahls6',
                         'Bhau7v'
-                    );
-
-                    INSERT INTO student
+                    );""")
+    con.execute("""INSERT INTO student
                     VALUES (
                         8,
                         'Pay',
@@ -119,9 +112,8 @@ def initdb_command():
                         1,
                         'gpay7',
                         'QIVexD'
-                    );
-
-                    INSERT INTO student
+                    );""")
+    con.execute("""INSERT INTO student
                     VALUES (
                         9,
                         'Jirak',
@@ -130,9 +122,8 @@ def initdb_command():
                         1,
                         'wjirak8',
                         'lPfiO1X5'
-                    );
-
-                    INSERT INTO student
+                    );""")
+    con.execute("""INSERT INTO student
                     VALUES (
                         10,
                         'Dimitrescu',
@@ -141,175 +132,153 @@ def initdb_command():
                         1,
                         'adimitrescu9',
                         'Dj1m0281bjv'
-                    );
-
-                    INSERT INTO course
-                   VALUES (
-                       1,
-                       'Software Engineering',
-                       'joining'
-                   );
-
-                    INSERT INTO course_registration (
-                                    id,
-                                    student_id,
-                                    course_id
-                                )
-                                VALUES (
-                                    1,
-                                    1,
-                                    1
-                                );
-
-                                INSERT INTO course_registration
-                                VALUES (
-                                    2,
-                                    2,
-                                    1
-                                );
-
-                                INSERT INTO course_registration
-                                VALUES (
-                                    3,
-                                    3,
-                                    1
-                                );
-
-                                INSERT INTO course_registration
-                                VALUES (
-                                    4,
-                                    4,
-                                    1
-                                );
-
-                                INSERT INTO course_registration
-                                VALUES (
-                                    5,
-                                    5,
-                                    1
-                                );
-
-                                INSERT INTO course_registration
-                                VALUES (
-                                    6,
-                                    6,
-                                    1
-                                );
-
-                                INSERT INTO course_registration
-                                VALUES (
-                                    7,
-                                    7,
-                                    1
-                                );
-
-                                INSERT INTO course_registration
-                                VALUES (
-                                    8,
-                                    8,
-                                    1
-                                );
-
-                                INSERT INTO course_registration
-                                VALUES (
-                                    9,
-                                    9,
-                                    1
-                                );
-
-                                INSERT INTO course_registration
-                                VALUES (
-                                    10,
-                                    10,
-                                    1
-                                );
-        INSERT INTO instructor
+                    );""")
+    con.execute("""INSERT INTO course
                        VALUES (
                            1,
-                           'daler@gmail.com',
-                           'Rahimov',
-                           'Daler',
-                           0,
-                           'prof',
-                           '$pbkdf2-sha256$29000$FsI4p7S2du6917q3FqK0tg$xW.BfqRgLLGFWTo9.32dT1BZLfufMFa6pVKk9glk7ps'
-                       );
-
-    INSERT INTO instructs_course
-                             VALUES (
-                                 1,
-                                 1
-                             );
-
-    INSERT INTO schedule
+                           'Software Engineering',
+                           'joining'
+                       );""")
+    con.execute("""INSERT INTO course_registration (
+                    id,
+                    student_id,
+                    course_id
+                )
+                VALUES (
+                    1,
+                    1,
+                    1
+                );""")
+    con.execute("""INSERT INTO course_registration
+                    VALUES (
+                        2,
+                        2,
+                        1
+                    );""")
+    con.execute("""INSERT INTO course_registration
+                    VALUES (
+                        3,
+                        3,
+                        1
+                    );""")
+    con.execute("""INSERT INTO course_registration
+                    VALUES (
+                        4,
+                        4,
+                        1
+                    );""")
+    con.execute("""INSERT INTO course_registration
+                    VALUES (
+                        5,
+                        5,
+                        1
+                    );""")
+    con.execute("""INSERT INTO course_registration
+                    VALUES (
+                        6,
+                        6,
+                        1
+                    );""")
+    con.execute("""INSERT INTO course_registration
+                    VALUES (
+                        7,
+                        7,
+                        1
+                    );""")
+    con.execute("""INSERT INTO course_registration
+                    VALUES (
+                        8,
+                        8,
+                        1
+                    );""")
+    con.execute("""INSERT INTO course_registration
+                    VALUES (
+                        9,
+                        9,
+                        1
+                    );""")
+    con.execute("""INSERT INTO course_registration
+                    VALUES (
+                        10,
+                        10,
+                        1
+                    );""")
+    con.execute("""INSERT INTO instructor
+                   VALUES (
+                       1,
+                       'daler@gmail.com',
+                       'Rahimov',
+                       'Daler',
+                       0,
+                       'prof',
+                       '$pbkdf2-sha256$29000$FsI4p7S2du6917q3FqK0tg$xW.BfqRgLLGFWTo9.32dT1BZLfufMFa6pVKk9glk7ps'
+                   );""")
+    con.execute("""INSERT INTO instructs_course
+                                 VALUES (
+                                     1,
+                                     1
+                                 );""")
+    con.execute("""INSERT INTO schedule
                      VALUES (
                          1,
                          1,
                          '1100111100011011010000000111000111101001111100011111011010001100100001110011110100011001100101010101010001010101000110111001000011101110011100111111101101110100000010001011101000000111111000011100'
-                     );
-
-                     INSERT INTO schedule
-                     VALUES (
-                         2,
-                         2,
-                         '1101010110110001101100111011110101000011101101011010010011001110110110011110010000111000111100110000001001000011110110100100001101100100110100011001110110011010110010010011000100000101110110010101'
-                     );
-
-                     INSERT INTO schedule
+                     );""")
+    con.execute("""INSERT INTO schedule
+                    VALUES (
+                        2,
+                        2,
+                        '1101010110110001101100111011110101000011101101011010010011001110110110011110010000111000111100110000001001000011110110100100001101100100110100011001110110011010110010010011000100000101110110010101'
+                    );""")
+    con.execute(""" INSERT INTO schedule
                      VALUES (
                          3,
                          3,
                          '1101110111000111111000110000111010101001011101001111110011101011000010011001000001011001101010111110010011100011111000000100011001011011100111101101011011011001100101100000010001010000101110100011'
                      );
-
-                     INSERT INTO schedule
-                     VALUES (
-                         4,
-                         4,
-                         '1001011000110010001101001110110111111100110000000101010011101011011101010101100110010010000000101101010111101010110101100000101010111010000000001110110000010100100101101011100111110100001101001111'
-                     );
-
-                     INSERT INTO schedule
+                """)
+    con.execute("""INSERT INTO schedule
+                    VALUES (
+                        4,
+                        4,
+                        '1001011000110010001101001110110111111100110000000101010011101011011101010101100110010010000000101101010111101010110101100000101010111010000000001110110000010100100101101011100111110100001101001111'
+                    );""")
+    con.execute(""" INSERT INTO schedule
                      VALUES (
                          5,
                          5,
                          '1010100100100100001010101000001101111110010110110101110100001001100101111111000011010110101101101001011010001000010000101101001000000101100000101010011011010100100000010101110100010000110001000110'
-                     );
-
-                     INSERT INTO schedule
-                     VALUES (
-                         6,
-                         6,
-                         '1110011011000011101110110011111001011100001001001011110101010010011010110110000000100001101011110110011010010001110100111110110001011100001101100110110011110011000111001000011011100111011000110000'
-                     );
-
-                     INSERT INTO schedule
-                     VALUES (
-                         7,
-                         7,
-                         '1100111001110001011000110101000001111101001011010110110100111111011010001010000111100111000111011000011111111000100110110101100100001110000000000010000110100000010100110100010101011101001011100100'
-                     );
-
-                     INSERT INTO schedule
-                     VALUES (
-                         8,
-                         8,
-                         '1011000101010100011011010111011110111000101010101001001001110010011111110111011100111101111101100000110110000000100111101000100000110110010111111011000111110000111100011111001000000001011111000011'
-                     );
-
-                     INSERT INTO schedule
-                     VALUES (
-                         9,
-                         9,
-                         '1111100001101000000000101001001101111100011111010100010101110000100010001111001010110111110111001001010011100101000110000110001010000011010010100110110111010001000101111011110000100001000001011100'
-                     );
-
-                     INSERT INTO schedule
-                     VALUES (
-                         10,
-                         10,
-                         '1010001010000000100011000011011100000101110001110011101100010011000011011101111000111010111100110011100011001111101100110110000101110011111111000011100010000110011001101110000000111111001010011011'
-                     );
-    """)
+                     );""")
+    con.execute("""INSERT INTO schedule
+                    VALUES (
+                        6,
+                        6,
+                        '1110011011000011101110110011111001011100001001001011110101010010011010110110000000100001101011110110011010010001110100111110110001011100001101100110110011110011000111001000011011100111011000110000'
+                    );""")
+    con.execute("""INSERT INTO schedule
+                    VALUES (
+                        7,
+                        7,
+                        '1100111001110001011000110101000001111101001011010110110100111111011010001010000111100111000111011000011111111000100110110101100100001110000000000010000110100000010100110100010101011101001011100100'
+                    );""")
+    con.execute("""INSERT INTO schedule
+                    VALUES (
+                        8,
+                        8,
+                        '1011000101010100011011010111011110111000101010101001001001110010011111110111011100111101111101100000110110000000100111101000100000110110010111111011000111110000111100011111001000000001011111000011'
+                    );""")
+    con.execute("""INSERT INTO schedule
+                    VALUES (
+                        9,
+                        9,
+                        '1111100001101000000000101001001101111100011111010100010101110000100010001111001010110111110111001001010011100101000110000110001010000011010010100110110111010001000101111011110000100001000001011100'
+    );""")
+    con.execute("""INSERT INTO schedule
+                    VALUES (
+                        10,
+                        10,
+                        '1010001010000000100011000011011100000101110001110011101100010011000011011101111000111010111100110011100011001111101100110110000101110011111111000011100010000110011001101110000000111111001010011011'
+                    );""")
 
     print('Initialized the database.')
 
