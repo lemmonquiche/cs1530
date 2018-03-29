@@ -30,7 +30,7 @@ def gen_groups(course_id):
         con = engine.connect()
         print(s)
         print(type(s))
-        result = con.execute('SELECT available_hour_week FROM schedule WHERE schedule_id = :stud', {'stud':s})
+        result = con.execute('SELECT available_hour_week FROM schedule WHERE schedule_id = 1')
         for r in result:
             print(r)
         sched = [r for (r, ) in result]
