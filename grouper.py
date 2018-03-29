@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory, redirect, url_for, request, g, render_template, make_response, Blueprint
+from flask import Flask, send_from_directory, redirect, url_for, request, g, render_template, make_response, Blueprint,session
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 import os
@@ -38,6 +38,14 @@ def initdb_command():
     )
     new_user.save_to_db()
     new_user = Student(
+        username = 'test',
+        password = Instructor.generate_hash('pwd'),
+        lname = 'Testing',
+        fname = 'Testing',
+        email = 'test@gmail.com'
+    )
+    new_user.save_to_db()
+    new_user = Student(
         username = 'username',
         password = Student.generate_hash('password'),
         lname = 'Rahimov',
@@ -48,7 +56,15 @@ def initdb_command():
     db.session.commit()
     print('Initialized the database.')
 
-
+@app.before_request
+def before_request():
+    g.student = None
+    if 'student_id' in session:
+        g.student = Student.query.filter_by(student_id=session['student_id']).first()
+    g.instructor= None
+    if 'instructor_id' in session:
+        g.instructor = Instructor.query.filter_by(instructor_id=session['instructor_id']).first()
+ 
 #===============================================================================
 # Resource API AUTH
 #===============================================================================
@@ -59,23 +75,11 @@ app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
 jwt = JWTManager(app)
 
 
-
-# @app.before_first_request
-# def create_tables():
-#     db.create_all()
-#     new_user = resources.Student(
-#             username = 'username',
-#             password = resources.Student.generate_hash('password'),
-#             lname = 'Rahimov',
-#             fname = 'Daler'
-#         )
-#     new_user.save_to_db()
-
-api.add_resource(resources.UserLogin, '/login')
-api.add_resource(resources.SecretResource, '/secret')
-api.add_resource(resources.UserLogoutAccess, '/logout/access')
-api.add_resource(resources.UserLogoutRefresh, '/logout/refresh')
-api.add_resource(resources.TokenRefresh, '/token/refresh')
+# api.add_resource(resources.UserLogin, '/login')
+# api.add_resource(resources.SecretResource, '/secret')
+# api.add_resource(resources.UserLogoutAccess, '/logout/access')
+# api.add_resource(resources.UserLogoutRefresh, '/logout/refresh')
+# api.add_resource(resources.TokenRefresh, '/token/refresh')
 api.add_resource(resources.LoginUser, '/api/login/user')
 api.add_resource(resources.LoginCridentials, '/api/login/credentials')
 api.add_resource(resources.GroupGenerate, '/api/group')
@@ -99,29 +103,39 @@ def main_page():
     return make_response(render_template('homepage.html'))
 
 @app.route('/signin')
-def function1():
+def signin():
+    if g.student:
+        return redirect(url_for('student'))
+    if g.instructor:
+        return redirect(url_for('instructor'))    
     return send_from_directory('signin/build', 'index.html')
 
 app.register_blueprint(Blueprint('signin', __name__, static_folder='signin/build/static', static_url_path=''), url_prefix='/signin/static')
 
 @app.route('/student')
-def function2():
+def student():
+    if not g.student: 
+        return redirect(url_for('signin'))
     return send_from_directory('student/build', 'index.html')
 
 app.register_blueprint(Blueprint('student', __name__, static_folder='student/build/static', static_url_path=''), url_prefix='/student/static')
 
 @app.route('/instructor')
-def function3():
+def instructor():
+    if not g.instructor: 
+        return redirect(url_for('signin'))
     return send_from_directory('instructor/build', 'index.html')
 
 app.register_blueprint(Blueprint('instructor', __name__, static_folder='instructor/build/static', static_url_path=''), url_prefix='/instructor/static')
 
-@app.route('/example')
-def function4():
-    return send_from_directory('example/build', 'index.html')
 
-app.register_blueprint(Blueprint('example', __name__, static_folder='example/build/static', static_url_path=''), url_prefix='/example/static')
-
+@app.route('/logout')
+def logout():
+    """Logs the user out."""
+    session.pop('student_id', None)
+    session.pop('instructor_id', None)
+    return redirect(url_for('signin'))
+    
 
 
 @app.route('/email', methods=['GET'])
@@ -146,17 +160,6 @@ def email_post():
           message=request.form.get('message'))
     return redirect(url_for(email_get.__name__, success=['true']))
 
-
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     """Logs the user in."""
-#     pass
-
-
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    """Registers the user."""
-    pass
 
 
 if __name__ == '__main__':

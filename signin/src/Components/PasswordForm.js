@@ -40,7 +40,16 @@ class PasswordForm extends Component {
       success: function (data, status, jQReq) {
         // console.log('success', data, arguments);
         if (!data.err) {
-          alert("redirecting to new place, hopefully cookie is set");
+//          alert(data.user_type); 
+          if (data.user_type == 'Student'){
+              window.location.assign("/student")
+          }
+          if (data.user_type == 'Instructor'){
+              window.location.assign("/instructor")
+          }
+          console.log(data)
+//          window.location.assign("/instructor")
+ 
           success = true;
           return;
         }

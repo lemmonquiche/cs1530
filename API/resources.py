@@ -25,7 +25,7 @@ registration_parser.add_argument('', help = 'This field cannot be blank', requir
 
 class Registration(Resource):
     def post(self):
-        pass
+        
 #           this.post('/api/login/signup', function (request) {
 #     console.log("API CALL: /api/login/signup");
 #     var body = JSON.parse(request.requestBody);
@@ -104,7 +104,7 @@ class LoginCridentials (Resource):
                 session['student_id'] = current_student.student_id
 #                 print (current_student.student_id)
                 return {
-                    'message': 'Logged in as {}'.format(current_user.username),
+                    'message': 'Logged in as {}'.format(current_student.username),
                     'user_type': '{}'.format(type(current_student).__name__),
                     'student_id': '{}'.format(current_student.student_id)
                     }
@@ -124,7 +124,7 @@ class LoginCridentials (Resource):
                 return {'message': 'Wrong credentials',
                         'err' : 'Incorrect Password'}
 
-
+    
 class UserLogin(Resource):
     def post(self):
         data = parser.parse_args()
