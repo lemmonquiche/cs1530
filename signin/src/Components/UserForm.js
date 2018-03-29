@@ -49,8 +49,8 @@ class UserForm extends Component {
       if (!(that.refs && that.refs.input && that.refs.form))
         return;
 
-      that.refs.input.value = 'test';
-      // that.refs.input.value = 'nope';
+      // that.refs.input.value = 'test';
+      that.refs.input.value = 'nope';
       ReactTestUtils.Simulate.change(that.refs.input);
       ReactTestUtils.Simulate.submit(that.refs.form);
 
@@ -59,7 +59,7 @@ class UserForm extends Component {
 
   render() {
     if (process.env.NODE_ENV !== 'production') {
-      // this.testing(this);
+      this.testing(this);
     }
     return (
       <div style={{ maxWidth: '500px', margin: 'auto' }}>

@@ -9,13 +9,15 @@ class SignupForm extends Component {
 
     this.state = {
       username: this.props.username,
-      name: '',
+      fname: '',
+      lname: '',
       email: '',
       role: 0
     };
 
     this.usernameChange = this.usernameChange.bind(this);
-    this.nameChange = this.nameChange.bind(this);
+    this.fnameChange = this.fnameChange.bind(this);
+    this.lnameChange = this.lnameChange.bind(this);
     this.emailChange = this.emailChange.bind(this);
 
     this.signupFormSubmit = this.signupFormSubmit.bind(this);
@@ -26,7 +28,8 @@ class SignupForm extends Component {
   }
 
   usernameChange(event) { this.setState({username: event.target.value}); }
-  nameChange(event) { this.setState({name: event.target.value}); }
+  fnameChange(event) { this.setState({fname: event.target.value}); }
+  lnameChange(event) { this.setState({lname: event.target.value}); }
   emailChange(event) { this.setState({email: event.target.value}); }
 
   signupFormSubmit(event) {
@@ -87,7 +90,7 @@ class SignupForm extends Component {
     }
 
     return (
-      <div style={{ maxWidth: '500px', minHeight: 520, margin: 'auto', position: 'relative', padding: 20 }}>
+      <div style={{ width: '500px', minHeight: 590, margin: 'auto', position: 'relative', padding: 20 }}>
         <div style={{ position: 'absolute', bottom: 8, left: 8 }}>
           <button id='template-editor-submit' ref='back' type='button' className='btn btn-danger' onClick={this.backBtn}>
             <span className="glyphicon glyphicon-send"></span> Back
@@ -113,17 +116,31 @@ class SignupForm extends Component {
             </div>
           </div>
           <div className="form-group">
-            <label className="col-sm-2 control-label" htmlFor="signup-form-name">Name:</label>
+            <label className="col-sm-2 control-label" htmlFor="signup-form-name">First Name:</label>
             <div className="col-sm-10">
               <input
                 id="signup-form-name"
                 ref='name'
                 className="form-control"
-                placeholder="Name"
+                placeholder="First Name"
                 type="text"
                 autoComplete="name"
                 value={this.state.name}
-                onChange={this.nameChange} />
+                onChange={this.fnameChange} />
+            </div>
+          </div>
+          <div className="form-group">
+            <label className="col-sm-2 control-label" htmlFor="signup-form-name">Last Name:</label>
+            <div className="col-sm-10">
+              <input
+                id="signup-form-name"
+                ref='name'
+                className="form-control"
+                placeholder="Last Name"
+                type="text"
+                autoComplete="name"
+                value={this.state.name}
+                onChange={this.lnameChange} />
             </div>
           </div>
           <div className="form-group">
