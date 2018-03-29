@@ -21,16 +21,13 @@ def gen_groups(course_id):
     result = con.execute('SELECT student_id FROM course_registration WHERE course_id = :course', {'course':course_id})
 
     ss = [r for (r, ) in result]
-    for s in ss:
-        print(s)
 
     sched_matrix = np.empty((0, 196), int)
     print(sched_matrix.shape)
 
     #get schedules for all students
     for s in ss:
-        #not sure if this query is formated correctly...
-        result = con.execute('SELECT available_hour_week FROM schedule WHERE student_id = :stud', {'stud':s})
+        result = con.execute('SELECT available_hour_week FROM schedule WHERE schedule_id = :stud', {'stud':s})
         sched = [r for (r, ) in result]
         for l in sched:
             print(l)
@@ -107,4 +104,4 @@ def gen_groups(course_id):
     for g in groups:
         print("group id: ", g)
 
-gen_groups(4)
+gen_groups(1)
