@@ -1,0 +1,253 @@
+{
+	"info": {
+		"name": "flask",
+		"_postman_id": "84a8030c-c36a-0ff2-707e-e9aba5a0380a",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "jwt-access-with-tolken",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxZGU4NGJiZC1lN2ZkLTRlNjQtODVmNC05MmU3NDFmNDQzNmUiLCJleHAiOjE1MjA4MDE0NzcsImZyZXNoIjpmYWxzZSwiaWF0IjoxNTIwODAwNTc3LCJ0eXBlIjoiYWNjZXNzIiwibmJmIjoxNTIwODAwNTc3LCJpZGVudGl0eSI6InVzZXJuYW1lIn0.j7tr61MShnLPQCEH7X1O48JzUM0Vra9mYLd5roIdlU0"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"test\",\n\t\"password\": \"test\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/secret",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"secret"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "jwt-login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"username\",\n\t\"password\": \"ww\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/login",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"login"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "jwt - token/refresh",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJiMTg1MTVmZi05Y2RmLTQwMGEtYmUyMi1iZDg1MGI5ZmViNjQiLCJleHAiOjE1MjMzOTI1NzcsImlhdCI6MTUyMDgwMDU3NywidHlwZSI6InJlZnJlc2giLCJuYmYiOjE1MjA4MDA1NzcsImlkZW50aXR5IjoidXNlcm5hbWUifQ.JbiS7K1aRFhyWJyYz_w3yUH1V5-cIO3FuS03GrAKomk"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/token/refresh",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"token",
+						"refresh"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "jwt - logout/access",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxZGU4NGJiZC1lN2ZkLTRlNjQtODVmNC05MmU3NDFmNDQzNmUiLCJleHAiOjE1MjA4MDE0NzcsImZyZXNoIjpmYWxzZSwiaWF0IjoxNTIwODAwNTc3LCJ0eXBlIjoiYWNjZXNzIiwibmJmIjoxNTIwODAwNTc3LCJpZGVudGl0eSI6InVzZXJuYW1lIn0.j7tr61MShnLPQCEH7X1O48JzUM0Vra9mYLd5roIdlU0"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/logout/access",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"logout",
+						"access"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "jwt- /logout/refresh",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJiMTg1MTVmZi05Y2RmLTQwMGEtYmUyMi1iZDg1MGI5ZmViNjQiLCJleHAiOjE1MjMzOTI1NzcsImlhdCI6MTUyMDgwMDU3NywidHlwZSI6InJlZnJlc2giLCJuYmYiOjE1MjA4MDA1NzcsImlkZW50aXR5IjoidXNlcm5hbWUifQ.JbiS7K1aRFhyWJyYz_w3yUH1V5-cIO3FuS03GrAKomk"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"test3\",\n\t\"password\": \"test\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/logout/refresh",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"logout",
+						"refresh"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "jwt-login-as-student",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"username\",\n\t\"password\": \"password\"\n}"
+				},
+				"url": {
+					"raw": "http://10.0.0.111:5002/login",
+					"protocol": "http",
+					"host": [
+						"10",
+						"0",
+						"0",
+						"111"
+					],
+					"port": "5002",
+					"path": [
+						"login"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "jwt-login-as-instructor",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"prof\",\n\t\"password\": \"password\"\n}"
+				},
+				"url": {
+					"raw": "http://10.0.0.111:5002/login",
+					"protocol": "http",
+					"host": [
+						"10",
+						"0",
+						"0",
+						"111"
+					],
+					"port": "5002",
+					"path": [
+						"login"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
