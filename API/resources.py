@@ -36,7 +36,7 @@ class Registration(Resource):
         if not data.user_type: data.user_type='student'
         if not data.lname: data.lname = 'dummy'
         if not data.password: data.password = 'password'
-        
+
         if data.user_type == 'instructor':
             new_user = Instructor(
                 username = data.username,
@@ -50,7 +50,7 @@ class Registration(Resource):
                 return {'result': 'success'}
             except exc.IntegrityError:
                 return {'err': 'user alredy exit'}
-            
+
         if data.user_type == 'student':
             new_user = Student(
                 username = data.username,
@@ -64,7 +64,7 @@ class Registration(Resource):
                 return {'result': 'success'}
             except exc.IntegrityError:
                 return {'err': 'user alredy exit'}
-        
+
 class GroupGenerate(Resource):
     def post(self):
         data = course_parser.parse_args()
@@ -75,14 +75,9 @@ class GroupGenerate(Resource):
         elif iid:
             #cid = course_parser.parse_args()
             groups = gen_groups(cid)
-            jgroups = {}
-            count = 0
             for g in groups:
-                d[count] = g
-            json.dumps(jgroups)
-#            jgroups = ""
-#            for g in groups:
-#                jgroups += jsonify(g)
+                jgroups += " \"{}\",".format(g)
+            jgroups = jgroups[:-1]
             return {jgroups}
         else:
             return{'err':'could not generate group'}
