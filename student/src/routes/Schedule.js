@@ -85,7 +85,7 @@ class Schedule extends Component {
     this.setState({ loaded: false });
     $.ajax({
       method: 'post',
-      url: '/api/student/schedule',
+      url: '/api/schedule/add',
       contentType: 'application/json',
       data: JSON.stringify({
         schedule: adaptArray()
