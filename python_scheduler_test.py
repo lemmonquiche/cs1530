@@ -40,6 +40,7 @@ def gen_groups(course_id):
         for r in sched:
             print(r)
         if not sched:
+            con.close()
             return
 #        sch = np.array(map(int, sched[0]))
 #        sched_matrix = np.vstack((sched_matrix, sch))
