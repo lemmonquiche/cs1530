@@ -25,7 +25,7 @@ registration_parser.add_argument('', help = 'This field cannot be blank', requir
 
 class Registration(Resource):
     def post(self):
-        
+        pass
 #           this.post('/api/login/signup', function (request) {
 #     console.log("API CALL: /api/login/signup");
 #     var body = JSON.parse(request.requestBody);
