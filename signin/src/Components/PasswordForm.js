@@ -41,10 +41,10 @@ class PasswordForm extends Component {
         // console.log('success', data, arguments);
         if (!data.err) {
 //          alert(data.user_type); 
-          if (data.user_type == 'Student'){
+          if (data.user_type === 'Student'){
               window.location.assign("/student")
           }
-          if (data.user_type == 'Instructor'){
+          if (data.user_type === 'Instructor'){
               window.location.assign("/instructor")
           }
           console.log(data)
