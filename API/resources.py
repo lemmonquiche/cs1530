@@ -23,7 +23,7 @@ schedule_parser.add_argument('schedule_id', help = 'This field cannot be blank',
 schedule_parser.add_argument('schedule', help = 'This field cannot be blank', required = True)
 
 registration_parser = reqparse.RequestParser()
-registration_parser.add_argument('user_type', help = 'This field can be blank', required = False)
+registration_parser.add_argument('role', help = 'This field can be blank', required = False)
 registration_parser.add_argument('username', help = 'This field cannot be blank', required = True)
 registration_parser.add_argument('fname', help = 'This field cannot be blank', required = True)
 registration_parser.add_argument('lname', help = 'This field can be blank', required = False)
@@ -33,11 +33,11 @@ registration_parser.add_argument('password', help = 'This field can be blank', r
 class Registration(Resource):
     def post(self):
         data = registration_parser.parse_args()
-        if not data.user_type: data.user_type='student'
+        if not data.user_type: data.role='0'
         if not data.lname: data.lname = 'dummy'
         if not data.password: data.password = 'password'
 
-        if data.user_type == 'instructor':
+        if data.role == '1':
             new_user = Instructor(
                 username = data.username,
                 password = Instructor.generate_hash(data.password),
@@ -51,7 +51,7 @@ class Registration(Resource):
             except exc.IntegrityError:
                 return {'err': 'user alredy exit'}
 
-        if data.user_type == 'student':
+        if data.role == '0':
             new_user = Student(
                 username = data.username,
                 password = Instructor.generate_hash(data.password),
