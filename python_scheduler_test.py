@@ -20,8 +20,9 @@ def gen_groups(course_id):
     #for x in result:
     #    print(x)
 
-    zip(*result)[0]
-    print(result)
+    results = [r for (r, ) in result]
+    for r in results
+        print(r)
 
     """
 
