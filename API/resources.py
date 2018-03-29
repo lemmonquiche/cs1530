@@ -5,6 +5,7 @@ from ..models.models import Student, Instructor, RevokedTokenModel
 from ..scheduler import *
 from sqlalchemy.sql import text
 from sqlalchemy import exc
+import json
 
 parser = reqparse.RequestParser()
 parser.add_argument('username', help = 'This field cannot be blank', required = True)
@@ -15,6 +16,7 @@ user_parser.add_argument('username', help = 'This field cannot be blank', requir
 
 course_parser = reqparse.RequestParser()
 course_parser.add_argument('course_id', help = 'This field cannot be blank', required = True)
+course_parser.add_argument('instructor_id', help = 'This field cannot be blank', required = True)
 
 schedule_parser = reqparse.RequestParser()
 schedule_parser.add_argument('schedule_id', help = 'This field cannot be blank', required = True)
@@ -63,33 +65,23 @@ class Registration(Resource):
             except exc.IntegrityError:
                 return {'err': 'user alredy exit'}
         
-#                 username: this.state.username,
-#         name: this.state.name,
-#         email: this.state.email
-#           this.post('/api/login/signup', function (request) {
-#     console.log("API CALL: /api/login/signup");
-#     var body = JSON.parse(request.requestBody);
-#     var email = body.email;
-#     console.log("New User", body.username);
-#
-#     return new Promise((resolve, reject) => {
-#       setTimeout(function() {
-#         resolve([200, null, JSON.stringify({ msg: 'Emailed ' + email })]);
-#       }, 400);
-#     });
-#   });
-
-
 class GroupGenerate(Resource):
     def post(self):
-        if not session['instructor_id']:
+        data = course_parser.parse_args()
+        cid = data['course_id']
+        iid = data['instructor_id']
+        if not iid:
             return{'err':'Not an instructor'}
+        elif iid:
+            #cid = course_parser.parse_args()
+            groups = gen_groups(cid)
+            json.dumps(groups)
+#            jgroups = ""
+#            for g in groups:
+#                jgroups += jsonify(g)
+            return {groups}
         else:
-            cid = course_parser.parse_args()
-            groups = scheduler.gen_groups(cid)
-            for g in groups:
-                jgroups += jsonify(g)
-            return {jgroups}
+            return{'err':'could not generate group'}
 
 class AddSchedule(Resource):
     def post(self):
@@ -164,7 +156,7 @@ class LoginCridentials (Resource):
                 return {'message': 'Wrong credentials',
                         'err' : 'Incorrect Password'}
 
-    
+
 class UserLogin(Resource):
     def post(self):
         data = parser.parse_args()
@@ -256,7 +248,7 @@ class StudentDashBoard(Resource):
                     member_dict["email"] = group_member.email
                     group_members.append(member_dict)
                 info_dict["members"] = group_members
-                group_info.append(info_dict)    
+                group_info.append(info_dict)
             return group_info
 
 class InstructorDashBoard(Resource):
@@ -279,32 +271,32 @@ class InstructorDashBoard(Resource):
                 info_dict["pending_students"] = pending_students
                 instructor_info_dicts.append(info_dict)
             return instructor_info_dicts
-        
+
 class RegisterForCourse(Resource):
     def post(self):
         data = user_parser.parse_args()
         if not session['student_id']:
             return {'err': 'Not a student'}
         else:
-            
+
             course_id = data['course_id']
             course_passcode = data['course_passcode']
-            
+
             if(course_passcode == course.passcode):
                 course_registration = Course_Registration(data["student_id"], data["course_id"])
-                
+
                 db.session.add(course_registration)
                 db.session.commit()
-            
+
                 return {'message': 'Course registration complete'}
             else: # add to pending courses
                 student = Student.query.filter(Student.student_id == session['student_id']).first()
                 course = Course.query.filter(Course.course_id==course_id).first()
-                
+
                 course.pending_students.append(student)
                 db.session.commit()
                 return {'message': 'Student added to pending students'}
-                
+
 class ConfirmCourse(Resource):
     def post(self):
         if not session['instructor_id']:
@@ -313,15 +305,15 @@ class ConfirmCourse(Resource):
             data = user_parser.parse_args()
             if(data["student_id"]==None or data["course_id"]==None):
                 return {'err': 'Need student id and course id'}
-        
+
             course_registration = Course_Registration(data["student_id"], data["course_id"])
             course.pending_students.remove(student)
-            
+
             db.session.add(course_registration)
             db.session.commit()
-            
+
             return {'message': 'Course confirmation complete'}
-            
+
 class CreateCourse(Resource):
     def post(self):
         data = user_parser.parse_args()
@@ -334,8 +326,8 @@ class CreateCourse(Resource):
                 return {'err': 'Need course name or course passcode.'}
             instructor = Instructor.query.filter(Instructor.instructor_id == session['instructor_id']).first()
             course = Course(course_name, course_passcode, instructors = [instructor])
-            
+
             db.session.add(course)
             db.session.commit()
-            
+
             return{'message':'Course creation complete'}

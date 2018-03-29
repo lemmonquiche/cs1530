@@ -15,7 +15,7 @@ def sumColumn(m, column):
 
 def gen_groups(course_id):
     #get all students from course
-    students = db.session.query(Course_Registration).filter(Course_Registration.course == course_id)
+    students = db.session.query(Course_Registration).filter(Course_Registration.course_id == course_id)
 
     #make dict
     ss = []
@@ -25,13 +25,13 @@ def gen_groups(course_id):
     for s in students:
         ss.append(s.student_id)
         #not sure if this query is formated correctly...
-        sched = Schedule.bitstring_to_matrix(db.session.query(Schedule).filter(Schedule.schedule_id == s.schedule_id))
+        sched = Schedule.bitstring_to_matrix(db.session.query(Schedule).filter(Schedule.student_id == s.student_id))
         sched_matrix.append(sched)
 
 
     #generate groups
-    query = text("""SELECT max(group_id) FROM group""")
-    group_id = db.execute(query)
+    query = text("""SELECT max(group_id) FROM 'group' group by course""")
+    group_id = db.engine.execute(query)
     groups = []
 
     #random list of values for possible times
@@ -54,7 +54,7 @@ def gen_groups(course_id):
             groups.append(group_id)
             group = ({"group_id":group_id, "course_id":course_id})
             statement = text("""INSERT INTO group VALUES(:group_id, :course_id)""")
-            db.execute(statement)
+            db.engine.execute(statement)
 
             #initialize values needed to create groups
             i = 0
@@ -65,8 +65,8 @@ def gen_groups(course_id):
                     #get student id: add to database that student is in this group
                     stud = ss[snum]
                     data = ({"group_id":group_id, "student_id":stud})
-                    statement = text("""INSERT INTO group_membership VALUES(:group_id, :course_id)""")
-                    db.execute(statement)
+                    statement = text("""INSERT INTO group_membership VALUES(:group_id, :student_id)""")
+                    db.engineself.execute(statement)
 
                     #remove student from ss and their schedule from sched_matrix
                     ss.remove(stud)
@@ -85,14 +85,14 @@ def gen_groups(course_id):
             groups.append(group_id)
             group = ({"group_id":group_id, "course_id":course_id})
             statement = text("""INSERT INTO group VALUES(:group_id, :course_id)""")
-            db.execute(statement)
+            db.engine.execute(statement)
 
             #generate the group with first 5 students
             for x in range(0, 5):
                 stud = ss[x]
                 data = ({"group_id":group_id, "student_id":stud})
-                statement = text("""INSERT INTO group_membership VALUES(:group_id, :course_id)""")
-                db.execute(statement)
+                statement = text("""INSERT INTO group_membership VALUES(:group_id, :student_id)""")
+                db.engine.execute(statement)
 
                 #remove student from ss and their schedule from sched_matrix
                 ss.remove(stud)
@@ -104,8 +104,8 @@ def gen_groups(course_id):
                 num.randint(0, len(groups))
                 group_num = groups[num]
                 data = ({"group_id":group_num, "student_id":stud})
-                statement = text("""INSERT INTO group_membership VALUES(:group_id, :course_id)""")
-                db.execute(statement)
+                statement = text("""INSERT INTO group_membership VALUES(:group_id, :student_id)""")
+                db.engine.execute(statement)
                 #somehow indicate group might not be optimal
 
     return groups
