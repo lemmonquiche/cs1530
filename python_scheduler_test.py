@@ -15,13 +15,16 @@ def sumColumn(m, column):
 def gen_groups(course_id):
     con = engine.connect()
     #get all students from course
-    ss = con.execute('SELECT student_id FROM course_registration WHERE course_id = :course', {'course':course_id})
+    students = con.execute('SELECT student_id FROM course_registration WHERE course_id = :course', {'course':course_id})
 
     sched_matrix = []
+    ss = []
 
     #get schedules for all students
-    for s in ss:
+    for s in sstudents:
         #not sure if this query is formated correctly...
+        s = s[:-1]
+        ss.apend(s)
         sched = Schedule.bitstring_to_matrix(con.execute('SELECT available_hour_week FROM schedule WHERE student_id = :stud', {'stud':s}))
         sched_matrix.append(sched)
 
