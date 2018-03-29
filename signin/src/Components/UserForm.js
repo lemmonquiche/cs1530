@@ -59,7 +59,7 @@ class UserForm extends Component {
 
   render() {
     if (process.env.NODE_ENV !== 'production') {
-      this.testing(this);
+      // this.testing(this);
     }
     return (
       <div style={{ maxWidth: '500px', margin: 'auto' }}>

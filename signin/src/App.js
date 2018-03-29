@@ -38,8 +38,10 @@ class App extends Component {
 
     else if (outcome.missing) {
       console.log("user missing!!", outcome.missing);
-      this.setState({ userData: null });
-      this.setState({ username: outcome.missing });
+      this.setState({
+        userData: null,
+        username: outcome.missing
+      });
     }
   }
 
@@ -58,22 +60,23 @@ class App extends Component {
   render() {
     var form = <UserForm result={this.userFormResult} />;
     if (this.state.userData) {
-      form = <PasswordForm userData={this.state.userData} />;
+      form = <PasswordForm userData={this.state.userData} back={this.signupFormResult} />;
     }
 
     else if (this.state.username) {
-      form = <SignupForm result={this.signupFormResult} username={this.state.username} />
-      // form = <SignupForm result={this.signupFormResult} username={'new'}/>;
+      form = <SignupForm result={this.signupFormResult} username={this.state.username} back={this.signupFormResult} />
     }
 
-    return <div>
-      <Header />
-      <div className="container-fluid" style={{ padding: 0 }}>
-        <div className="row" style={{ marginTop: 66, marginLeft: 0, marginRight: 0 }}>
-          {form}
+    return (
+      <div>
+        <Header />
+        <div className="container-fluid" style={{ padding: 0 }}>
+          <div className="row" style={{ marginTop: 66, marginLeft: 0, marginRight: 0 }}>
+            {form || null}
+          </div>
         </div>
       </div>
-    </div>;
+    );
   }
 }
 
