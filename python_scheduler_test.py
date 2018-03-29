@@ -2,7 +2,7 @@ from models.models import Course_Registration, Schedule, Group
 from sqlalchemy import create_engine
 from sqlalchemy.sql import text
 engine = create_engine('sqlite:///grouper.db')
-con = engine.connect()
+
 
 def sumColumn(m, column):
     total = 0
@@ -11,6 +11,7 @@ def sumColumn(m, column):
     return total
 
 def gen_groups(course_id):
+    con = engine.connect()
     #get all students from course
     ss = con.execute('SELECT student_id FROM course_registration WHERE course_id = :course', {'course':course_id})
 
@@ -89,8 +90,9 @@ def gen_groups(course_id):
                 group_num = groups[num]
                 con.execute('INSERT INTO group_membership VALUES(:group_id, :student_id)', {'group_id':group_id, 'student_id':stud})
                 #somehow indicate group might not be optimal
-
+    con.close()
     for g in groups:
         print("group id: ", g)
 
-con.close()
+
+gen_groups(4)
