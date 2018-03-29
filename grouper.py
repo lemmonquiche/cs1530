@@ -60,7 +60,7 @@ def initdb_command():
                         'ballicock2',
                         'ssQlhEMIDB1'
                     );""")
-                    con.execute("""INSERT INTO student
+    con.execute("""INSERT INTO student
                     VALUES (
                         4,
                         'Keeri',
