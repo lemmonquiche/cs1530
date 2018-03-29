@@ -50,7 +50,7 @@ class GroupGenerate(Resource):
             return{'err':'Not an instructor'}
         elif iid:
             #cid = course_parser.parse_args()
-            groups = scheduler.gen_groups(cid)
+            groups = gen_groups(cid)
             for g in groups:
                 jgroups += jsonify(g)
             return {jgroups}
