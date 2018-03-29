@@ -31,7 +31,7 @@ def gen_groups(course_id):
 
     #generate groups
     query = text("""SELECT max(group_id) FROM group""")
-    group_id = db.execute(query)
+    group_id = db.engine.execute(query)
     groups = []
 
     #random list of values for possible times
@@ -54,7 +54,7 @@ def gen_groups(course_id):
             groups.append(group_id)
             group = ({"group_id":group_id, "course_id":course_id})
             statement = text("""INSERT INTO group VALUES(:group_id, :course_id)""")
-            db.execute(statement)
+            db.engine.execute(statement)
 
             #initialize values needed to create groups
             i = 0
@@ -66,7 +66,7 @@ def gen_groups(course_id):
                     stud = ss[snum]
                     data = ({"group_id":group_id, "student_id":stud})
                     statement = text("""INSERT INTO group_membership VALUES(:group_id, :student_id)""")
-                    db.execute(statement)
+                    db.engineself.execute(statement)
 
                     #remove student from ss and their schedule from sched_matrix
                     ss.remove(stud)
@@ -85,14 +85,14 @@ def gen_groups(course_id):
             groups.append(group_id)
             group = ({"group_id":group_id, "course_id":course_id})
             statement = text("""INSERT INTO group VALUES(:group_id, :course_id)""")
-            db.execute(statement)
+            db.engine.execute(statement)
 
             #generate the group with first 5 students
             for x in range(0, 5):
                 stud = ss[x]
                 data = ({"group_id":group_id, "student_id":stud})
                 statement = text("""INSERT INTO group_membership VALUES(:group_id, :student_id)""")
-                db.execute(statement)
+                db.engine.execute(statement)
 
                 #remove student from ss and their schedule from sched_matrix
                 ss.remove(stud)
@@ -105,7 +105,7 @@ def gen_groups(course_id):
                 group_num = groups[num]
                 data = ({"group_id":group_num, "student_id":stud})
                 statement = text("""INSERT INTO group_membership VALUES(:group_id, :student_id)""")
-                db.execute(statement)
+                db.engine.execute(statement)
                 #somehow indicate group might not be optimal
 
     return groups
