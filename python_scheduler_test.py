@@ -27,7 +27,6 @@ def gen_groups(course_id):
         sched = Schedule.bitstring_to_matrix(con.execute('SELECT available_hour_week FROM schedule WHERE student_id = :stud', {'stud':str(s)}))
         sched_matrix.append(sched)
 
-"""
     #generate groups
     group_id = con.execute('SELECT max(group_id) FROM \'group\' group by course')
     groups = []
@@ -97,7 +96,5 @@ def gen_groups(course_id):
     con.close()
     for g in groups:
         print("group id: ", g)
-        """
-
 
 gen_groups(4)
