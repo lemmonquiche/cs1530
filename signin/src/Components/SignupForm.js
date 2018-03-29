@@ -12,6 +12,7 @@ class SignupForm extends Component {
       fname: '',
       lname: '',
       email: '',
+      password: '',
       role: 0
     };
 
@@ -19,6 +20,7 @@ class SignupForm extends Component {
     this.fnameChange = this.fnameChange.bind(this);
     this.lnameChange = this.lnameChange.bind(this);
     this.emailChange = this.emailChange.bind(this);
+    this.passwordChange = this.passwordChange.bind(this);
 
     this.signupFormSubmit = this.signupFormSubmit.bind(this);
 
@@ -31,6 +33,7 @@ class SignupForm extends Component {
   fnameChange(event) { this.setState({fname: event.target.value}); }
   lnameChange(event) { this.setState({lname: event.target.value}); }
   emailChange(event) { this.setState({email: event.target.value}); }
+  passwordChange(event) { this.setState({password: event.target.value}); }
 
   signupFormSubmit(event) {
     event.preventDefault();
@@ -91,7 +94,7 @@ class SignupForm extends Component {
     }
 
     return (
-      <div style={{ width: '500px', minHeight: 590, margin: 'auto', position: 'relative', padding: 20 }}>
+      <div style={{ width: '500px', minHeight: 650, margin: 'auto', position: 'relative', padding: 20 }}>
         <div style={{ position: 'absolute', bottom: 8, left: 8 }}>
           <button id='template-editor-submit' ref='back' type='button' className='btn btn-danger' onClick={this.backBtn}>
             <span className="glyphicon glyphicon-send"></span> Back
@@ -117,11 +120,11 @@ class SignupForm extends Component {
             </div>
           </div>
           <div className="form-group">
-            <label className="col-sm-2 control-label" htmlFor="signup-form-name">First Name:</label>
+            <label className="col-sm-2 control-label" htmlFor="signup-form-fname">First Name:</label>
             <div className="col-sm-10">
               <input
-                id="signup-form-name"
-                ref='name'
+                id="signup-form-fname"
+                ref='fname'
                 className="form-control"
                 placeholder="First Name"
                 type="text"
@@ -131,11 +134,11 @@ class SignupForm extends Component {
             </div>
           </div>
           <div className="form-group">
-            <label className="col-sm-2 control-label" htmlFor="signup-form-name">Last Name:</label>
+            <label className="col-sm-2 control-label" htmlFor="signup-form-lname">Last Name:</label>
             <div className="col-sm-10">
               <input
-                id="signup-form-name"
-                ref='name'
+                id="signup-form-lname"
+                ref='lname'
                 className="form-control"
                 placeholder="Last Name"
                 type="text"
@@ -158,7 +161,20 @@ class SignupForm extends Component {
                 onChange={this.emailChange} />
             </div>
           </div>
-
+          <div className="form-group">
+            <label className="col-sm-2 control-label" htmlFor="signup-form-password">Password:</label>
+            <div className="col-sm-10">
+              <input
+                id="signup-form-password"
+                ref='password'
+                className="form-control"
+                placeholder="Password"
+                type="password"
+                autoComplete="name"
+                value={this.state.password}
+                onChange={this.passwordChange} />
+            </div>
+          </div>
           <p>I am a: </p>
           <div className="btn-group btn-group-toggle" data-toggle="buttons">
             <label className="btn btn-secondary" onClick={() => { console.log(this.state); this.setState({ role: 0 }) }} >
