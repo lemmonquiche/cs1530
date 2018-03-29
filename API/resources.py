@@ -75,11 +75,13 @@ class GroupGenerate(Resource):
         elif iid:
             #cid = course_parser.parse_args()
             groups = gen_groups(cid)
-            jgroups = ""
+            jgroups = "group_ids: ["
             for g in groups:
                 jgroups += " \"{}\",".format(g)
             jgroups = jgroups[:-1]
-            return {jgroups}
+            jgroups += "]"
+            # return {jgroups}
+            return {''}
         else:
             return{'err':'could not generate group'}
 
