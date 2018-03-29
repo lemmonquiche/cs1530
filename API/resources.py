@@ -73,15 +73,17 @@ class GroupGenerate(Resource):
         if not iid:
             return{'err':'Not an instructor'}
         elif iid:
-            #cid = course_parser.parse_args()
+            # #cid = course_parser.parse_args()
             groups = gen_groups(cid)
-            jgroups = "\"group_ids\": ["
-            for g in groups:
-                jgroups += " \"{}\",".format(g)
-            jgroups = jgroups[:-1]
-            jgroups += "]"
-            # return {jgroups}
-            return {jgroups}
+            row_json = json.dumps(groups)
+            # jgroups = "\"group_ids\": ["
+            # for g in groups:
+            #     jgroups += " \"{}\",".format(g)
+            # jgroups = jgroups[:-1]
+            # jgroups += "]"
+            # # return {jgroups}
+
+            return {row_json}
         else:
             return{'err':'could not generate group'}
 
