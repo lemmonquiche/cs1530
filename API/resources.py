@@ -33,11 +33,11 @@ registration_parser.add_argument('password', help = 'This field can be blank', r
 class Registration(Resource):
     def post(self):
         data = registration_parser.parse_args()
-        if not data.user_type: data.role='0'
+        if not data.user_type: data.role='student'
         if not data.lname: data.lname = 'dummy'
         if not data.password: data.password = 'password'
 
-        if data.role == '1':
+        if data.role == 'instructor':
             new_user = Instructor(
                 username = data.username,
                 password = Instructor.generate_hash(data.password),
@@ -51,7 +51,7 @@ class Registration(Resource):
             except exc.IntegrityError:
                 return {'err': 'user alredy exit'}
 
-        if data.role == '0':
+        if data.role == 'student':
             new_user = Student(
                 username = data.username,
                 password = Instructor.generate_hash(data.password),

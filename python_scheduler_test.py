@@ -30,17 +30,22 @@ def gen_groups(course_id):
     for s in ss:
 
 #        result = con.execute('SELECT student_id FROM course_registration WHERE course_id = :course', {'course':course_id})
-        resultt = con.execute('SELECT available_hour_week FROM schedule WHERE schedule_id = :st', {'st':s})
+        result = con.execute('SELECT available_hour_week FROM schedule WHERE schedule_id = :st', {'st':s})
 #        for r in result:
 #            print(r)
-        sched = [r for (r, ) in resultt]
+        sched = [r for (r, ) in result]
         for r in sched:
             print(r)
+#        if not sched:
+#            return
 #        sch = np.array(map(int, sched[0]))
 #        sched_matrix = np.vstack((sched_matrix, sch))
 
     #generate groups
-    group_id = con.execute('SELECT max(group_id) FROM \'group\' group by course')
+    gid = con.execute('SELECT max(group_id) FROM \'group\' group by course')
+    group_id = [r for (r, ) in gid]
+    for g in group_id:
+        print(g)
     groups = []
 
     #random list of values for possible times
