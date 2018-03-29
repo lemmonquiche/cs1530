@@ -40,7 +40,8 @@ class SignupForm extends Component {
       contentType: 'application/json',
       data: JSON.stringify({
         username: this.state.username,
-        name: this.state.name,
+        fname: this.state.fname,
+        lname: this.state.lname,
         email: this.state.email,
         role: this.state.role === 0 ? 'student' : 'instructor'
       }),

@@ -33,7 +33,7 @@ registration_parser.add_argument('password', help = 'This field can be blank', r
 class Registration(Resource):
     def post(self):
         data = registration_parser.parse_args()
-        if not data.user_type: data.role='student'
+        if not data.role: data.role='student'
         if not data.lname: data.lname = 'dummy'
         if not data.password: data.password = 'password'
 

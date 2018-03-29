@@ -5,7 +5,8 @@ class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
+      fname: '',
+      lname: '',
       email: '',
       username: '',
       password: '',
@@ -23,7 +24,8 @@ class Profile extends Component {
     $.get('/api/profile', function (data) {
       this.setState({
         loaded: true,
-        name: data.name,
+        fname: data.fname,
+        lname: data.lname,
         username: data.username,
         email: data.email
       });
@@ -66,9 +68,13 @@ class Profile extends Component {
             <h3>Personal info</h3>
             <form className="form-horizontal" onSubmit={this.formSubmit}>
               <TextFormGroup
-                label='Name:'
-                value={this.state.name}
-                onChange={(e) => this.setState({name: e.target.value})} />
+                label='First Name:'
+                value={this.state.fname}
+                onChange={(e) => this.setState({fname: e.target.value})} />
+              <TextFormGroup
+                label='Last Name:'
+                value={this.state.lname}
+                onChange={(e) => this.setState({lname: e.target.value})} />
               <TextFormGroup
                 label='Email:'
                 value={this.state.email}
