@@ -25,7 +25,7 @@ def gen_groups(course_id):
     for s in students:
         ss.append(s.student_id)
         #not sure if this query is formated correctly...
-        sched = Schedule.bitstring_to_matrix(db.session.query(Schedule).filter(Schedule.schedule_id == s.schedule_id))
+        sched = Schedule.bitstring_to_matrix(db.session.query(Schedule).filter(Schedule.student_id == s.student_id))
         sched_matrix.append(sched)
 
 
@@ -65,7 +65,7 @@ def gen_groups(course_id):
                     #get student id: add to database that student is in this group
                     stud = ss[snum]
                     data = ({"group_id":group_id, "student_id":stud})
-                    statement = text("""INSERT INTO group_membership VALUES(:group_id, :course_id)""")
+                    statement = text("""INSERT INTO group_membership VALUES(:group_id, :student_id)""")
                     db.execute(statement)
 
                     #remove student from ss and their schedule from sched_matrix
@@ -91,7 +91,7 @@ def gen_groups(course_id):
             for x in range(0, 5):
                 stud = ss[x]
                 data = ({"group_id":group_id, "student_id":stud})
-                statement = text("""INSERT INTO group_membership VALUES(:group_id, :course_id)""")
+                statement = text("""INSERT INTO group_membership VALUES(:group_id, :student_id)""")
                 db.execute(statement)
 
                 #remove student from ss and their schedule from sched_matrix
@@ -104,7 +104,7 @@ def gen_groups(course_id):
                 num.randint(0, len(groups))
                 group_num = groups[num]
                 data = ({"group_id":group_num, "student_id":stud})
-                statement = text("""INSERT INTO group_membership VALUES(:group_id, :course_id)""")
+                statement = text("""INSERT INTO group_membership VALUES(:group_id, :student_id)""")
                 db.execute(statement)
                 #somehow indicate group might not be optimal
 
