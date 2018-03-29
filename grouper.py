@@ -1,9 +1,12 @@
 from flask import Flask, send_from_directory, redirect, url_for, request, g, render_template, make_response, Blueprint,session
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
 import os
 from models.models import db, RevokedTokenModel, Student, Instructor, Course
 from  util.email import  *
+
+engine = create_engine('sqlite:///grouper.db')
 
 app = Flask(__name__)
 app.register_blueprint(Blueprint('static_bp', __name__, static_folder='assets', static_url_path=''), url_prefix='/assets')
@@ -29,7 +32,8 @@ def initdb_command():
     db.drop_all()
     db.create_all()
 
-    db.execute("""INSERT INTO student
+    con = engine.connect()
+    con.execute("""INSERT INTO student
                     VALUES (
                         1,
                         'Testing',
@@ -307,7 +311,6 @@ def initdb_command():
                      );
     """)
 
-    db.session.commit()
     print('Initialized the database.')
 
 @app.before_request
