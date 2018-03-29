@@ -31,6 +31,8 @@ def gen_groups(course_id):
         print(s)
         print(type(s))
         result = con.execute('SELECT available_hour_week FROM schedule WHERE schedule_id = :stud', {'stud':s})
+        for r in result:
+            print(r)
         sched = [r for (r, ) in result]
         for r in sched:
             print(r)
