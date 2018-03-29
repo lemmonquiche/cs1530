@@ -1,5 +1,6 @@
 import Pretender from 'pretender';
 
+if (process.env.NODE_ENV !== 'production')
 var server = new Pretender(function(){
   this.post('/api/login/user', function(request) {
     console.log("API CALL: /api/login/user");

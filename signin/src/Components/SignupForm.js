@@ -31,7 +31,7 @@ class SignupForm extends Component {
     jQuery.ajax({
       method: 'post',
       url: '/api/login/signup',
-      contentType: "application/json",
+      contentType: 'application/json',
       data: JSON.stringify({
         username: this.state.username,
         name: this.state.name,
@@ -77,7 +77,9 @@ class SignupForm extends Component {
   }
 
   render() {
-//    this.testing(this);
+    if (process.env.NODE_ENV !== 'production')
+      this.testing(this);
+
     return (
       <div style={{ maxWidth: '500px', minHeight: 450, margin: 'auto', position: 'relative' }}>
         <div style={{ position: 'absolute', bottom: 8, left: 8 }}>

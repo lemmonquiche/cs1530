@@ -26,7 +26,7 @@ class UserForm extends Component {
     jQuery.ajax({
       method: 'post',
       url: '/api/login/user',
-      contentType: "application/json",
+      contentType: 'application/json',
       data: JSON.stringify({ username }),
       // data: { username },
       dataType: 'json',
@@ -49,8 +49,8 @@ class UserForm extends Component {
       if (!(that.refs && that.refs.input && that.refs.form))
         return;
 
-//      that.refs.input.value = 'test';
-//       that.refs.input.value = 'nope';
+      that.refs.input.value = 'test';
+      // that.refs.input.value = 'nope';
       ReactTestUtils.Simulate.change(that.refs.input);
       ReactTestUtils.Simulate.submit(that.refs.form);
 
@@ -58,7 +58,9 @@ class UserForm extends Component {
   }
 
   render() {
-//    this.testing(this);
+    if (process.env.NODE_ENV !== 'production') {
+      this.testing(this);
+    }
     return (
       <div style={{ maxWidth: '500px', margin: 'auto' }}>
         <form className="form-horizontal" onSubmit={this.userFormSubmit} ref='form'>

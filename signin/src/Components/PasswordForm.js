@@ -31,7 +31,7 @@ class PasswordForm extends Component {
     jQuery.ajax({
       method: 'post',
       url: '/api/login/credentials',
-      contentType: "application/json",
+      contentType: 'application/json',
       data: JSON.stringify({ username, password }),
       dataType: 'json',
       error: function (jQReq, status, error) {
@@ -68,7 +68,9 @@ class PasswordForm extends Component {
   }
 
   render() {
-    this.testing(this);
+    if (process.env.NODE_ENV !== 'production')
+      this.testing(this);
+
     var space = { margin: 5 };
     var err = this.state.error ? 'Password not recognized' : '.';
     return (
