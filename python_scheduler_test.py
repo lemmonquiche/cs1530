@@ -28,11 +28,11 @@ def gen_groups(course_id):
     #get schedules for all students
     for s in ss:
         #not sure if this query is formated correctly...
-        sched = con.execute('SELECT available_hour_week FROM schedule WHERE student_id = :stud', {'stud':s})
+        result = con.execute('SELECT available_hour_week FROM schedule WHERE student_id = :stud', {'stud':s})
+        sched = [r for (r, ) in result]
         for l in sched:
             print(l)
-        scheds = np.asarray(sched)
-        print(scheds.shape)
+        #scheds = np.asarray(sched)
         sched_matrix = np.concatenate((sched_matrix, sched), axis = 0)
 
     #generate groups
