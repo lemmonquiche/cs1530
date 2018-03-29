@@ -30,10 +30,10 @@ def gen_groups(course_id):
     for s in ss:
 
 #        result = con.execute('SELECT student_id FROM course_registration WHERE course_id = :course', {'course':course_id})
-        result = con.execute('SELECT available_hour_week FROM schedule WHERE schedule_id = :st', {'st':s})
+        resultt = con.execute('SELECT available_hour_week FROM schedule WHERE schedule_id = :st', {'st':s})
 #        for r in result:
 #            print(r)
-        sched = [r for (r, ) in result]
+        sched = [r for (r, ) in resultt]
         for r in sched:
             print(r)
 #        sch = np.array(map(int, sched[0]))
