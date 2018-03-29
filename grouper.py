@@ -1,7 +1,7 @@
 from flask import Flask, send_from_directory, redirect, url_for, request, g, render_template, make_response, Blueprint,session
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine
+from sqlalchemy import *
 import os
 from models.models import db, RevokedTokenModel, Student, Instructor
 from  util.email import  *
