@@ -23,13 +23,10 @@ def gen_groups(course_id):
     ss = [r for (r, ) in result]
 
     sched_matrix = np.empty((0, 196), int)
-    print(sched_matrix.shape)
+    #print(sched_matrix.shape)
 
     #get schedules for all students
     for s in ss:
-        con = engine.connect()
-        print(s)
-        print(type(s))
         result = con.execute('SELECT available_hour_week FROM schedule WHERE schedule_id = 1')
         for r in result:
             print(r)
