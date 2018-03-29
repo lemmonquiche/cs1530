@@ -42,10 +42,10 @@ class Registration(Resource):
 
 #change instructor id parser back to session['instructor_id'] after testing
 class GroupGenerate(Resource):
-    data = course_parser.parse_args()
-    cid = data['course_id']
-    iid = data['instructor_id']
     def post(self):
+        data = course_parser.parse_args()
+        cid = data['course_id']
+        iid = data['instructor_id']
         if not iid:
             return{'err':'Not an instructor'}
         elif iid:
