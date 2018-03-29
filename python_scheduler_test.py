@@ -31,7 +31,7 @@ def gen_groups(course_id):
     for s in ss:
         result = con.execute('SELECT available_hour_week FROM schedule WHERE schedule_id = :stud', {'stud':s})
         sched = [r for (r, ) in result]
-        sch = np.array(map(int, sched[0])
+        sch = np.array(map(int, sched[0]))
         sched_matrix = np.vstack((sched_matrix, sch))
 
     #generate groups
