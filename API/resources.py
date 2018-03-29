@@ -14,6 +14,7 @@ user_parser.add_argument('username', help = 'This field cannot be blank', requir
 
 course_parser = reqparse.RequestParser()
 course_parser.add_argument('course_id', help = 'This field cannot be blank', required = True)
+course_parser.add_argument('instructor_id', help = 'This field cannot be blank', required = True)
 
 schedule_parser = reqparse.RequestParser()
 schedule_parser.add_argument('schedule_id', help = 'This field cannot be blank', required = True)
@@ -39,13 +40,16 @@ class Registration(Resource):
 #     });
 #   });
 
-
+#change instructor id parser back to session['instructor_id'] after testing
 class GroupGenerate(Resource):
+    data = course_parser.parse_args()
+    cid = data['course_id']
+    iid = data['instructor_id']
     def post(self):
-        if not session['instructor_id']:
+        if not iid:
             return{'err':'Not an instructor'}
-        elif session['instructor_id']:
-            cid = course_parser.parse_args()
+        elif iid:
+            #cid = course_parser.parse_args()
             groups = scheduler.gen_groups(cid)
             for g in groups:
                 jgroups += jsonify(g)
