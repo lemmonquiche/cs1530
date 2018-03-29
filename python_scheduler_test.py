@@ -20,6 +20,9 @@ def gen_groups(course_id):
     for s in students:
         print(type(s))
         print(s)
+        str(s)
+        print(type(s))
+        print(s)
 
     """
 
