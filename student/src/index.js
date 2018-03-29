@@ -15,14 +15,6 @@ import { BrowserRouter } from 'react-router-dom';
 
 window.$ = window.jQuery = jQuery;
 
-if (process.env.NODE_ENV === 'development') {
-  window.token = window.token || process.env.REACT_APP_token || 'ok';
-}
-
-if (!window.token) {
-  alert("forwarding to /login");
-}
-
 ReactDOM.render(
   <BrowserRouter>
     <App token={window.token} />
