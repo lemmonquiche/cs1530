@@ -52,11 +52,15 @@ class GroupGenerate(Resource):
         elif iid:
             #cid = course_parser.parse_args()
             groups = gen_groups(cid)
-            json.dumps(groups)
+            jgroups = {}
+            count = 0
+            for g in groups:
+                d[count] = g
+            json.dumps(jgroups)
 #            jgroups = ""
 #            for g in groups:
 #                jgroups += jsonify(g)
-            return {groups}
+            return {jgroups}
         else:
             return{'err':'could not generate group'}
 
