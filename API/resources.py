@@ -4,6 +4,7 @@ from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_r
 from ..models.models import Student, Instructor, RevokedTokenModel
 from ..scheduler import *
 from sqlalchemy.sql import text
+from sqlalchemy import exc
 import json
 
 parser = reqparse.RequestParser()
@@ -22,26 +23,48 @@ schedule_parser.add_argument('schedule_id', help = 'This field cannot be blank',
 schedule_parser.add_argument('schedule', help = 'This field cannot be blank', required = True)
 
 registration_parser = reqparse.RequestParser()
-registration_parser.add_argument('user_type', help = 'This field cannot be blank', required = True)
-registration_parser.add_argument('', help = 'This field cannot be blank', required = True)
+registration_parser.add_argument('user_type', help = 'This field can be blank', required = False)
+registration_parser.add_argument('username', help = 'This field cannot be blank', required = True)
+registration_parser.add_argument('fname', help = 'This field cannot be blank', required = True)
+registration_parser.add_argument('lname', help = 'This field can be blank', required = False)
+registration_parser.add_argument('email', help = 'This field cannot be blank', required = True)
+registration_parser.add_argument('password', help = 'This field can be blank', required = False)
 
 class Registration(Resource):
     def post(self):
-        pass
-#           this.post('/api/login/signup', function (request) {
-#     console.log("API CALL: /api/login/signup");
-#     var body = JSON.parse(request.requestBody);
-#     var email = body.email;
-#     console.log("New User", body.username);
-#
-#     return new Promise((resolve, reject) => {
-#       setTimeout(function() {
-#         resolve([200, null, JSON.stringify({ msg: 'Emailed ' + email })]);
-#       }, 400);
-#     });
-#   });
-
-#change instructor id parser back to session['instructor_id'] after testing
+        data = registration_parser.parse_args()
+        if not data.user_type: data.user_type='student'
+        if not data.lname: data.lname = 'dummy'
+        if not data.password: data.password = 'password'
+        
+        if data.user_type == 'instructor':
+            new_user = Instructor(
+                username = data.username,
+                password = Instructor.generate_hash(data.password),
+                lname = data.lname,
+                fname = data.fname,
+                email = data.email
+            )
+            try:
+                new_user.save_to_db()
+                return {'result': 'success'}
+            except exc.IntegrityError:
+                return {'err': 'user alredy exit'}
+            
+        if data.user_type == 'student':
+            new_user = Student(
+                username = data.username,
+                password = Instructor.generate_hash(data.password),
+                lname = data.lname,
+                fname = data.fname,
+                email = data.email
+            )
+            try:
+                new_user.save_to_db()
+                return {'result': 'success'}
+            except exc.IntegrityError:
+                return {'err': 'user alredy exit'}
+        
 class GroupGenerate(Resource):
     def post(self):
         data = course_parser.parse_args()
