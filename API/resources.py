@@ -3,7 +3,7 @@ from flask import g, session, jsonify
 from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
 from ..models.models import Student, Instructor, RevokedTokenModel
 from ..scheduler import *
-from sqlalchemy.sql import
+from sqlalchemy.sql import text
 from __future__ import print_function # In python 2.7
 import json
 import sys
