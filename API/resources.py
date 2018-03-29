@@ -4,6 +4,7 @@ from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_r
 from ..models.models import Student, Instructor, RevokedTokenModel
 from ..scheduler import *
 from sqlalchemy.sql import text
+from sqlalchemy import exc
 
 parser = reqparse.RequestParser()
 parser.add_argument('username', help = 'This field cannot be blank', required = True)
@@ -20,12 +21,51 @@ schedule_parser.add_argument('schedule_id', help = 'This field cannot be blank',
 schedule_parser.add_argument('schedule', help = 'This field cannot be blank', required = True)
 
 registration_parser = reqparse.RequestParser()
-registration_parser.add_argument('user_type', help = 'This field cannot be blank', required = True)
-registration_parser.add_argument('', help = 'This field cannot be blank', required = True)
+registration_parser.add_argument('user_type', help = 'This field can be blank', required = False)
+registration_parser.add_argument('username', help = 'This field cannot be blank', required = True)
+registration_parser.add_argument('fname', help = 'This field cannot be blank', required = True)
+registration_parser.add_argument('lname', help = 'This field can be blank', required = False)
+registration_parser.add_argument('email', help = 'This field cannot be blank', required = True)
+registration_parser.add_argument('password', help = 'This field can be blank', required = False)
 
 class Registration(Resource):
     def post(self):
+        data = registration_parser.parse_args()
+        if not data.user_type: data.user_type='student'
+        if not data.lname: data.lname = 'dummy'
+        if not data.password: data.password = 'password'
         
+        if data.user_type == 'instructor':
+            new_user = Instructor(
+                username = data.username,
+                password = Instructor.generate_hash(data.password),
+                lname = data.lname,
+                fname = data.fname,
+                email = data.email
+            )
+            try:
+                new_user.save_to_db()
+                return {'result': 'success'}
+            except exc.IntegrityError:
+                return {'err': 'user alredy exit'}
+            
+        if data.user_type == 'student':
+            new_user = Student(
+                username = data.username,
+                password = Instructor.generate_hash(data.password),
+                lname = data.lname,
+                fname = data.fname,
+                email = data.email
+            )
+            try:
+                new_user.save_to_db()
+                return {'result': 'success'}
+            except exc.IntegrityError:
+                return {'err': 'user alredy exit'}
+        
+#                 username: this.state.username,
+#         name: this.state.name,
+#         email: this.state.email
 #           this.post('/api/login/signup', function (request) {
 #     console.log("API CALL: /api/login/signup");
 #     var body = JSON.parse(request.requestBody);
