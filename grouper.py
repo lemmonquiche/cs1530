@@ -13,7 +13,7 @@ app.config.update(dict(SEND_FILE_MAX_AGE_DEFAULT=0))
 
 # configuration
 DEBUG = True
-SECRET_KEY = 'secret_key'
+SECRET_KEY = 'secret_key' 
 
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(app.root_path, 'grouper.db')
 
