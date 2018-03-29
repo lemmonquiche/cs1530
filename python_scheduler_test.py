@@ -17,14 +17,11 @@ def gen_groups(course_id):
     #get all students from course
     result = con.execute('SELECT student_id FROM course_registration WHERE course_id = :course', {'course':course_id})
 
-    for x in result:
-        print(r)
+    #for x in result:
+    #    print(x)
 
-    result = [r for r, in result]
-
-    for x in result:
-        print(type(r))
-        print(r)
+    zip(*result)[0]
+    print(result)
 
     """
 
