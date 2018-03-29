@@ -4,6 +4,7 @@ from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_r
 from ..models.models import Student, Instructor, RevokedTokenModel
 from ..scheduler import *
 from sqlalchemy.sql import text
+import json
 
 parser = reqparse.RequestParser()
 parser.add_argument('username', help = 'This field cannot be blank', required = True)
@@ -51,10 +52,11 @@ class GroupGenerate(Resource):
         elif iid:
             #cid = course_parser.parse_args()
             groups = gen_groups(cid)
-            jgroups = ""
-            for g in groups:
-                jgroups += jsonify(g)
-            return {jgroups}
+            json.dumps(groups)
+#            jgroups = ""
+#            for g in groups:
+#                jgroups += jsonify(g)
+            return {groups}
         else:
             return{'err':'could not generate group'}
 
