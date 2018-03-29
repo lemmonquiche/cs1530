@@ -51,6 +51,7 @@ class PasswordForm extends Component {
 //          window.location.assign("/instructor")
  
           success = true;
+          window.location.href = '/' + (data.role || 'student');
           return;
         }
 
@@ -77,13 +78,14 @@ class PasswordForm extends Component {
   }
 
   render() {
-    if (process.env.NODE_ENV !== 'production')
-      this.testing(this);
+    if (process.env.NODE_ENV !== 'production') {
+      // this.testing(this);
+    }
 
     var space = { margin: 5 };
     var err = this.state.error ? 'Password not recognized' : '.';
     return (
-      <div style={{ maxWidth: '500px', margin: 'auto' }}>
+      <div style={{ width: '500px', margin: 'auto' }}>
         <div className="media">
           <div className="media-left" style={{ ...space }}>
             {/*<a href=""></a>*/}
@@ -119,8 +121,14 @@ class PasswordForm extends Component {
           </div>
           <div className="form-group">
             <div className="col-sm-offset-2 col-sm-10">
-              <button type="submit" className="btn btn-default pull-right" style={{ float: 'right' }}>
+              <button type="submit" className="btn btn-default float-right" >
                 Next
+              </button>
+              <button type="" onClick={(e) => {
+                  e.preventDefault();
+                  this.props.back();
+                }} className="btn btn-default float-right" >
+                Back
               </button>
             </div>
           </div>
