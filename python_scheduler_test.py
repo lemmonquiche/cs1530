@@ -1,6 +1,8 @@
 from models.models import Course_Registration, Schedule, Group
 from sqlalchemy import create_engine
 from sqlalchemy.sql import text
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 engine = create_engine('sqlite:///grouper.db')
 
 
