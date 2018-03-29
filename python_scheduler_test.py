@@ -21,16 +21,11 @@ def gen_groups(course_id):
     ss = []
 
     #get schedules for all students
-    for s in sstudents:
+    for s in students:
         #not sure if this query is formated correctly...
-<<<<<<< HEAD
-        print(s)
+	s = s[:-1]
+	ss.append(s)
 	sched = Schedule.bitstring_to_matrix(con.execute('SELECT available_hour_week FROM schedule WHERE student_id = :stud', {'stud':s}))
-=======
-        s = s[:-1]
-        ss.apend(s)
-        sched = Schedule.bitstring_to_matrix(con.execute('SELECT available_hour_week FROM schedule WHERE student_id = :stud', {'stud':s}))
->>>>>>> 21d774377f3ecd8b41fdfbd7aa68b968c9ff1a14
         sched_matrix.append(sched)
 
 
