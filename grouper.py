@@ -7,6 +7,7 @@ from models.models import db, RevokedTokenModel, Student, Instructor
 from  util.email import  *
 
 engine = create_engine('sqlite:///grouper.db')
+metadata = MetaData()
 
 app = Flask(__name__)
 app.register_blueprint(Blueprint('static_bp', __name__, static_folder='assets', static_url_path=''), url_prefix='/assets')
@@ -29,7 +30,6 @@ db.init_app(app)
 @app.cli.command('initdb')
 def initdb_command():
     """Creates the database tables."""
-    metadata = MetaData()
     metadata.crop_all(engine)
     metadata.create_all(engine)
 
