@@ -81,7 +81,7 @@ class GroupGenerate(Resource):
             jgroups = jgroups[:-1]
             jgroups += "]"
             # return {jgroups}
-            return {''}
+            return {jgroups}
         else:
             return{'err':'could not generate group'}
 
