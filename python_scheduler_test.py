@@ -3,6 +3,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.sql import text
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+import random
+from random import shuffle
+import numpy as np
 engine = create_engine('sqlite:///grouper.db')
 
 
