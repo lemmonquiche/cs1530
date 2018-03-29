@@ -29,8 +29,8 @@ def gen_groups(course_id):
 #    con = engine.connect()
     for s in ss:
 
-        result = con.execute('SELECT student_id FROM course_registration WHERE course_id = :course', {'course':course_id})
-        #result = con.execute('SELECT available_hour_week FROM schedule WHERE schedule_id = 1')
+#        result = con.execute('SELECT student_id FROM course_registration WHERE course_id = :course', {'course':course_id})
+        result = con.execute('SELECT available_hour_week FROM schedule WHERE schedule_id = :st', {'st':s})
 #        for r in result:
 #            print(r)
         sched = [r for (r, ) in result]
