@@ -23,21 +23,21 @@ def gen_groups(course_id):
     ss = [r for (r, ) in result]
 
     sched_matrix = np.empty((0, 196), int)
-    print(sched_matrix.shape)
+    #print(sched_matrix.shape)
 
     #get schedules for all students
+    con = engine.connect()
     for s in ss:
-        con = engine.connect()
-        print(s)
-        print(type(s))
-        result = con.execute('SELECT available_hour_week FROM schedule WHERE schedule_id = 1')
-        for r in result:
-            print(r)
-        sched = [r for (r, ) in result]
+
+#        result = con.execute('SELECT student_id FROM course_registration WHERE course_id = :course', {'course':course_id})
+        resultt = con.execute('SELECT available_hour_week FROM schedule WHERE schedule_id = :st', {'st':s})
+#        for r in result:
+#            print(r)
+        sched = [r for (r, ) in resultt]
         for r in sched:
             print(r)
-        sch = np.array(map(int, sched[0]))
-        sched_matrix = np.vstack((sched_matrix, sch))
+#        sch = np.array(map(int, sched[0]))
+#        sched_matrix = np.vstack((sched_matrix, sch))
 
     #generate groups
     group_id = con.execute('SELECT max(group_id) FROM \'group\' group by course')
