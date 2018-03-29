@@ -17,28 +17,17 @@ def gen_groups(course_id):
     #get all students from course
     result = con.execute('SELECT student_id FROM course_registration WHERE course_id = :course', {'course':course_id})
 
-    #for x in result:
-    #    print(x)
-
-    results = [r for (r, ) in result]
-    for r in results:
-        print(type(r))
-        print(r)
-
-    """
+    ss = [r for (r, ) in result]
 
     sched_matrix = []
-    ss = []
 
     #get schedules for all students
-    for s in students:
+    for s in ss:
         #not sure if this query is formated correctly...
-	s = s[:-1]
-	ss.append(s)
-	sched = Schedule.bitstring_to_matrix(con.execute('SELECT available_hour_week FROM schedule WHERE student_id = :stud', {'stud':s}))
+        sched = Schedule.bitstring_to_matrix(con.execute('SELECT available_hour_week FROM schedule WHERE student_id = :stud', {'stud':str(s)}))
         sched_matrix.append(sched)
 
-
+"""
     #generate groups
     group_id = con.execute('SELECT max(group_id) FROM \'group\' group by course')
     groups = []
