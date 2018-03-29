@@ -23,11 +23,13 @@ def gen_groups(course_id):
     ss = [r for (r, ) in result]
 
     sched_matrix = np.empty((0, 196), int)
+    sched_matrix
 
     #get schedules for all students
     for s in ss:
         #not sure if this query is formated correctly...
         sched = Schedule.bitstring_to_matrix(con.execute('SELECT available_hour_week FROM schedule WHERE student_id = :stud', {'stud':str(s)}))
+        sched
         sched_matrix = np.concatenate((sched_matrix, sched), axis = 0)
 
     #generate groups
