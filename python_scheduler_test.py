@@ -18,6 +18,7 @@ def gen_groups(course_id):
     students = con.execute('SELECT student_id FROM course_registration WHERE course_id = :course', {'course':course_id})
 
     for s in students:
+        print(type(s))
         print(s)
 
     """
