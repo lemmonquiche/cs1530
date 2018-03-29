@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import TableDragSelect from "react-table-drag-select";
 import "react-table-drag-select/style.css";
 
+import $ from 'jquery';
+
 class Schedule extends Component {
   constructor(props) {
     super(props);
@@ -52,9 +54,34 @@ class Schedule extends Component {
     console.log(this.state);
     e.preventDefault();
 
-    setTimeout(function() {
-      this.setState({ saved: true });
-    }.bind(this), 500);
+    var that = this;
+    function adaptArray() {
+      return that.state.cells.map(function (row) {
+        return row.slice(1).map(function (value) {
+          return value ? '1' : '0';
+        });
+      });
+    }
+
+    this.setState({ loaded: false });
+    $.ajax({
+      method: 'post',
+      url: '/api/schedule/add',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        schedule: adaptArray()
+      }),
+      dataType: 'json',
+      error: function () {
+        console.log(arguments);
+        this.setState({ loaded: true, saved: false });
+      }.bind(this),
+      success: function (data) {
+        console.log(arguments);
+        this.setState({ loaded: true, saved: true });
+      }.bind(this),
+    });
+    // setTimeout(function() {}.bind(this), 500);
   }
 
   render() {
