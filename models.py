@@ -33,20 +33,28 @@ course_pending = db.Table('course_pending',
     db.Column('course_id', db.Integer, db.ForeignKey('course.course_id'))
 )
 
-course_registration = db.Table('course_registration',
-	db.Column('student_id', db.Integer, db.ForeignKey('student.student_id')),
-    db.Column('course_id', db.Integer, db.ForeignKey('course.course_id'))
-)
+
+class Course_Registration(db.Model):
+     id = db.Column(db.Integer, primary_key=True)
+     student_id = db.Column(db.Integer, db.ForeignKey('student.student_id'))
+     course_id = db.Column(db.Integer, db.ForeignKey('course.course_id'))
+     
+     def __init__(self, student_id, course_id, schedule_id):
+     	self.student_id = student_id
+     	self.course_id = course_id
+     	
+     def __repr__(self):
+         return '<Course Registration {}>'.format(self.id)
       
 class Student(db.Model):
     student_id = db.Column(db.Integer, primary_key=True)
     pending_registrations_courses = db.relationship('Course', secondary=course_pending, backref=db.backref("pend_student", lazy="dynamic")) 
-    course_registrations = db.relationship("Course", secondary=course_registration, backref = db.backref("student", lazy="dynamic"))
+    course_registrations = db.relationship("Course_Registration", backref="student")
     schedule = db.relationship("Schedule", backref=db.backref("student", uselist=False))
     lname = db.Column(db.Text, nullable=False)
     fname = db.Column(db.Text, nullable=False)
     email = db.Column(db.Text, nullable=False)
-    is_reg_confirmed = db.Column(db.Boolean, nullable=False)
+    is_reg_confirmed = db.Column(db.Boolean, default=False, nullable=False)
     
     username = db.Column(db.String(120), unique = True, nullable = False)
     password = db.Column(db.String(120), nullable = False)
@@ -75,13 +83,12 @@ class Student(db.Model):
             }
         return {'students': list(map(lambda x: to_json(x), Student.query.all()))}
     
-    def __init__(self, lname, fname, username, password, email, is_reg_confirmed = False, schedule = None, pending_registrations_courses = []):
+    def __init__(self, lname, fname, username, password, email, is_reg_confirmed = False, pending_registrations_courses = []):
         for pending in pending_registrations_courses:
         	self.pending_registrations_courses.append(pending)
         
         self.username = username
         self.password = password
-        self.schedule = [schedule]
         self.lname = lname
         self.fname = fname
         self.email = email
@@ -98,7 +105,7 @@ class Instructor(db.Model):
     email = db.Column(db.Text, nullable=False)
     lname = db.Column(db.Text, nullable=False)
     fname = db.Column(db.Text, nullable=False)
-    is_reg_confirmed = db.Column(db.Boolean, nullable=False)
+    is_reg_confirmed = db.Column(db.Boolean, default=False, nullable=False)
     
     username = db.Column(db.String(120), unique = True, nullable = False)
     password = db.Column(db.String(120), nullable = False)
@@ -127,7 +134,7 @@ class Instructor(db.Model):
             }
         return {'Instractor': list(map(lambda x: to_json(x), Instructor.query.all()))}
     
-    def __init__(self, lname, fname, email, username, password, is_reg_confirmed, courses = []):
+    def __init__(self, lname, fname, email, username, password, is_reg_confirmed = False, courses = []):
         self.lname = lname
         self.fname = fname
         self.email = email
@@ -198,7 +205,6 @@ class Course(db.Model):
     passcode = db.Column(db.Text, nullable=False)
     groups = db.relationship("Group")
     pending_students = db.relationship('Student', secondary=course_pending, backref=db.backref("pend_course", lazy="dynamic"))
-    students = db.relationship('Student', secondary=course_registration, backref=db.backref("course", lazy="dynamic"))
     instructors = db.relationship('Instructor', secondary=instructs_course, backref=db.backref("course", lazy="dynamic"))
      
     def __init__(self, course_name, passcode, groups = [], pending_students = [], instructors = []):
