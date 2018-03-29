@@ -15,7 +15,7 @@ def sumColumn(m, column):
 
 def gen_groups(course_id):
     #get all students from course
-    students = db.session.query(Course_Registration).filter(Course_Registration.course == course_id)
+    students = db.session.query(Course_Registration).filter(Course_Registration.course_id == course_id)
 
     #make dict
     ss = []
