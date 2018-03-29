@@ -6,6 +6,12 @@ from ..scheduler import *
 from sqlalchemy.sql import text
 from sqlalchemy import exc
 import json
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
+engine = create_engine('sqlite:///grouper.db')
+db = engine.connect()
+from json import loads
+
 
 parser = reqparse.RequestParser()
 parser.add_argument('username', help = 'This field cannot be blank', required = True)
@@ -19,7 +25,7 @@ course_parser.add_argument('course_id', help = 'This field cannot be blank', req
 course_parser.add_argument('instructor_id', help = 'This field cannot be blank', required = True)
 
 schedule_parser = reqparse.RequestParser()
-schedule_parser.add_argument('schedule_id', help = 'This field cannot be blank', required = True)
+schedule_parser.add_argument('schedule_id', help = 'This field cannot be blank', required = False)
 schedule_parser.add_argument('schedule', help = 'This field cannot be blank', required = True)
 
 registration_parser = reqparse.RequestParser()
@@ -95,18 +101,24 @@ class AddSchedule(Resource):
         if not session['student_id']:
             return{'err': 'Not a student'}
         else:
-            data = schedule_parser.parse_args()
-            course = data['schedule_id']
-            schedule = data['schedule']
-
-            sched = Schedule.matrix_to_bitstring(schedule)
-
-            s = ({"schedule_id":sched})
-            statement = text("""UPDATE schedule SET available_hour_week=:schedule WHER schedule_id=:schedule_id""")
-            db.execute(statement)
-
-            #update/insert
-            return{'test':'testing'}
+            s_id = Schedule.query.filter_by(student_id = session['student_id']).first()
+            if s_id:
+                data = schedule_parser.parse_args()
+                schedule = loads(data['schedule'])
+                sched = Schedule.matrix_to_bitstring(schedule)
+                statement = text("UPDATE schedule SET available_hour_week='{}' WHERE student_id='{}'".format(sched, session['student_id']))
+                db.execute(statement)
+                return{'result':'success'}
+            else:
+                data = schedule_parser.parse_args()
+                schedule = Schedule.matrix_to_bitstring(loads(data['schedule']))
+                s = Schedule (
+                        student_id = session['student_id'],
+                        available_hour_week = schedule
+                    )
+                s.save_to_db()
+                return{'result':'success'}
+        return {'err': 'Failed for some reason' }
 
 class LoginUser(Resource):
     def post(self):
