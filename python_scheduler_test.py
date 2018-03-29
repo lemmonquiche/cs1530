@@ -28,6 +28,8 @@ def gen_groups(course_id):
     #get schedules for all students
     for s in ss:
         con = engine.connect()
+        print(s)
+        print(type(s))
         result = con.execute('SELECT available_hour_week FROM schedule WHERE schedule_id = :stud', {'stud':s})
         sched = [r for (r, ) in result]
         for r in sched:
