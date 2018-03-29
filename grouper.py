@@ -85,7 +85,7 @@ api.add_resource(resources.StudentDashBoard, '/api/studentdashboard')
 api.add_resource(resources.InstructorDashBoard, '/api/instructordashboard')
 api.add_resource(resources.RegisterForCourse, '/api/registerforcourse')
 api.add_resource(resources.ConfirmCourse, '/api/confirmstudent')
-api.add_resource(resource.CreateCourse, '/api/createcourse')
+api.add_resource(resources.CreateCourse, '/api/createcourse')
 
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
