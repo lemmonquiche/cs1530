@@ -30,7 +30,7 @@ db.init_app(app)
 @app.cli.command('initdb')
 def initdb_command():
     """Creates the database tables."""
-    metadata.crop_all(engine)
+    metadata.drop_all(engine)
     metadata.create_all(engine)
 
     con = engine.connect()
