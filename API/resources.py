@@ -9,7 +9,7 @@ import json
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 engine = create_engine('sqlite:///grouper.db')
-db = engine.connect()
+db = engine.connect() 
 from json import loads
 
 
