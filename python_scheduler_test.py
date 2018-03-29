@@ -17,6 +17,11 @@ def gen_groups(course_id):
     #get all students from course
     students = con.execute('SELECT student_id FROM course_registration WHERE course_id = :course', {'course':course_id})
 
+    for s in students:
+        print(s)
+
+    """
+
     sched_matrix = []
     ss = []
 
@@ -98,6 +103,7 @@ def gen_groups(course_id):
     con.close()
     for g in groups:
         print("group id: ", g)
+        """
 
 
 gen_groups(4)
