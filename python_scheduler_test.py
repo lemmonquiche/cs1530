@@ -29,6 +29,7 @@ def gen_groups(course_id):
     for s in ss:
         #not sure if this query is formated correctly...
         sched = Schedule.bitstring_to_matrix(con.execute('SELECT available_hour_week FROM schedule WHERE student_id = :stud', {'stud':str(s)}))
+        scheds = np.asarray(sched)
         print(sched.shape)
         sched_matrix = np.concatenate((sched_matrix, sched), axis = 0)
 
