@@ -31,6 +31,10 @@ def gen_groups(course_id):
 
 #        result = con.execute('SELECT student_id FROM course_registration WHERE course_id = :course', {'course':course_id})
         result = con.execute('SELECT available_hour_week FROM schedule WHERE schedule_id = :st', {'st':s})
+        print(type(result))
+        for r in result:
+            print(r)
+            print(type(r))
 #        for r in result:
 #            print(r)
         sched = [r for (r, ) in result]
@@ -43,9 +47,8 @@ def gen_groups(course_id):
 
     #generate groups
     gid = con.execute('SELECT max(group_id) FROM \'group\' group by course')
-    group_id = [r for (r, ) in gid]
-    for g in group_id:
-        print(g)
+    #if no gid is return, start at 0
+#    group_id = [r for (r, ) in gid]
     groups = []
 
     #random list of values for possible times
