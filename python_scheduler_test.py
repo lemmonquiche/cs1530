@@ -21,7 +21,8 @@ def gen_groups(course_id):
     #    print(x)
 
     results = [r for (r, ) in result]
-    for r in results
+    for r in results:
+        print(type(r))
         print(r)
 
     """
