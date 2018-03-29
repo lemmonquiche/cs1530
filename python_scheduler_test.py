@@ -32,7 +32,7 @@ def gen_groups(course_id):
         result = con.execute('SELECT available_hour_week FROM schedule WHERE schedule_id = :stud', {'stud':s})
         sched = [r for (r, ) in result]
         sch = np.array(map(int, sched[0])
-        sched_matrix = np.concatenate((sched_matrix, sch), axis=0)
+        sched_matrix = np.vstack((sched_matrix, sch))
 
     #generate groups
     group_id = con.execute('SELECT max(group_id) FROM \'group\' group by course')
