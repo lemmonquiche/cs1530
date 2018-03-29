@@ -75,6 +75,9 @@ class GroupGenerate(Resource):
         elif iid:
             # #cid = course_parser.parse_args()
             groups = gen_groups(cid)
+
+            if not groups:
+                return{'err':'could not generate group'}
             row_json = json.dumps(groups)
             # jgroups = "\"group_ids\": ["
             # for g in groups:
