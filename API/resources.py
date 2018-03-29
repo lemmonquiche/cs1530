@@ -5,6 +5,8 @@ from ..models.models import Student, Instructor, RevokedTokenModel
 from ..scheduler import *
 from sqlalchemy.sql import text
 import json
+from __future__ import print_function # In python 2.7
+import sys
 
 parser = reqparse.RequestParser()
 parser.add_argument('username', help = 'This field cannot be blank', required = True)
@@ -52,6 +54,7 @@ class GroupGenerate(Resource):
         elif iid:
             #cid = course_parser.parse_args()
             groups = gen_groups(cid)
+            print(groups, file=sys.stderr)
             json.dumps(groups)
 #            jgroups = ""
 #            for g in groups:
