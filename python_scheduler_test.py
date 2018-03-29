@@ -31,13 +31,13 @@ def gen_groups(course_id):
 
         result = con.execute('SELECT student_id FROM course_registration WHERE course_id = :course', {'course':course_id})
         #result = con.execute('SELECT available_hour_week FROM schedule WHERE schedule_id = 1')
-        for r in result:
-            print(r)
+#        for r in result:
+#            print(r)
         sched = [r for (r, ) in result]
         for r in sched:
             print(r)
-        sch = np.array(map(int, sched[0]))
-        sched_matrix = np.vstack((sched_matrix, sch))
+#        sch = np.array(map(int, sched[0]))
+#        sched_matrix = np.vstack((sched_matrix, sch))
 
     #generate groups
     group_id = con.execute('SELECT max(group_id) FROM \'group\' group by course')
