@@ -42,7 +42,7 @@ def initdb_command():
                         1,
                         'test',
                         '$pbkdf2-sha256$29000$X6sVIiREaG0NQSjl3BtjzA$WhUNyD7BYxY.fHbbpppVxrj.NRbYm1w1F7LHXb6eavQ'
-                    );"""
+                    );""")
     con.execute("""INSERT INTO student
                     VALUES (
                     2,
@@ -279,6 +279,7 @@ def initdb_command():
                         10,
                         '1010001010000000100011000011011100000101110001110011101100010011000011011101111000111010111100110011100011001111101100110110000101110011111111000011100010000110011001101110000000111111001010011011'
                     );""")
+    con.close()
 
     print('Initialized the database.')
 
