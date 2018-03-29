@@ -97,7 +97,6 @@ def gen_groups(course_id):
                 #remove student from ss and their schedule from sched_matrix
                 ss.remove(stud)
                 np.delete(sched_matrix, t, 0)
-
         else:
             #if there is not enough students to form a group
             for stud in ss:
