@@ -25,7 +25,7 @@ def gen_groups(course_id):
 
 
     #generate groups
-    group_id = con.execute('SELECT max(group_id) FROM 'group' group by course')
+    group_id = con.execute('SELECT max(group_id) FROM \'group\' group by course')
     groups = []
 
     #random list of values for possible times
