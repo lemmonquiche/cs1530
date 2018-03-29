@@ -75,6 +75,7 @@ class GroupGenerate(Resource):
         elif iid:
             #cid = course_parser.parse_args()
             groups = gen_groups(cid)
+            jgroups = ""
             for g in groups:
                 jgroups += " \"{}\",".format(g)
             jgroups = jgroups[:-1]
