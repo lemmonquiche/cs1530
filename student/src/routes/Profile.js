@@ -34,15 +34,33 @@ class Profile extends Component {
 
   formSubmit(e) {
     e.preventDefault();
-    var user = Object.assign({}, this.props.state);
-    delete user['loaded'];
-    delete user['error'];
-    $.post('/api/profile', JSON.stringify({ token: this.props.token, user }), function (res) {
-      this.setState({ loaded: true });
-      if (res.error) {
-        this.setState({ error: res.error });
-      }
-    }.bind(this));
+    $.ajax({
+      method: 'post',
+      url: '/api/profile',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        username: this.state.username,
+        fname: this.state.fname,
+        lname: this.state.lname,
+        email: this.state.email,
+        role: this.state.role === 0 ? 'student' : 'instructor'
+      }),
+      dataType: 'json',
+      error: function (jQReq, status, error) {
+        this.setState({ error });
+        console.log(arguments);
+      }.bind(this),
+      success: function (data, status, jQReq) {
+        console.log('success', data, arguments);
+        if (!data.err) {
+          // return this.props.result({ success: data });
+          console.log('Email sent, now refresh page.');
+          this.setState({ loaded: true, error: '' });
+        }
+        
+        this.setState({ error: data.err })
+      }.bind(this)
+    });
 
     this.setState({ password: '', loaded: false });
   }

@@ -80,21 +80,21 @@ edit_profile_parser.add_argument('password', help = 'This field can be blank', r
 
 class Profile(Resource):
     def get (self):
-        if sessin['studnet_id']:
-            u = Student.query.filter_by(student_id=session['student_id'])
+        if session['student_id']:
+            u = Student.query.filter_by(student_id=session['student_id']).first()
             return {
                 'username': u.username
                 , 'fname' : u.fname
                 , 'lname' : u.lname
-                , 'email' : u.eamil
+                , 'email' : u.email
                 }
-        elif sessin['instructor_id']:
-            u = Instructor.query.filter_by(student_id=session['instructor_id'])
+        elif session['instructor_id']:
+            u = Instructor.query.filter_by(student_id=session['instructor_id']).first()
             return {
                 'username': u.username
                 , 'fname' : u.fname
                 , 'lname' : u.lname
-                , 'email' : u.eamil
+                , 'email' : u.email
                 }
         else:
             return { 'err': 'not logged in'}
@@ -105,7 +105,7 @@ class Profile(Resource):
         if (not session['student_id'] and not session['instructor_id']):
             return {'err': 'not logged in'}
         
-        if sessin['studnet_id']:
+        if session['student_id']:
             s = Student.query.filter_by(student_id = session['student_id']).first()
             if data.fname: s.fname = data.fname
             if data.lname: s.lname = data.lname
@@ -117,7 +117,7 @@ class Profile(Resource):
             except exc.IntegrityError:
                 return {'err': 'user alredy exit'}
             
-        if sessin['instructor_id']:
+        if session['instructor_id']:
             s = Instructor.query.filter_by(student_id = session['instructor_id']).first()
             if data.fname: s.fname = data.fname
             if data.lname: s.lname = data.lname
@@ -218,7 +218,7 @@ class LoginUser(Resource):
 class LoginCridentials (Resource):
     def post(self):
         data = parser.parse_args()
-        ## studnet and instruct table have unique username cross table
+        ## student and instruct table have unique username cross table
         current_student = Student.find_by_username(data['username'])
         current_instruc = Instructor.find_by_username(data['username'])
 
