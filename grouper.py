@@ -30,8 +30,8 @@ db.init_app(app)
 @app.cli.command('initdb')
 def initdb_command():
     """Creates the database tables."""
-    metadata.drop_all(engine)
-    metadata.create_all(engine)
+    db.drop_all()
+    db.create_all()
 
     con = engine.connect()
     con.execute("""INSERT INTO student
@@ -140,16 +140,12 @@ def initdb_command():
                            'Software Engineering',
                            'joining'
                        );""")
-    con.execute("""INSERT INTO course_registration (
-                    id,
-                    student_id,
-                    course_id
-                )
-                VALUES (
-                    1,
-                    1,
-                    1
-                );""")
+    con.execute("""INSERT INTO course_registration
+                        VALUES (
+                            1,
+                            1,
+                            1
+                        );""")
     con.execute("""INSERT INTO course_registration
                     VALUES (
                         2,
