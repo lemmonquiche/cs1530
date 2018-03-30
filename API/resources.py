@@ -104,6 +104,13 @@ class StudentSchedule(Resource):
             return{'err': 'Not a student'}
         else:
             s = Schedule.query.filter_by(student_id = session['student_id']).first()
+            if not s: 
+                s = Schedule (
+                    student_id = session['student_id'],
+                    available_hour_week = ''
+                )
+                s.save_to_db()
+                return {'schedule':''}
             return {'schedule': Schedule.bitstring_to_matrix(s.available_hour_week)}
                
     def post(self):
