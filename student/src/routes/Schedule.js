@@ -59,26 +59,15 @@ class Schedule extends Component {
         });
     }
 
-    $.ajax({
-      method: 'get',
-      url: '/api/student/schedule',
-      success: function (data) {
-        // console.log(data.schedule);
-        // console.log(bitstringToArray(data.schedule));
-        // var matrix = data.schedule.match(/.{7}/g).map(function (row) {
-          // return row.match(/.{1}/g);
-        // });
-
-        // console.log(matrix);
-        var cells = bitstringToArray(data.schedule);/*data.schedule.map(function (row) {
-          return [false].concat(row.map(function (field) {
-            return field === '1' ? true : false;
-          }));
-        });*/
-
-        that.setState({ loaded: true, cells });
-      }
-    });
+    if (!this.state.loaded) {
+      $.ajax({
+        method: 'get',
+        url: '/api/student/schedule',
+        success: function (data) {
+          that.setState({ loaded: true, cells: bitstringToArray(data.schedule), loaded: true });
+        }
+      });
+    }
   }
 
   handleChange = cells => { this.setState({ cells }); this.setState({ saved: false }); }
