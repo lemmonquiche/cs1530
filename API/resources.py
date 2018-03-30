@@ -71,6 +71,7 @@ class Registration(Resource):
             except exc.IntegrityError:
                 return {'err': 'user alredy exit'}
 
+
 class GroupGenerate(Resource):
     def post(self):
         data = course_parser.parse_args()
@@ -96,7 +97,15 @@ class GroupGenerate(Resource):
         else:
             return{'err':'could not generate group'}
 
-class AddSchedule(Resource):
+
+class StudentSchedule(Resource):
+    def get(self):
+        if not session['student_id']:
+            return{'err': 'Not a student'}
+        else:
+            s = Schedule.query.filter_by(student_id = session['student_id']).first()
+            return {'schedule': Schedule.bitstring_to_matrix(s.available_hour_week)}
+               
     def post(self):
         if not session['student_id']:
             return{'err': 'Not a student'}
@@ -104,8 +113,7 @@ class AddSchedule(Resource):
             s_id = Schedule.query.filter_by(student_id = session['student_id']).first()
             if s_id:
                 data = schedule_parser.parse_args()
-                schedule = loads(data['schedule'])
-                sched = Schedule.matrix_to_bitstring(schedule)
+                sched = Schedule.matrix_to_bitstring(loads(data['schedule']))
                 statement = text("UPDATE schedule SET available_hour_week='{}' WHERE student_id='{}'".format(sched, session['student_id']))
                 db.execute(statement)
                 return{'result':'success'}
