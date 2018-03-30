@@ -21,9 +21,6 @@ def gen_groups(course_id):
     result = con.execute('SELECT student_id FROM course_registration WHERE course_id = :course', {'course':course_id})
 
     ss = [r for (r, ) in result]
-    for l in ss:
-        print(l)
-        print(type(l))
 
     sched_matrix = np.empty((0, 196), int)
     #print(sched_matrix.shape)
@@ -32,24 +29,23 @@ def gen_groups(course_id):
     con.close()
     con = engine.connect()
     for s in ss:
-#        result = con.execute('SELECT student_id FROM course_registration WHERE course_id = :course', {'course':course_id})
-        result = con.execute('SELECT available_hour_week FROM schedule WHERE schedule_id = 1')
-        for r in result:
-            print(r)
-            print(type(r))
-#        for r in result:
-#            print(r)
+        result = con.execute('SELECT available_hour_week FROM schedule WHERE schedule_id = :st', {'st':s})
         sched = [r for (r, ) in result]
         if not sched:
             con.close()
             return
-#        sch = np.array(map(int, sched[0]))
-#        sched_matrix = np.vstack((sched_matrix, sch))
+        sch = np.array(map(int, sched[0]))
+        sched_matrix = np.vstack((sched_matrix, sch))
 
     #generate groups
-    gid = con.execute('SELECT max(group_id) FROM \'group\' group by course')
+    gid = con.execute('SELECT max(group_id) FROM \'group\'')
+    group_i = [r for (r, ) in gid]
+    if group_i[0] is None:
+        group_id = 0
+    else:
+        group_id = int(group_i[0])
+
     #if no gid is return, start at 0
-#    group_id = [r for (r, ) in gid]
     groups = []
 
     #random list of values for possible times
@@ -70,7 +66,7 @@ def gen_groups(course_id):
             #generate new group information, append to groups, and add to database
             group_id += 1
             groups.append(group_id)
-            con.execute('INSERT INTO \'group\' VALUES(:group, :course)', {'group':group_id, ':course':course_id})
+            con.execute('INSERT INTO \'group\' VALUES(:group, :course)', {'group':group_id, 'course':course_id})
 
             #initialize values needed to create groups
             i = 0
@@ -80,7 +76,7 @@ def gen_groups(course_id):
                 if sched_matrix[snum, t] == 1:
                     #get student id: add to database that student is in this group
                     stud = ss[snum]
-                    con.execute('INSERT INTO group_membership VALUES(:group_id, :student_id)', {'group_id':group_id, 'student_id':stud})
+                    con.execute('INSERT INTO group_membership(student_id, group_id, randomized) VALUES(:student_id, :group_id, :randomized)', {'student_id':stud, 'group_id':group_id, 'randomized':0})
 
                     #remove student from ss and their schedule from sched_matrix
                     ss.remove(stud)
@@ -97,22 +93,22 @@ def gen_groups(course_id):
             #generate new group information, append to groups, and add to database
             group_id += 1
             groups.append(group_id)
-            con.execute('INSERT INTO \'group\' VALUES(:group, :course)', {'group':group_id, ':course':course_id})
+            con.execute('INSERT INTO \'group\' VALUES(:group, :course)', {'group':group_id, 'course':course_id})
 
             #generate the group with first 5 students
             for x in range(0, 5):
                 stud = ss[x]
-                con.execute('INSERT INTO group_membership VALUES(:group_id, :student_id)', {'group_id':group_id, 'student_id':stud})
-
+                con.execute('INSERT INTO group_membership(student_id, group_id, randomized) VALUES(:student_id, :group_id, :randomized)', {'student_id':stud, 'group_id':group_id, 'randomized':1})
                 #remove student from ss and their schedule from sched_matrix
                 ss.remove(stud)
-                np.delete(sched_matrix, t, 0)
         else:
             #if there is not enough students to form a group
             for stud in ss:
-                num.randint(0, len(groups))
+                g = len(groups) - 1
+                num = random.randint(0, g)
                 group_num = groups[num]
-                con.execute('INSERT INTO group_membership VALUES(:group_id, :student_id)', {'group_id':group_id, 'student_id':stud})
+                con.execute('INSERT INTO group_membership(student_id, group_id, randomized) VALUES(:student_id, :group_id, :randomized)', {'student_id':stud, 'group_id':group_id, 'randomized':1})
+                ss.remove(stud)
                 #somehow indicate group might not be optimal
     con.close()
     for g in groups:
