@@ -158,6 +158,7 @@ class GroupGenerate(Resource):
 
 class StudentSchedule(Resource):
     def get(self):
+        # return{'err': 'Not a student', 'sid': str(session['student_id'])}
         if not session['student_id']:
             return{'err': 'Not a student'}
         else:
@@ -169,7 +170,7 @@ class StudentSchedule(Resource):
                 )
                 s.save_to_db()
                 return {'schedule':''}
-            return {'schedule': Schedule.bitstring_to_matrix(s.available_hour_week)}
+            return {'schedule': s.available_hour_week}
                
     def post(self):
         if not session['student_id']:

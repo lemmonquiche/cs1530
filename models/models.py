@@ -167,6 +167,7 @@ class Schedule(db.Model):
         db.session.commit()
 
     def __init__(self, student_id, available_hour_week):
+        self.student_id = student_id
         self.available_hour_week = available_hour_week
 
     def __repr__(self):
@@ -184,6 +185,7 @@ class Group(db.Model):
 
 class GroupMembership(db.Model):
     __tablename__ = 'group_membership'
+    __table_args__ = {'sqlite_autoincrement': True}
 
     id = db.Column('id', db.Integer, primary_key = True)
     student_id = db.Column(db.Integer, db.ForeignKey("student.student_id"))
