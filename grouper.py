@@ -140,16 +140,12 @@ def initdb_command():
                            'Software Engineering',
                            'joining'
                        );""")
-    con.execute("""INSERT INTO course_registration (
-                    id,
-                    student_id,
-                    course_id
-                )
-                VALUES (
-                    1,
-                    1,
-                    1
-                );""")
+    con.execute("""INSERT INTO course_registration
+                        VALUES (
+                            1,
+                            1,
+                            1
+                        );""")
     con.execute("""INSERT INTO course_registration
                     VALUES (
                         2,
