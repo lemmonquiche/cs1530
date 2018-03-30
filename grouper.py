@@ -30,8 +30,8 @@ db.init_app(app)
 @app.cli.command('initdb')
 def initdb_command():
     """Creates the database tables."""
-    metadata.drop_all(engine)
-    metadata.create_all(engine)
+    db.drop_all()
+    db.create_all()
 
     con = engine.connect()
     con.execute("""INSERT INTO student
