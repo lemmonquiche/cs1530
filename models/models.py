@@ -184,6 +184,7 @@ class Group(db.Model):
 
 class GroupMembership(db.Model):
     __tablename__ = 'group_membership'
+    __table_args__ = {'sqlite_autoincrement': True}
 
     id = db.Column('id', db.Integer, primary_key = True)
     student_id = db.Column(db.Integer, db.ForeignKey("student.student_id"))
