@@ -327,6 +327,10 @@ def main_page():
     """
     return make_response(render_template('homepage.html'))
 
+@app.errorhandler(404)
+def catch_404(e):
+    return redirect('/signin')
+
 @app.route('/signin')
 def signin():
     if g.student:
