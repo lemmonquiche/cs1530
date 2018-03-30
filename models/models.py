@@ -167,6 +167,7 @@ class Schedule(db.Model):
         db.session.commit()
 
     def __init__(self, student_id, available_hour_week):
+        self.student_id = student_id
         self.available_hour_week = available_hour_week
 
     def __repr__(self):

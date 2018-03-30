@@ -71,7 +71,67 @@ class Registration(Resource):
             except exc.IntegrityError:
                 return {'err': 'user alredy exit'}
 
+edit_profile_parser = reqparse.RequestParser()
+edit_profile_parser.add_argument('username', help = 'This field cannot be blank', required = False)
+edit_profile_parser.add_argument('fname', help = 'This field cannot be blank', required = False)
+edit_profile_parser.add_argument('lname', help = 'This field can be blank', required = False)
+edit_profile_parser.add_argument('email', help = 'This field cannot be blank', required = False)
+edit_profile_parser.add_argument('password', help = 'This field can be blank', required = False)
 
+class Profile(Resource):
+    def get (self):
+        if session['student_id']:
+            u = Student.query.filter_by(student_id=session['student_id']).first()
+            return {
+                'username': u.username
+                , 'fname' : u.fname
+                , 'lname' : u.lname
+                , 'email' : u.email
+                , 'password': Student.generate_hash(u.password)
+                }
+        elif session['instructor_id']:
+            u = Instructor.query.filter_by(student_id=session['instructor_id']).first()
+            return {
+                'username': u.username
+                , 'fname' : u.fname
+                , 'lname' : u.lname
+                , 'email' : u.email
+                , 'password': Student.generate_hash(u.password)
+                }
+        else:
+            return { 'err': 'not logged in'}
+        
+    def post(self):
+        data = edit_profile_parser.parse_args()
+        
+        if (not session['student_id'] and not session['instructor_id']):
+            return {'err': 'not logged in'}
+        
+        if session['student_id']:
+            s = Student.query.filter_by(student_id = session['student_id']).first()
+            if data.fname: s.fname = data.fname
+            if data.lname: s.lname = data.lname
+            if data.email: s.email = data.email
+            if data.password: s.password= Student.generate_hash(data.password)
+            try:
+                s.save_to_db()
+                return {'result': 'success'}
+            except exc.IntegrityError:
+                return {'err': 'user alredy exit'}
+            
+        if session['instructor_id']:
+            s = Instructor.query.filter_by(student_id = session['instructor_id']).first()
+            if data.fname: s.fname = data.fname
+            if data.lname: s.lname = data.lname
+            if data.email: s.email = data.email
+            if data.password: s.password= Instructor.generate_hash(data.password)
+            try:
+                s.save_to_db()
+                return {'result': 'success'}
+            except exc.IntegrityError:
+                return {'err': 'user alredy exit'}
+
+                        
 class GroupGenerate(Resource):
     def post(self):
         data = course_parser.parse_args()
@@ -100,6 +160,7 @@ class GroupGenerate(Resource):
 
 class StudentSchedule(Resource):
     def get(self):
+        # return{'err': 'Not a student', 'sid': str(session['student_id'])}
         if not session['student_id']:
             return{'err': 'Not a student'}
         else:
@@ -111,7 +172,7 @@ class StudentSchedule(Resource):
                 )
                 s.save_to_db()
                 return {'schedule':''}
-            return {'schedule': Schedule.bitstring_to_matrix(s.available_hour_week)}
+            return {'schedule': s.available_hour_week}
                
     def post(self):
         if not session['student_id']:
@@ -159,7 +220,7 @@ class LoginUser(Resource):
 class LoginCridentials (Resource):
     def post(self):
         data = parser.parse_args()
-        ## studnet and instruct table have unique username cross table
+        ## student and instruct table have unique username cross table
         current_student = Student.find_by_username(data['username'])
         current_instruc = Instructor.find_by_username(data['username'])
 

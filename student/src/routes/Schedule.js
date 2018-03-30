@@ -51,20 +51,23 @@ class Schedule extends Component {
   componentDidMount() {
     var that = this;
 
-    $.ajax({
-      method: 'get',
-      url: '/api/student/schedule',
-      success: function (data) {
-        console.log(data);
-        var cells = data.schedule.map(function (row) {
-          return [false].concat(row.map(function (field) {
-            return field === '1' ? true : false;
-          }));
+    function bitstringToArray(str) {
+      return str.match(/.{7}/g)
+        .map(function(row) {
+          return [false].concat(row.match(/.{1}/g)
+            .map(function(value) {return value === "1" ? true : false; }));
         });
+    }
 
-        that.setState({ loaded: true, cells });
-      }
-    });
+    if (!this.state.loaded) {
+      $.ajax({
+        method: 'get',
+        url: '/api/student/schedule',
+        success: function (data) {
+          that.setState({ loaded: true, cells: bitstringToArray(data.schedule), loaded: true });
+        }
+      });
+    }
   }
 
   handleChange = cells => { this.setState({ cells }); this.setState({ saved: false }); }
@@ -85,10 +88,10 @@ class Schedule extends Component {
     this.setState({ loaded: false });
     $.ajax({
       method: 'post',
-      url: '/api/schedule/add',
+      url: '/api/student/schedule',
       contentType: 'application/json',
       data: JSON.stringify({
-        schedule: adaptArray()
+        schedule: JSON.stringify(adaptArray())
       }),
       dataType: 'json',
       error: function () {
@@ -96,7 +99,6 @@ class Schedule extends Component {
         this.setState({ loaded: true, saved: false });
       }.bind(this),
       success: function (data) {
-        console.log(arguments);
         this.setState({ loaded: true, saved: true });
       }.bind(this),
     });
