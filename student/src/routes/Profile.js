@@ -43,7 +43,8 @@ class Profile extends Component {
         fname: this.state.fname,
         lname: this.state.lname,
         email: this.state.email,
-        role: this.state.role === 0 ? 'student' : 'instructor'
+        role: this.state.role === 0 ? 'student' : 'instructor',
+        password: this.state.password,
       }),
       dataType: 'json',
       error: function (jQReq, status, error) {
