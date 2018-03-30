@@ -309,6 +309,7 @@ api.add_resource(resources.LoginCridentials, '/api/login/credentials')
 api.add_resource(resources.GroupGenerate, '/api/group')
 api.add_resource(resources.StudentSchedule, '/api/student/schedule')
 api.add_resource(resources.Registration, '/api/login/signup')
+api.add_resource(resources.Profile, '/api/profile')
 
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']

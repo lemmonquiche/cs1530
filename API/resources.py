@@ -71,7 +71,65 @@ class Registration(Resource):
             except exc.IntegrityError:
                 return {'err': 'user alredy exit'}
 
+edit_profile_parser = reqparse.RequestParser()
+edit_profile_parser.add_argument('username', help = 'This field cannot be blank', required = False)
+edit_profile_parser.add_argument('fname', help = 'This field cannot be blank', required = False)
+edit_profile_parser.add_argument('lname', help = 'This field can be blank', required = False)
+edit_profile_parser.add_argument('email', help = 'This field cannot be blank', required = False)
+edit_profile_parser.add_argument('password', help = 'This field can be blank', required = False)
 
+class Profile(Resource):
+    def get (self):
+        if sessin['studnet_id']:
+            u = Student.query.filter_by(student_id=session['student_id'])
+            return {
+                'username': u.username
+                , 'fname' : u.fname
+                , 'lname' : u.lname
+                , 'email' : u.eamil
+                }
+        elif sessin['instructor_id']:
+            u = Instructor.query.filter_by(student_id=session['instructor_id'])
+            return {
+                'username': u.username
+                , 'fname' : u.fname
+                , 'lname' : u.lname
+                , 'email' : u.eamil
+                }
+        else:
+            return { 'err': 'not logged in'}
+        
+    def post(self):
+        data = edit_profile_parser.parse_args()
+        
+        if (not session['student_id'] and not session['instructor_id']):
+            return {'err': 'not logged in'}
+        
+        if sessin['studnet_id']:
+            s = Student.query.filter_by(student_id = session['student_id']).first()
+            if data.fname: s.fname = data.fname
+            if data.lname: s.lname = data.lname
+            if data.email: s.email = data.email
+            if data.password: s.password= Student.generate_hash(data.password)
+            try:
+                s.save_to_db()
+                return {'result': 'success'}
+            except exc.IntegrityError:
+                return {'err': 'user alredy exit'}
+            
+        if sessin['instructor_id']:
+            s = Instructor.query.filter_by(student_id = session['instructor_id']).first()
+            if data.fname: s.fname = data.fname
+            if data.lname: s.lname = data.lname
+            if data.email: s.email = data.email
+            if data.password: s.password= Instructor.generate_hash(data.password)
+            try:
+                s.save_to_db()
+                return {'result': 'success'}
+            except exc.IntegrityError:
+                return {'err': 'user alredy exit'}
+
+                        
 class GroupGenerate(Resource):
     def post(self):
         data = course_parser.parse_args()
