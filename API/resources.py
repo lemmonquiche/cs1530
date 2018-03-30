@@ -87,6 +87,7 @@ class Profile(Resource):
                 , 'fname' : u.fname
                 , 'lname' : u.lname
                 , 'email' : u.email
+                , 'password': Student.generate_hash(u.password)
                 }
         elif session['instructor_id']:
             u = Instructor.query.filter_by(student_id=session['instructor_id']).first()
@@ -95,6 +96,7 @@ class Profile(Resource):
                 , 'fname' : u.fname
                 , 'lname' : u.lname
                 , 'email' : u.email
+                , 'password': Student.generate_hash(u.password)
                 }
         else:
             return { 'err': 'not logged in'}
