@@ -426,3 +426,95 @@ class CreateCourse(Resource):
             db.session.commit()
 
             return{'message':'Course creation complete'}
+
+class SearchCourse(Resource):
+	def post(self):
+		data = user_parser.parse_args()
+		if not session['student_id']:
+			return {'err': 'Not a student'}
+		else:
+			course_id = data['course_id']
+			course_name = data['course_name']
+			instructor_name = data['instructor_name']
+			if(course_id != None):
+				courses = Course.query.filter(Course.course_id==course_id).all()
+				course_list =[]
+				for course in courses:
+					course_dict ={}
+					course_dict["course_id"] = course.course_id
+					course_dict["course_name"] = course.course_name
+					course_dict["course_passcode"] = course.passcode
+					instructor_list = []
+					for instructor in course.instructors:
+						instructor_dict = {}
+						instructor_dict["name"] = instructor.fname + " " + instructor.lname
+						instructor_dict["email"] = instructor.email
+						instructor_list.append(instructor_dict)
+					course_dict["instructors"] = instructor_list
+					course_list.append(course_dict)
+				return course_list
+
+			elif(course_name != None and instructor_name != None):
+				instructor_split = instructor_name.split(" ")
+				instructor_fname = instructor_split[0]
+				instructor_lname = instructor_split[1]
+				courses = Course.query.filter(and_(Course.course_name==course_name,
+											  and_(Course.instructors.any(Instructor.fname == instructor_fname),
+											   Course.instructors.any(Instructor.lname == instructor_lname)))).all()
+				course_list =[]
+				for course in courses:
+					course_dict ={}
+					course_dict["course_id"] = course.course_id
+					course_dict["course_name"] = course.course_name
+					course_dict["course_passcode"] = course.passcode
+					instructor_list = []
+					for instructor in course.instructors:
+						instructor_dict = {}
+						instructor_dict["name"] = instructor.fname + " " + instructor.lname
+						instructor_dict["email"] = instructor.email
+						instructor_list.append(instructor_dict)
+					course_dict["instructors"] = instructor_list
+					course_list.append(course_dict)
+				return course_list
+
+			elif(course_name != None): 
+				courses = Course.query.filter(Course.course_name == course_name).all()
+				course_list =[]
+				for course in courses:
+					course_dict ={}
+					course_dict["course_id"] = course.course_id
+					course_dict["course_name"] = course.course_name
+					course_dict["course_passcode"] = course.passcode
+					instructor_list = []
+					for instructor in course.instructors:
+						instructor_dict = {}
+						instructor_dict["name"] = instructor.fname + " " + instructor.lname
+						instructor_dict["email"] = instructor.email
+						instructor_list.append(instructor_dict)
+					course_dict["instructors"] = instructor_list
+					course_list.append(course_dict)
+				return course_list
+
+			elif(instructor_name != None):
+				instructor_split = instructor_name.split(" ")
+				instructor_fname = instructor_split[0]
+				instructor_lname = instructor_split[1]
+				courses = Course.query.filter(and_(Course.instructors.any(Instructor.fname == instructor_fname),
+											   Course.instructors.any(Instructor.lname == instructor_lname))).all()
+				course_list =[]
+				for course in courses:
+					course_dict ={}
+					course_dict["course_id"] = course.course_id
+					course_dict["course_name"] = course.course_name
+					course_dict["course_passcode"] = course.passcode
+					instructor_list = []
+					for instructor in course.instructors:
+						instructor_dict = {}
+						instructor_dict["name"] = instructor.fname + " " + instructor.lname
+						instructor_dict["email"] = instructor.email
+						instructor_list.append(instructor_dict)
+					course_dict["instructors"] = instructor_list
+					course_list.append(course_dict)
+				return course_list
+			else:
+				return {'err':'Please provide search parameters'}
