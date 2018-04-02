@@ -518,3 +518,43 @@ class SearchCourse(Resource):
 				return course_list
 			else:
 				return {'err':'Please provide search parameters'}
+				
+class GenerateGroups(Resource):
+	def post(self):
+		data = user_parser.parse_args()
+		if not session['instructor_id']:
+			return {'err': 'Not an instructor'}
+		else:
+			course_id = data['course_id']
+			course = Course.query.filter(Course.course_id == course_id).first()
+    		group_ids = gen_groups(course_id)
+    		groups = Group.query.filter(Group.group_id in group_ids).all()
+    		for group in groups:
+    			course.groups.append(group)
+    		db.session.commit()
+    		return {'message': 'Groups generated'}
+			
+class RetrieveGroups(Resource):
+	def get(self):
+		data = user_parser.parse_args()
+		course_id = data['course_id']
+		course = Course.query.filter(Course.course_id == course_id).first()
+		group_list = []
+		for group in course.groups:
+			group_dict = {}
+			group_dict["id"] = group.group_id
+			group_memberships = GroupMembership.query.filter(GroupMembership.group_id == group.group_id).all()
+			student_ids = [membership.student_id for membership in group_memberships]
+			students = Student.query.filter(Student.student_id.in_(student_ids)).all()
+			student_list = []
+			for student in students:
+				student_dict = {}
+				student_dict["id"] = student.student_id
+				student_dict["name"] = student.fname + " " + student.lname
+				student_dict["email"] = student.email
+				student_list.append(student_dict)
+			group_dict["students"] = student_list
+			group_list.append(group_dict)
+		return group_list
+			
+			
