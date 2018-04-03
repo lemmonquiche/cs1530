@@ -960,7 +960,7 @@ def initdb_command():
                         'lbottomley2f',
                         '9vbUVGN'
                     );""")
-    con.execute("""INSERT INTO student VALUES ("
+    con.execute("""INSERT INTO student VALUES (
                         89,
                         'Black',
                         'Randell',
@@ -968,7 +968,7 @@ def initdb_command():
                         1,
                         'rblack2g',
                         'yoSa5yZHt'
-                    );"")
+                    );""")
     con.execute("""INSERT INTO student VALUES (
                         90,
                         'Bickle',
