@@ -491,15 +491,6 @@ def initdb_command():
                         'qsjrNb1FI'
                     );""")
     con.execute("""INSERT INTO student VALUES (
-                        38,
-                        'Lester',
-                        'Nerty',
-                        'nlester11@phpbb.com',
-                        1,
-                        'nlester11',
-                        'qsjrNb1FI'
-                    );""")
-    con.execute("""INSERT INTO student VALUES (
                         39,
                         'Feaveryear',
                         'Lora',
@@ -824,15 +815,6 @@ def initdb_command():
                         1,
                         'tdreye21',
                         'qR0pGG'
-                    );""")
-    con.execute("""INSERT INTO student VALUES (
-                        75,
-                        'Drinkhall',
-                        'Hadley',
-                        'hdrinkhall22@forbes.com',
-                        1,
-                        'hdrinkhall22',
-                        'ZMRLHtoGQz7'
                     );""")
     con.execute("""INSERT INTO student VALUES (
                         75,
