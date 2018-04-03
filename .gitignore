@@ -176,3 +176,5 @@ typings/
 
 # next.js build output
 .next
+grouper.db
+

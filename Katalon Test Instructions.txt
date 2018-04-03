@@ -1,0 +1,8 @@
+To Run Tests (Chrome):
+1.) Download Katalon: https://chrome.google.com/webstore/detail/katalon-recorder-selenium/ljdobmomdgdljniojadhoplhkpialdid?hl=en-US
+2.) Click on the green "K" icon that was placed to the right of the address bar.
+3.) Click on the folder on the right side of the screen.
+4.) Select the "CS1530 Grouper Automated Tests.html" file (the file is on github, make sure you have a local copy)
+5.) Go to the Student Registration test and change the username to an unused username (this needs to be done twice in the test. Uploaded file has the UN as "zac")
+6.) Go to the Instructor Registration test and change the username to an unused username (this needs to be done twice in the test. Uploaded file has the UN as "inst")
+7.) Hit the "Play Suite button at the top of the page to play the tests. Make sure the website is up and running on port 5000 before executing the tests.

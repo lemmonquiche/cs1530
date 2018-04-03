@@ -26,40 +26,6 @@ app.config.from_envvar('CHAT_CONFIG', silent=True)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # to get rid of some warning
 db.init_app(app)
 
-
-@app.cli.command('initdb')
-def initdb_command():
-    """Creates the database tables."""
-    db.drop_all()
-    db.create_all()
-    # add for debuggin
-    new_user = Instructor(
-        username = 'prof',
-        password = Instructor.generate_hash('password'),
-        lname = 'Rahimov',
-        fname = 'Daler',
-        email = 'daler@gmail.com'
-    )
-    new_user.save_to_db()
-    new_user = Student(
-        username = 'test',
-        password = Instructor.generate_hash('pwd'),
-        lname = 'Testing',
-        fname = 'Testing',
-        email = 'test@gmail.com'
-    )
-    new_user.save_to_db()
-    new_user = Student(
-        username = 'username',
-        password = Student.generate_hash('password'),
-        lname = 'Rahimov',
-        fname = 'Daler',
-        email = 'daler@gmail.com'
-    )
-    new_user.save_to_db()
-    db.session.commit()
-    print('Initialized the database.')
-
 @app.before_request
 def before_request():
     g.student = None
@@ -89,7 +55,6 @@ api.add_resource(resources.LoginCridentials, '/api/login/credentials')
 api.add_resource(resources.GroupGenerate, '/api/group')
 api.add_resource(resources.StudentSchedule, '/api/student/schedule')
 api.add_resource(resources.Registration, '/api/login/signup')
-api.add_resource(resources.Profile, '/api/profile')
 
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
@@ -107,10 +72,6 @@ def main_page():
     """ This is the seleton page
     """
     return make_response(render_template('homepage.html'))
-
-@app.errorhandler(404)
-def catch_404(e):
-    return redirect('/signin')
 
 @app.route('/signin')
 def signin():
@@ -170,7 +131,38 @@ def email_post():
           message=request.form.get('message'))
     return redirect(url_for(email_get.__name__, success=['true']))
 
-
+@app.cli.command('initdb')
+def initdb_command():
+    """Creates the database tables."""
+    db.drop_all()
+    db.create_all()
+    # add for debuggin
+    new_user = Instructor(
+        username = 'prof',
+        password = Instructor.generate_hash('password'),
+        lname = 'Rahimov',
+        fname = 'Daler',
+        email = 'daler@gmail.com'
+    )
+    new_user.save_to_db()
+    new_user = Student(
+        username = 'test',
+        password = Instructor.generate_hash('pwd'),
+        lname = 'Testing',
+        fname = 'Testing',
+        email = 'test@gmail.com'
+    )
+    new_user.save_to_db()
+    new_user = Student(
+        username = 'username',
+        password = Student.generate_hash('password'),
+        lname = 'Rahimov',
+        fname = 'Daler',
+        email = 'daler@gmail.com'
+    )
+    new_user.save_to_db()
+    db.session.commit()
+    print('Initialized the database.')
 
 if __name__ == '__main__':
     app.run()
