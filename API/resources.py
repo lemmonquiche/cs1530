@@ -1,10 +1,10 @@
 from flask_restful import Resource, reqparse
 from flask import g, session, jsonify
 from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
-from ..models.models import Student, Instructor, RevokedTokenModel
+from ..models.models import Student, Instructor, RevokedTokenModel, Course, Instructor, Group, GroupMembership, Course_Registration, Schedule
 from ..scheduler import *
 from sqlalchemy.sql import text
-from sqlalchemy import exc
+from sqlalchemy import exc, and_, or_
 import json
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
