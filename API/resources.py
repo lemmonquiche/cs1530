@@ -28,6 +28,11 @@ schedule_parser = reqparse.RequestParser()
 schedule_parser.add_argument('schedule_id', help = 'This field cannot be blank', required = False)
 schedule_parser.add_argument('schedule', help = 'This field cannot be blank', required = True)
 
+search_parser = reqparse.RequestParser()
+search_parser.add_argument('course_id', help="This field can be blank", required = False)
+search_parser.add_argument('course_name', help="This field can be blank", required = False)
+search_parser.add_argument('instructor_name', help="This field can be blank", required = False)
+
 registration_parser = reqparse.RequestParser()
 registration_parser.add_argument('role', help = 'This field can be blank', required = False)
 registration_parser.add_argument('username', help = 'This field cannot be blank', required = True)
@@ -429,7 +434,7 @@ class CreateCourse(Resource):
 
 class SearchCourse(Resource):
 	def post(self):
-		data = user_parser.parse_args()
+		data = search_parser.parse_args()
 		if not session['student_id']:
 			return {'err': 'Not a student'}
 		else:
