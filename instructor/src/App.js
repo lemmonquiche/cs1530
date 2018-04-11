@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { /*Link,*/ Route } from 'react-router-dom';
+
 import $ from 'jquery';
 import 'bootstrap';
-
 
 import './App.css';
 
 import Header from './Components/nav/Header';
 import Sidebar from './Components/nav/Sidebar';
-
-import Class from './Components/Class';
-
 import routes from './routes';
 
 class App extends Component {
