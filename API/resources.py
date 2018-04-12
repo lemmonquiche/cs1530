@@ -14,43 +14,42 @@ from json import loads
 
 import string
 import random
+
+
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
-parser = reqparse.RequestParser()
-parser.add_argument('username', help = 'This field cannot be blank', required = True)
-parser.add_argument('password', help = 'This field cannot be blank', required = True)
+parser              = reqparse.RequestParser()
+parser.add_argument('username',               help='This field cannot be blank', required=True )
+parser.add_argument('password',               help='This field cannot be blank', required=True )
 
-user_parser = reqparse.RequestParser()
-user_parser.add_argument('username', help = 'This field cannot be blank', required = True)
+user_parser         = reqparse.RequestParser()
+user_parser.add_argument('username',          help='This field cannot be blank', required=True )
 
-add_course_parser = reqparse.RequestParser()
-add_course_parser.add_argument('name', help = 'This field cannot be blank', required = True)
+add_course_parser   = reqparse.RequestParser()
+add_course_parser.add_argument('name',        help='This field cannot be blank', required=True )
 
-course_parser = reqparse.RequestParser()
-course_parser.add_argument('course_id', help = 'This field cannot be blank', required = True)
-#course_parser.add_argument('instructor_id', help = 'This field cannot be blank', required = True)
+course_parser       = reqparse.RequestParser()
+course_parser.add_argument('course_id',       help='This field cannot be blank', required=True )
+course_parser.add_argument('instructor_id',   help='This field cannot be blank', required=True )
 
-schedule_parser = reqparse.RequestParser()
-schedule_parser.add_argument('schedule_id', help = 'This field cannot be blank', required = False)
-schedule_parser.add_argument('schedule', help = 'This field cannot be blank', required = True)
+schedule_parser     = reqparse.RequestParser()
+schedule_parser.add_argument('schedule_id',   help='This field cannot be blank', required=False)
+schedule_parser.add_argument('schedule',      help='This field cannot be blank', required=True )
 
-search_parser = reqparse.RequestParser()
-search_parser.add_argument('course_id', help="This field can be blank", required = False)
-search_parser.add_argument('course_name', help="This field can be blank", required = False)
-search_parser.add_argument('instructor_name', help="This field can be blank", required = False)
+search_parser       = reqparse.RequestParser()
+search_parser.add_argument('course_id',       help='This field can be blank',    required=False)
+search_parser.add_argument('course_name',     help='This field can be blank',    required=False)
+search_parser.add_argument('instructor_name', help='This field can be blank',    required=False)
 
 registration_parser = reqparse.RequestParser()
-registration_parser.add_argument('role', help = 'This field can be blank', required = False)
-registration_parser.add_argument('username', help = 'This field cannot be blank', required = True)
-registration_parser.add_argument('fname', help = 'This field cannot be blank', required = True)
-registration_parser.add_argument('lname', help = 'This field can be blank', required = False)
-registration_parser.add_argument('email', help = 'This field cannot be blank', required = True)
-registration_parser.add_argument('password', help = 'This field can be blank', required = False)
+registration_parser.add_argument('role',      help='This field can be blank',    required=False)
+registration_parser.add_argument('username',  help='This field cannot be blank', required=True )
+registration_parser.add_argument('fname',     help='This field cannot be blank', required=True )
+registration_parser.add_argument('lname',     help='This field can be blank',    required=False)
+registration_parser.add_argument('email',     help='This field cannot be blank', required=True )
+registration_parser.add_argument('password',  help='This field can be blank',    required=False)
 
-#amend_parser = reqparse.RequestParser()
-#amend_parser.add_argument('course_id', help = 'This field cannot be blank', required = True)
-#amend_parser.add_argument('swaps', help = 'This field cannot be blank', required = True)
 
 class Registration(Resource):
     def post(self):
@@ -87,12 +86,14 @@ class Registration(Resource):
             except exc.IntegrityError:
                 return {'err': 'user alredy exit'}
 
+
 edit_profile_parser = reqparse.RequestParser()
-edit_profile_parser.add_argument('username', help = 'This field cannot be blank', required = False)
-edit_profile_parser.add_argument('fname', help = 'This field cannot be blank', required = False)
-edit_profile_parser.add_argument('lname', help = 'This field can be blank', required = False)
-edit_profile_parser.add_argument('email', help = 'This field cannot be blank', required = False)
-edit_profile_parser.add_argument('password', help = 'This field can be blank', required = False)
+edit_profile_parser.add_argument('username', help='This field cannot be blank', required=False)
+edit_profile_parser.add_argument('fname',    help='This field cannot be blank', required=False)
+edit_profile_parser.add_argument('lname',    help='This field can be blank',    required=False)
+edit_profile_parser.add_argument('email',    help='This field cannot be blank', required=False)
+edit_profile_parser.add_argument('password', help='This field can be blank',    required=False)
+
 
 class Profile(Resource):
     def get (self):
@@ -201,6 +202,7 @@ class StudentSchedule(Resource):
                 return{'result':'success'}
         return {'err': 'Failed for some reason' }
 
+
 class LoginUser(Resource):
     def post(self):
         data = user_parser.parse_args()
@@ -219,6 +221,7 @@ class LoginUser(Resource):
         else:
             return {'err' : 'User not recongnized'}
 
+
 class LoginCridentials (Resource):
     def post(self):
         data = parser.parse_args()
@@ -231,7 +234,7 @@ class LoginCridentials (Resource):
         if current_student:
             if Student.verify_hash(data['password'], current_student.password):
                 session['student_id'] = current_student.student_id
-#                 print (current_student.student_id)
+                # print (current_student.student_id)
                 return {
                     'message': 'Logged in as {}'.format(current_student.username),
                     'user_type': '{}'.format(type(current_student).__name__),
@@ -243,7 +246,7 @@ class LoginCridentials (Resource):
         elif current_instruc:
             if Student.verify_hash(data['password'], current_instruc.password):
                 session['instructor_id'] = current_instruc.instructor_id
-#                 print (current_student.student_id)
+                # print (current_student.student_id)
                 return {
                     'message': 'Logged in as {}'.format(current_instruc.username),
                     'user_type': '{}'.format(type(current_instruc).__name__),
@@ -276,6 +279,7 @@ class UserLogin(Resource):
         else:
             return {'message': 'Wrong credentials'}
 
+
 class UserLogoutAccess(Resource):
     @jwt_required
     def post(self):
@@ -286,6 +290,7 @@ class UserLogoutAccess(Resource):
             return {'message': 'Access token has been revoked'}
         except:
             return {'message': 'Something went wrong'}, 500
+
 
 class UserLogoutRefresh(Resource):
     @jwt_refresh_token_required
@@ -298,12 +303,14 @@ class UserLogoutRefresh(Resource):
         except:
             return {'message': 'Something went wrong'}, 500
 
+
 class TokenRefresh(Resource):
     @jwt_refresh_token_required
     def post(self):
         current_user = get_jwt_identity()
         access_token = create_access_token(identity = current_user)
         return {'access_token': access_token}
+
 
 class SecretResource(Resource):
     try:
@@ -314,6 +321,7 @@ class SecretResource(Resource):
             }
     except Exception as e:
         print (e)
+
 
 class StudentDashBoard(Resource):
     def get(self):
@@ -346,6 +354,7 @@ class StudentDashBoard(Resource):
                 group_info.append(info_dict)
             return group_info
 
+
 class InstructorDashBoard(Resource):
     def get(self):
         if not session['instructor_id']:
@@ -372,6 +381,7 @@ class InstructorDashBoard(Resource):
 
         result['courses'] = courses_result
         return result
+
 
 class InstructorAddCourse(Resource):
     def post(self):
@@ -428,6 +438,7 @@ class RegisterForCourse(Resource):
                 db.session.commit()
                 return {'message': 'Student added to pending students'}
 
+
 class ConfirmCourse(Resource):
     def post(self):
         if not session['instructor_id']:
@@ -444,6 +455,7 @@ class ConfirmCourse(Resource):
             db.session.commit()
 
             return {'message': 'Course confirmation complete'}
+
 
 class CreateCourse(Resource):
     def post(self):
@@ -462,6 +474,7 @@ class CreateCourse(Resource):
             db.session.commit()
 
             return{'message':'Course creation complete'}
+
 
 class SearchCourse(Resource):
 	def post(self):
@@ -555,6 +568,7 @@ class SearchCourse(Resource):
 			else:
 				return {'err':'Please provide search parameters'}
 
+
 class RetrieveGroups(Resource):
     def post(self):
         if not session['instructor_id']:
@@ -590,19 +604,3 @@ class RetrieveGroups(Resource):
             group_dict["students"] = student_list
             group_list.append(group_dict)
         return {'group_list': group_list, 'students': all_students}
-
-#class AmendGroups(Resource):
-#    def post(self):
-#        if not session['instructor_id']:
-#             return {'err': 'Not an instructor'}
-#swaps = [
-# {
-#   'student': id,
-#   'old': 2,
-#   'new': 3
-# },
-#]
-#
-#for swap in swaps:
-# rmgroup(swap['old'], swap['student'])
-# addgroup(swap['new'], swap['student'])
