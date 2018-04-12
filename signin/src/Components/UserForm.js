@@ -49,8 +49,8 @@ class UserForm extends Component {
       if (!(that.refs && that.refs.input && that.refs.form))
         return;
 
-      // that.refs.input.value = 'test';
-      that.refs.input.value = 'nope';
+      that.refs.input.value = 'test';
+      // that.refs.input.value = 'nope';
       ReactTestUtils.Simulate.change(that.refs.input);
       ReactTestUtils.Simulate.submit(that.refs.form);
 
@@ -68,6 +68,7 @@ class UserForm extends Component {
             <label className="col-sm-2 control-label" htmlFor="user-form-username">Username:</label>
             <div className="col-sm-10">
               <input
+                tabIndex="1"
                 id="user-form-username"
                 ref='input'
                 className="form-control"

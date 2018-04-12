@@ -109,6 +109,7 @@ class PasswordForm extends Component {
             <label className="col-sm-2 control-label" htmlFor="user-form-password">Password:</label>
             <div className="col-sm-10">
               <input
+                tabIndex="1"
                 id="user-form-password"
                 ref='password'
                 className="form-control"

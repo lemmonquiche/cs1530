@@ -110,6 +110,7 @@ class SignupForm extends Component {
             <label className="col-sm-2 control-label" htmlFor="signup-form-username">Username:</label>
             <div className="col-sm-10">
               <input
+                tabIndex="1"
                 id="signup-form-username"
                 ref='username'
                 className="form-control"
