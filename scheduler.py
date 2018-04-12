@@ -18,6 +18,12 @@ def sumColumn(m, column):
 def gen_groups(course_id):
     con = engine.connect()
     #get all students from course
+    cur_groups = con.execute('SELECT group_id FROM \'group\' WHERE course = :course_id', {'course_id':course_id})
+    cur_groups_id = [r for (r, ) in cur_groups]
+    for c in cur_groups_id:
+        con.execute('DELETE FROM group_membership WHERE group_id = :group', {'group':c})
+    con.execute('DELETE FROM \'group\' WHERE course = :course_id', {'course_id':course_id})
+
     result = con.execute('SELECT student_id FROM course_registration WHERE course_id = :course', {'course':course_id})
 
     ss = [r for (r, ) in result]
