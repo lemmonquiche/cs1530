@@ -50,12 +50,14 @@ jwt = JWTManager(app)
 # api.add_resource(resources.UserLogoutAccess, '/logout/access')
 # api.add_resource(resources.UserLogoutRefresh, '/logout/refresh')
 # api.add_resource(resources.TokenRefresh, '/token/refresh')
-api.add_resource(resources.LoginUser, '/api/login/user')
-api.add_resource(resources.LoginCridentials, '/api/login/credentials')
-api.add_resource(resources.GroupGenerate, '/api/instructor/course/generategroup')
-api.add_resource(resources.StudentSchedule, '/api/student/schedule')
-api.add_resource(resources.Registration, '/api/login/signup')
-api.add_resource(resources.RetrieveGroups, '/api/instructor/course/groups')
+api.add_resource(resources.LoginUser,           '/api/login/user')
+api.add_resource(resources.LoginCridentials,    '/api/login/credentials')
+api.add_resource(resources.StudentSchedule,     '/api/student/schedule')
+api.add_resource(resources.Registration,        '/api/login/signup')
+api.add_resource(resources.InstructorDashBoard, '/api/instructor/course')
+api.add_resource(resources.GroupGenerate,       '/api/instructor/course/generategroup')
+api.add_resource(resources.RetrieveGroups,      '/api/instructor/course/groups')
+api.add_resource(resources.InstructorAddCourse, '/api/instructor/addCourse')
 
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
@@ -73,6 +75,15 @@ def main_page():
     """ This is the seleton page
     """
     return make_response(render_template('homepage.html'))
+
+@app.errorhandler(404)
+def page_not_found(e):
+    if g.student:
+        return send_from_directory('student/build', 'index.html')
+    if g.instructor:
+        return send_from_directory('instructor/build', 'index.html')
+
+    return redirect(url_for('signin'))
 
 @app.route('/signin')
 def signin():

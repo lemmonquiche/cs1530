@@ -1,5 +1,5 @@
 import sys
-print (sys.path)
+# print (sys.path)
 import datetime
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy

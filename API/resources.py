@@ -12,6 +12,10 @@ engine = create_engine('sqlite:///grouper.db')
 db = engine.connect()
 from json import loads
 
+import string
+import random
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
 
 parser = reqparse.RequestParser()
 parser.add_argument('username', help = 'This field cannot be blank', required = True)
@@ -19,6 +23,9 @@ parser.add_argument('password', help = 'This field cannot be blank', required = 
 
 user_parser = reqparse.RequestParser()
 user_parser.add_argument('username', help = 'This field cannot be blank', required = True)
+
+add_course_parser = reqparse.RequestParser()
+add_course_parser.add_argument('name', help = 'This field cannot be blank', required = True)
 
 course_parser = reqparse.RequestParser()
 course_parser.add_argument('course_id', help = 'This field cannot be blank', required = True)
@@ -343,22 +350,56 @@ class InstructorDashBoard(Resource):
     def get(self):
         if not session['instructor_id']:
             return {'err':'Not an instructor'}
-        else:
-            courses = Course.query.filter(Course.instructors.any(instructor_id=session['instructor_id'])).all()
-            instructor_info_dicts = []
-            for course in courses:
-                info_dict = {}
-                info_dict["course_name"] = course.course_name
-                info_dict["course_id"] = course.course_id
-                pending_students = []
-                for student in course.pending_students:
-                    student_dict = {}
-                    student_dict["name"] = student.fname + " " + student.lname
-                    student_dict["id"] = student.student_id
-                    pending_students.append(student_dict)
-                info_dict["pending_students"] = pending_students
-                instructor_info_dicts.append(info_dict)
-            return instructor_info_dicts
+
+        courses = Course.query.filter(Course.instructors.any(instructor_id=session['instructor_id'])).all()
+        result = {}
+
+        courses_result = []
+        for course in courses:
+            info_dict = {}
+            info_dict["course_name"] = course.course_name
+            info_dict["course_id"] = course.course_id
+            # pending_students = []
+            # for student in course.pending_students:
+            #     student_dict = {}
+            #     student_dict["name"] = student.fname + " " + student.lname
+            #     student_dict["id"] = student.student_id
+            #     pending_students.append(student_dict)
+            # info_dict["pending_students"] = pending_students
+
+            courses_result.append(info_dict)
+
+        result['courses'] = courses_result
+        return result
+
+class InstructorAddCourse(Resource):
+    def post(self):
+        data = add_course_parser.parse_args()
+        if not session['instructor_id']:
+            return {'err': 'Not an instructor'}
+
+        iid = session['instructor_id']
+        
+        name = data['name']
+        code = id_generator()
+        try:
+            # insert course into courses
+            ins = Course.__table__.insert().values(
+                course_name=name,
+                passcode=code)#,
+            last_id = db.execute(ins).inserted_primary_key[0]
+
+            # assoc with current instructor_id, aka iid
+            result = db.execute(("insert into "
+                "instructs_course (instructor_id, course_id) "
+                "values (?, ?)"), iid, last_id)
+            last_id = result.inserted_primary_key[0]
+
+            return { 'status': 'success', 'id': last_id }
+        except Exception as e:
+            raise e
+            return { 'error': 'Python Error: ' + e.message }
+
 
 class RegisterForCourse(Resource):
     def post(self):
