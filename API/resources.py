@@ -43,7 +43,7 @@ registration_parser.add_argument('password', help = 'This field can be blank', r
 
 #amend_parser = reqparse.RequestParser()
 #amend_parser.add_argument('course_id', help = 'This field cannot be blank', required = True)
-#amend_parser.add_argument('to_swap', help = 'This field cannot be blank', required = True)
+#amend_parser.add_argument('swaps', help = 'This field cannot be blank', required = True)
 
 class Registration(Resource):
     def post(self):
@@ -553,3 +553,14 @@ class RetrieveGroups(Resource):
 #    def post(self):
 #        if not session['instructor_id']:
 #             return {'err': 'Not an instructor'}
+#swaps = [
+# {
+#   'student': id,
+#   'old': 2,
+#   'new': 3
+# },
+#]
+#
+#for swap in swaps:
+# rmgroup(swap['old'], swap['student'])
+# addgroup(swap['new'], swap['student'])
