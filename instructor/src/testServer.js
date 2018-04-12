@@ -1,5 +1,25 @@
 import Pretender from 'pretender';
 
+if (process.env.NODE_ENV === 'development') {
+
+const dataTable = _.range(1, 50).map(x => ({
+  id: x, course: `Course ${x}`, instructor: `Professor ${x}`
+}));
+
+// Simulates the call to the server to get the data
+const fakeDataFetcher = {
+  fetch(page, size) {
+    return new Promise((resolve, reject) => {
+      resolve({items: _.slice(dataTable, (page-1)*size, ((page-1)*size) + size), total: dataTable.length});
+    });
+  }
+};
+
+/*fakeDataFetcher.fetch(page, sizePerPage)
+  .then(data => {
+    this.setState({items: data.items, totalSize: data.total, page, sizePerPage});
+  });*/
+
 var students = [
   { id: 1, name: "Alice" , grouped: false },
   { id: 2, name: "Bob"   , grouped: false },
@@ -28,7 +48,6 @@ var courses = [
   { course_id: 3, course_name: 'Advanced',     passcode: 'abc' }
 ];
 
-if (process.env.NODE_ENV === 'development') {
 var server = new Pretender(function(){
   this.get('/test', function () {
     return [200, {}, 'ok'];

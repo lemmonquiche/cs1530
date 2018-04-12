@@ -241,30 +241,33 @@ class StudentPendingClass(Resource):
         limit = data['sizePerPage']
         offset = data['page'] * int(limit)
 
-        try:
-            query = """select c.course_name as name,
-                              i.lname as l,
-                              i.fname as f
-                       from course_pending cp
-                       join course c on cp.course_id = c.course_id
-                       join instructs_course ic on ic.course_id = c.course_id
-                       join instructor i on i.instructor_id = ic.instructor_id
-                       where cp.student_id = ?
-                       limit ?
-                       offset ?;"""
-            r = db.execute(query, session['student_id'], data[''], data[''])
-            rs = r.fetchall()
-            
-            def make_course_dict(row):
+        # try:
+        query = """select c.course_id as id,
+                          c.course_name as name,
+                          i.fname as f,
+                          i.lname as l
+                   from course_pending cp
+                   join course c on cp.course_id = c.course_id
+                   join instructs_course ic on ic.course_id = c.course_id
+                   join instructor i on i.instructor_id = ic.instructor_id
+                   where cp.student_id = ?
+                   limit ?
+                   offset ?;"""
+        r = db.execute(query, session['student_id'], limit, offset)
+        rs = r.fetchall()
+        
+        def make_course_dict(row):
             return {
                 'id':         row['id'],
-                'course':     row['name'],
+                'name':       row['name'],
                 'instructor': row['f'] + ' ' + row['l']
             }
 
-            return { 'status': 'success' }
-        except:
-            return { 'error': True }
+        courses = [make_course_dict(r) for r in rs]
+
+        return { 'courses': courses, 'status': 'success' }
+        # except:
+        #     return { 'error': True }
 
 
 class StudentSchedule(Resource):

@@ -3,18 +3,7 @@ import React, {Component} from 'react';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import _ from 'lodash';
 
-const dataTable = _.range(1, 50).map(x => ({
-  id: x, course: `Course ${x}`, instructor: `Professor ${x}`
-}));
 
-// Simulates the call to the server to get the data
-const fakeDataFetcher = {
-  fetch(page, size) {
-    return new Promise((resolve, reject) => {
-      resolve({items: _.slice(dataTable, (page-1)*size, ((page-1)*size) + size), total: dataTable.length});
-    });
-  }
-};
 
 class DataGrid extends Component {
   constructor(props) {
@@ -36,10 +25,7 @@ class DataGrid extends Component {
   }
 
   fetchData(page = this.state.page, sizePerPage = this.state.sizePerPage) {
-    fakeDataFetcher.fetch(page, sizePerPage)
-      .then(data => {
-        this.setState({items: data.items, totalSize: data.total, page, sizePerPage});
-      });
+    this.props.updatePages(page, sizePerPage);
   }
 
   handlePageChange(page, sizePerPage) {
@@ -57,20 +43,7 @@ class DataGrid extends Component {
       onSizePerPageList: this.handleSizePerPageChange,
       page: this.state.page,
       sizePerPage: this.state.sizePerPage,
-
-      // onSearchChange: this.props.onSearchChange,
-      // clearSearch: true
     };
-
-    // console.log(Object.keys(this.props));
-
-    // var datas = this.state.items;
-    // var first = JSON.stringify(datas);
-        // <div>
-        //   <p>{first}</p>
-        //   <p>{JSON.stringify(options)}</p>
-        //   <p>{JSON.stringify(this.state.totalSize)}</p>
-        // </div>
 
     function add(row, cell) {
       var onClick = function () {

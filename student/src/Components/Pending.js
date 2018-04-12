@@ -121,8 +121,7 @@ class DataGrid extends Component {
         hover
         condensed
       >
-        <TableHeaderColumn dataField="id" isKey dataFormat={viewLink} width='10%' dataAlign="center">View</TableHeaderColumn>
-        <TableHeaderColumn dataField="id"       dataFormat={remove}   width='10%' dataAlign="center">Remove</TableHeaderColumn>
+        <TableHeaderColumn dataField="id" isKey dataFormat={remove}   width='10%' dataAlign="center">Remove</TableHeaderColumn>
         <TableHeaderColumn dataField="course"     width='40%' dataAlign="center">Course</TableHeaderColumn>
         <TableHeaderColumn dataField="instructor" width='40%' dataAlign="center">Instructor</TableHeaderColumn>
       </BootstrapTable>
