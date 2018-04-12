@@ -41,6 +41,10 @@ registration_parser.add_argument('lname', help = 'This field can be blank', requ
 registration_parser.add_argument('email', help = 'This field cannot be blank', required = True)
 registration_parser.add_argument('password', help = 'This field can be blank', required = False)
 
+#amend_parser = reqparse.RequestParser()
+#amend_parser.add_argument('course_id', help = 'This field cannot be blank', required = True)
+#amend_parser.add_argument('to_swap', help = 'This field cannot be blank', required = True)
+
 class Registration(Resource):
     def post(self):
         data = registration_parser.parse_args()
@@ -544,3 +548,8 @@ class RetrieveGroups(Resource):
             group_dict["students"] = student_list
             group_list.append(group_dict)
         return {'group_list': group_list, 'students': all_students}
+
+#class AmendGroups(Resource):
+#    def post(self):
+#        if not session['instructor_id']:
+#             return {'err': 'Not an instructor'}
