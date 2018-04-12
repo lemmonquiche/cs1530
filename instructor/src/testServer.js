@@ -49,16 +49,82 @@ var server = new Pretender(function(){
   this.post('/api/instructor/course/groups', function (request) {
     var class_id = JSON.parse(request.requestBody)['class_id'];
 
-    var class_ = {
-      class_id: class_id, name: 'ok', groups: [1, 2, 3, 4]
+    var response = {
+      group_list: [
+        { id: 1, students: [
+          {
+            "email": "daler@gmail.com",
+            "id": 2,
+            "name": "Daler Rahimov"
+          },
+          {
+            "email": "ballicock2@huffingtonpost.com",
+            "id": 3,
+            "name": "Betteann Allicock"
+          },
+          {
+            "email": "lkeeri3@marriott.com",
+            "id": 4,
+            "name": "Lory Keeri"
+          },
+          {
+            "email": "vsolan4@desdev.cn",
+            "id": 5,
+            "name": "Vanda Solan"
+          },
+          {
+            "email": "mcraythorn5@tinyurl.com",
+            "id": 6,
+            "name": "Melessa Craythorn"
+          }
+        ] },
+        { id: 2, students: [
+          {
+            "email": "test@gmail.com",
+            "id": 1,
+            "name": "Testing Testing"
+          },
+          {
+            "email": "abahls6@sitemeter.com",
+            "id": 7,
+            "name": "Alessandra Bahls"
+          },
+          {
+            "email": "gpay7@webs.com",
+            "id": 8,
+            "name": "Gizela Pay"
+          },
+          {
+            "email": "wjirak8@amazon.co.jp",
+            "id": 9,
+            "name": "Willamina Jirak"
+          },
+          {
+            "email": "adimitrescu9@sciencedaily.com",
+            "id": 10,
+            "name": "Alberta Dimitrescu"
+          }
+        ] }
+      ],
+      students: 
+        [ { fname: 'Testing',    id: 1,  lname: 'Testing' },
+          { fname: 'Daler',      id: 2,  lname: 'Rahimov' },
+          { fname: 'Betteann',   id: 3,  lname: 'Allicock' },
+          { fname: 'Lory',       id: 4,  lname: 'Keeri' },
+          { fname: 'Vanda',      id: 5,  lname: 'Solan' },
+          { fname: 'Melessa',    id: 6,  lname: 'Craythorn' },
+          { fname: 'Alessandra', id: 7,  lname: 'Bahls' },
+          { fname: 'Gizela',     id: 8,  lname: 'Pay' },
+          { fname: 'Willamina',  id: 9,  lname: 'Jirak' },
+          { fname: 'Alberta',    id: 10, lname: 'Dimitrescu' } ]
     };
 
     return new Promise(function (resolve) {
       setTimeout(function() {
         resolve([
-          200, {"Content-Type": "application/json"}, JSON.stringify(class_)
+          200, {"Content-Type": "application/json"}, JSON.stringify(response)
         ]);
-      }.bind(this), 100);
+      }.bind(this), 500);
     });
   });
 

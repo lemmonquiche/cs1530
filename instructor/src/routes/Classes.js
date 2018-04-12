@@ -28,7 +28,7 @@ class Classes extends Component {
   }
 
   componentDidMount() {
-    console.log("component did mount")
+    // console.log("component did mount")
     this.loadClasses();
   }
 
