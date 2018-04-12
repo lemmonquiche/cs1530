@@ -46,6 +46,7 @@ class SignupForm extends Component {
         fname: this.state.fname,
         lname: this.state.lname,
         email: this.state.email,
+        password: this.state.password,
         role: this.state.role === 0 ? 'student' : 'instructor'
       }),
       dataType: 'json',
