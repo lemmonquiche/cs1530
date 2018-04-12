@@ -5,47 +5,53 @@ import "react-table-drag-select/style.css";
 
 import $ from 'jquery';
 
+var defaultCells = [
+  /* dis  mon    tues   wed    thurs  fri    sat    sun */
+  [false, false, false, false, false, false, false, false],  // 8
+  [false, false, false, false, false, false, false, false],  // 830
+  [false, false, false, false, false, false, false, false],  // 9
+  [false, false, false, false, false, false, false, false],
+  [false, false, false, false, false, false, false, false],  // 10
+  [false, false, false, false, false, false, false, false],
+  [false, false, false, false, false, false, false, false],  // 11
+  [false, false, false, false, false, false, false, false],
+  [false, false, false, false, false, false, false, false],  // 12
+  [false, false, false, false, false, false, false, false],
+  [false, false, false, false, false, false, false, false],  // 13
+  [false, false, false, false, false, false, false, false],
+  [false, false, false, false, false, false, false, false],  // 2
+  [false, false, false, false, false, false, false, false],
+  [false, false, false, false, false, false, false, false],  // 3
+  [false, false, false, false, false, false, false, false],
+  [false, false, false, false, false, false, false, false],  // 4
+  [false, false, false, false, false, false, false, false],
+  [false, false, false, false, false, false, false, false],  // 5
+  [false, false, false, false, false, false, false, false],
+  [false, false, false, false, false, false, false, false],  // 6
+  [false, false, false, false, false, false, false, false],
+  [false, false, false, false, false, false, false, false],  // 7
+  [false, false, false, false, false, false, false, false],
+  [false, false, false, false, false, false, false, false],  // 8
+  [false, false, false, false, false, false, false, false],
+  [false, false, false, false, false, false, false, false],  // 9
+  [false, false, false, false, false, false, false, false],
+  [false, false, false, false, false, false, false, false],
+];
+
 class Schedule extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loaded: false,
-      cells: [
-        /* dis  mon    tues   wed    thurs  fri    sat    sun */
-        [false, false, false, false, false, false, false, false],  // 8
-        [false, false, false, false, false, false, false, false],  // 830
-        [false, false, false, false, false, false, false, false],  // 9
-        [false, false, false, false, false, false, false, false],
-        [false, false, false, false, false, false, false, false],  // 10
-        [false, false, false, false, false, false, false, false],
-        [false, false, false, false, false, false, false, false],  // 11
-        [false, false, false, false, false, false, false, false],
-        [false, false, false, false, false, false, false, false],  // 12
-        [false, false, false, false, false, false, false, false],
-        [false, false, false, false, false, false, false, false],  // 13
-        [false, false, false, false, false, false, false, false],
-        [false, false, false, false, false, false, false, false],  // 2
-        [false, false, false, false, false, false, false, false],
-        [false, false, false, false, false, false, false, false],  // 3
-        [false, false, false, false, false, false, false, false],
-        [false, false, false, false, false, false, false, false],  // 4
-        [false, false, false, false, false, false, false, false],
-        [false, false, false, false, false, false, false, false],  // 5
-        [false, false, false, false, false, false, false, false],
-        [false, false, false, false, false, false, false, false],  // 6
-        [false, false, false, false, false, false, false, false],
-        [false, false, false, false, false, false, false, false],  // 7
-        [false, false, false, false, false, false, false, false],
-        [false, false, false, false, false, false, false, false],  // 8
-        [false, false, false, false, false, false, false, false],
-        [false, false, false, false, false, false, false, false],  // 9
-        [false, false, false, false, false, false, false, false],
-        [false, false, false, false, false, false, false, false],
-      ],
+      cells: defaultCells,
       saved: true
     };
 
     this.save = this.save.bind(this);
+  }
+
+  componentDidCatch() {
+    this.setState({ loaded: true, cells: defaultCells });
   }
 
   componentDidMount() {
@@ -57,6 +63,10 @@ class Schedule extends Component {
           return [false].concat(row.match(/.{1}/g)
             .map(function(value) {return value === "1" ? true : false; }));
         });
+      // try {
+      // } catch (e) {
+      //   return defaultCells;
+      // }
     }
 
     if (!this.state.loaded) {
