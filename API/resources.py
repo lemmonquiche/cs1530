@@ -190,11 +190,9 @@ class StudentClasses(Resource):
                    join course c               on cr.course_id = c.course_id
                    join instructs_course ic    on ic.course_id = c.course_id
                    join instructor i           on i.instructor_id = ic.instructor_id
-                   where s.student_id = ?
-                   limit ?
-                   offset ?;"""
+                   where s.student_id = ?;"""
 
-        result = db.execute(query, session['student_id'], limit, offset)
+        result = db.execute(query, session['student_id'])#, limit, offset)
         rows = result.fetchall()
 
         def make_course_dict(row):

@@ -1,4 +1,5 @@
 import Pretender from 'pretender';
+import _ from 'lodash';
 
 if (process.env.NODE_ENV === 'development') {
 
