@@ -9,7 +9,7 @@ import json
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 engine = create_engine('sqlite:///grouper.db')
-db = engine.connect() 
+db = engine.connect()
 from json import loads
 
 
@@ -22,7 +22,7 @@ user_parser.add_argument('username', help = 'This field cannot be blank', requir
 
 course_parser = reqparse.RequestParser()
 course_parser.add_argument('course_id', help = 'This field cannot be blank', required = True)
-course_parser.add_argument('instructor_id', help = 'This field cannot be blank', required = True)
+#course_parser.add_argument('instructor_id', help = 'This field cannot be blank', required = True)
 
 schedule_parser = reqparse.RequestParser()
 schedule_parser.add_argument('schedule_id', help = 'This field cannot be blank', required = False)
@@ -105,13 +105,13 @@ class Profile(Resource):
                 }
         else:
             return { 'err': 'not logged in'}
-        
+
     def post(self):
         data = edit_profile_parser.parse_args()
-        
+
         if (not session['student_id'] and not session['instructor_id']):
             return {'err': 'not logged in'}
-        
+
         if session['student_id']:
             s = Student.query.filter_by(student_id = session['student_id']).first()
             if data.fname: s.fname = data.fname
@@ -123,7 +123,7 @@ class Profile(Resource):
                 return {'result': 'success'}
             except exc.IntegrityError:
                 return {'err': 'user alredy exit'}
-            
+
         if session['instructor_id']:
             s = Instructor.query.filter_by(student_id = session['instructor_id']).first()
             if data.fname: s.fname = data.fname
@@ -136,29 +136,18 @@ class Profile(Resource):
             except exc.IntegrityError:
                 return {'err': 'user alredy exit'}
 
-                        
+
 class GroupGenerate(Resource):
     def post(self):
         data = course_parser.parse_args()
         cid = data['course_id']
-        iid = data['instructor_id']
-        if not iid:
+        if not session['instructor_id']:
             return{'err':'Not an instructor'}
         elif iid:
-            # #cid = course_parser.parse_args()
             groups = gen_groups(cid)
-
             if not groups:
-                return{'err':'could not generate group'}
-            row_json = json.dumps(groups)
-            # jgroups = "\"group_ids\": ["
-            # for g in groups:
-            #     jgroups += " \"{}\",".format(g)
-            # jgroups = jgroups[:-1]
-            # jgroups += "]"
-            # # return {jgroups}
-
-            return {"group_ids": row_json}
+                return{'err':'could not generate groups'}
+            return{'message':'groups generated'}
         else:
             return{'err':'could not generate group'}
 
@@ -170,7 +159,7 @@ class StudentSchedule(Resource):
             return{'err': 'Not a student'}
         else:
             s = Schedule.query.filter_by(student_id = session['student_id']).first()
-            if not s: 
+            if not s:
                 s = Schedule (
                     student_id = session['student_id'],
                     available_hour_week = ''
@@ -178,7 +167,7 @@ class StudentSchedule(Resource):
                 s.save_to_db()
                 return {'schedule':''}
             return {'schedule': s.available_hour_week}
-               
+
     def post(self):
         if not session['student_id']:
             return{'err': 'Not a student'}
@@ -218,9 +207,6 @@ class LoginUser(Resource):
                 }
         else:
             return {'err' : 'User not recongnized'}
-
-
-
 
 class LoginCridentials (Resource):
     def post(self):
@@ -290,7 +276,6 @@ class UserLogoutAccess(Resource):
         except:
             return {'message': 'Something went wrong'}, 500
 
-
 class UserLogoutRefresh(Resource):
     @jwt_refresh_token_required
     def post(self):
@@ -301,7 +286,6 @@ class UserLogoutRefresh(Resource):
             return {'message': 'Refresh token has been revoked'}
         except:
             return {'message': 'Something went wrong'}, 500
-
 
 class TokenRefresh(Resource):
     @jwt_refresh_token_required
@@ -394,6 +378,7 @@ class RegisterForCourse(Resource):
                 course = Course.query.filter(Course.course_id==course_id).first()
 
                 course.pending_students.append(student)
+
                 db.session.commit()
                 return {'message': 'Student added to pending students'}
 
@@ -482,7 +467,7 @@ class SearchCourse(Resource):
 					course_list.append(course_dict)
 				return course_list
 
-			elif(course_name != None): 
+			elif(course_name != None):
 				courses = Course.query.filter(Course.course_name == course_name).all()
 				course_list =[]
 				for course in courses:
@@ -523,43 +508,39 @@ class SearchCourse(Resource):
 				return course_list
 			else:
 				return {'err':'Please provide search parameters'}
-				
-class GenerateGroups(Resource):
-	def post(self):
-		data = user_parser.parse_args()
-		if not session['instructor_id']:
-			return {'err': 'Not an instructor'}
-		else:
-			course_id = data['course_id']
-			course = Course.query.filter(Course.course_id == course_id).first()
-    		group_ids = gen_groups(course_id)
-    		groups = Group.query.filter(Group.group_id in group_ids).all()
-    		for group in groups:
-    			course.groups.append(group)
-    		db.session.commit()
-    		return {'message': 'Groups generated'}
-			
+
 class RetrieveGroups(Resource):
-	def get(self):
-		data = user_parser.parse_args()
-		course_id = data['course_id']
-		course = Course.query.filter(Course.course_id == course_id).first()
-		group_list = []
-		for group in course.groups:
-			group_dict = {}
-			group_dict["id"] = group.group_id
-			group_memberships = GroupMembership.query.filter(GroupMembership.group_id == group.group_id).all()
-			student_ids = [membership.student_id for membership in group_memberships]
-			students = Student.query.filter(Student.student_id.in_(student_ids)).all()
-			student_list = []
-			for student in students:
-				student_dict = {}
-				student_dict["id"] = student.student_id
-				student_dict["name"] = student.fname + " " + student.lname
-				student_dict["email"] = student.email
-				student_list.append(student_dict)
-			group_dict["students"] = student_list
-			group_list.append(group_dict)
-		return group_list
-			
-			
+    def post(self):
+        if not session['instructor_id']:
+             return {'err': 'Not an instructor'}
+        data = course_parser.parse_args()
+        course_id = data['course_id']
+
+        all_students = []
+        students_result = Course_Registration.query.filter(Course_Registration.course_id == course_id).all()
+        for stud in students_result:
+            student_info = Student.query.filter(Student.student_id == stud.student_id).first()
+            s = {}
+            s["id"] = stud.student_id
+            s["fname"] = student_info.fname
+            s["lname"] = student_info.lname
+            all_students.append(s)
+
+        course = Course.query.filter(Course.course_id == course_id).first()
+        group_list = []
+        for group in course.groups:
+            group_dict = {}
+            group_dict["id"] = group.group_id
+            group_memberships = GroupMembership.query.filter(GroupMembership.group_id == group.group_id).all()
+            student_ids = [membership.student_id for membership in group_memberships]
+            students = Student.query.filter(Student.student_id.in_(student_ids)).all()
+            student_list = []
+            for student in students:
+                student_dict = {}
+                student_dict["id"] = student.student_id
+                student_dict["name"] = student.fname + " " + student.lname
+                student_dict["email"] = student.email
+                student_list.append(student_dict)
+            group_dict["students"] = student_list
+            group_list.append(group_dict)
+        return {'group_list': group_list, 'students': all_students}
