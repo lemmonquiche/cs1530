@@ -83,13 +83,6 @@ class DataGrid extends Component {
       sizePerPage: this.state.sizePerPage,
     };
 
-    // var datas = this.state.items;
-    // var first = JSON.stringify(datas);
-        // <div>
-        //   <p>{first}</p>
-        //   <p>{JSON.stringify(options)}</p>
-        //   <p>{JSON.stringify(this.state.totalSize)}</p>
-        // </div>
 
     function viewLink(row, cell) {
       return <Link to={'/joined/' + cell.id}>
@@ -99,9 +92,25 @@ class DataGrid extends Component {
       </Link>;
     };
 
+    var that = this;
     function remove(row, cell) {
       var onClick = function () {
-        console.log("deleting this students course number" + cell.id);
+        $.ajax({
+          url: '/api/student/classes/pendingrm',
+          method: 'post',
+          contentType: 'application/json',
+          dataType: 'json',
+          data: JSON.stringify({ course_id: cell.id }),
+          error: function() {},
+          success: function (data, status, req) {
+            if (!data.error) {
+              alert("success");
+              that.fetchData();
+            } else {
+              alert("failure");
+            }
+          }
+        })
       };
 
       return <button type="button" className="btn btn-primary btn-sm" onClick={onClick}>
@@ -122,7 +131,7 @@ class DataGrid extends Component {
         condensed
       >
         <TableHeaderColumn dataField="id" isKey dataFormat={remove}   width='10%' dataAlign="center">Remove</TableHeaderColumn>
-        <TableHeaderColumn dataField="course"     width='40%' dataAlign="center">Course</TableHeaderColumn>
+        <TableHeaderColumn dataField="name"     width='40%' dataAlign="center">Course</TableHeaderColumn>
         <TableHeaderColumn dataField="instructor" width='40%' dataAlign="center">Instructor</TableHeaderColumn>
       </BootstrapTable>
     );

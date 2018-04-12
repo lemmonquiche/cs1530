@@ -36,6 +36,9 @@ limit_offset_parser = reqparse.RequestParser()
 limit_offset_parser.add_argument('page',            help='This field cannot be blank', required=True )
 limit_offset_parser.add_argument('sizePerPage',     help='This field cannot be blank', required=True )
 
+just_course         = reqparse.RequestParser()
+just_course.add_argument('course_id',         help='This field cannot be blank', required=True )
+
 course_parser       = reqparse.RequestParser()
 course_parser.add_argument('course_id',       help='This field cannot be blank', required=True )
 course_parser.add_argument('instructor_id',   help='This field cannot be blank', required=True )
@@ -205,6 +208,28 @@ class StudentClasses(Resource):
         courses = [make_course_dict(row) for row in rows]
         return { 'courses': courses }
 
+
+class StudentAddRequest(Resource):
+    def post(self):
+        if not session['student_id']:
+            return { 'err': 'Not a student' }
+
+        try:
+            data = just_course.parse_args()
+
+            query = """insert into course_pending (student_id, course_id)
+                       values (?, ?)"""
+            result = db.execute(query, session['student_id'], data['course_id'])
+            print("db has executed")
+            print(dir(result))
+            print(result.lastrowid)
+            return { 'status': 'success' }
+        except:
+            return { 'error': True }
+
+
+
+
 class StudentAddClassCode(Resource):
     def post(self):
         if not session['student_id']:
@@ -248,10 +273,8 @@ class StudentPendingClass(Resource):
                    join course c on cp.course_id = c.course_id
                    join instructs_course ic on ic.course_id = c.course_id
                    join instructor i on i.instructor_id = ic.instructor_id
-                   where cp.student_id = ?
-                   limit ?
-                   offset ?;"""
-        r = db.execute(query, session['student_id'], limit, offset)
+                   where cp.student_id = ?"""
+        r = db.execute(query, session['student_id'])
         rs = r.fetchall()
         
         def make_course_dict(row):
@@ -266,6 +289,20 @@ class StudentPendingClass(Resource):
         return { 'courses': courses, 'status': 'success' }
         # except:
         #     return { 'error': True }
+
+
+class StudentPendingRm(Resource):
+    def post(self):
+        if not session['student_id']:
+            return{'err': 'Not a student'}
+
+        data = just_course.parse_args()
+        query = """delete from course_pending
+                   where student_id = ? and
+                   course_id = ?"""
+
+        r = db.execute(query, session['student_id'], data['course_id'])
+        return { 'status': 'success' }
 
 
 class StudentSchedule(Resource):

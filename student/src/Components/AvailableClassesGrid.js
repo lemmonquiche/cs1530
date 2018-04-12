@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 // import { Link } from 'react-router-dom';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import _ from 'lodash';
-
+import $ from 'jquery';
 
 
 class DataGrid extends Component {
@@ -10,6 +10,7 @@ class DataGrid extends Component {
     super(props);
 
     this.state = {
+      error: '',
       page: 1,
       sizePerPage: 10,
     };
@@ -43,9 +44,24 @@ class DataGrid extends Component {
       sizePerPage: this.state.sizePerPage,
     };
 
+    var that = this;
     function add(row, cell) {
       var onClick = function () {
-        console.log("deleting this students course number" + cell.id);
+        $.ajax({
+          url: '/api/student/classes/addJoin',
+          method: 'post',
+          contentType: 'application/json',
+          dataType: 'json',
+          data: JSON.stringify({
+            course_id: cell.course_id
+          }),
+          error: function (jqReq, status, error) {
+            this.setState({ error: error });
+          }.bind(that),
+          success: function (data, success, jqReq) {
+            alert("successfully added");
+          }.bind(that)
+        });
       };
 
       return <button type="button" className="btn btn-primary btn-sm" onClick={onClick}>
@@ -68,9 +84,9 @@ class DataGrid extends Component {
         search
         multiColumnSearch
       >
-        <TableHeaderColumn dataField="id" isKey dataFormat={add} width='10%' dataAlign="center">Add</TableHeaderColumn>
-        <TableHeaderColumn dataField="course"     width='50%' dataAlign="center">Course</TableHeaderColumn>
-        <TableHeaderColumn dataField="instructors" width='50%' dataAlign="center">Instructor</TableHeaderColumn>
+        <TableHeaderColumn dataField="course_id" isKey dataFormat={add} width='10%' dataAlign="center">Add</TableHeaderColumn>
+        <TableHeaderColumn dataField="course_name"     width='50%' dataAlign="center">Course</TableHeaderColumn>
+        <TableHeaderColumn dataField="instructors"     width='50%' dataAlign="center">Instructor</TableHeaderColumn>
       </BootstrapTable>
     );
   }

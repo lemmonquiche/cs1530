@@ -128,7 +128,7 @@ class DataGrid extends Component {
       >
         <TableHeaderColumn dataField="id" isKey dataFormat={viewLink} width='10%' dataAlign="center">View</TableHeaderColumn>
         <TableHeaderColumn dataField="course"     width='45%' dataAlign="center">Course</TableHeaderColumn>
-        <TableHeaderColumn dataField="instructors" width='45%' dataAlign="center">Instructor</TableHeaderColumn>
+        <TableHeaderColumn dataField="instructor" width='45%' dataAlign="center">Instructor</TableHeaderColumn>
       </BootstrapTable>
     );
   }

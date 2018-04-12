@@ -13,18 +13,18 @@ var server = new Pretender(function(){
   this.post('/api/student/classes/search', function (request) {
     var res = [
       {
-        id: 1,
-        course: 'a',
+        course_id: 1,
+        course_name: 'a',
         instructors: [{ name: 'A' }]
       },
       {
-        id: 2,
-        course: 'b',
+        course_id: 2,
+        course_name: 'b',
         instructors: [{ name: 'B' }]
       },
       {
-        id: 3,
-        course: 'c',
+        course_id: 3,
+        course_name: 'c',
         instructors: [{ name: 'C' }]
       },
     ];
