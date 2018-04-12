@@ -1097,6 +1097,18 @@ def initdb_command():
                            'Software Engineering',
                            'joining'
                        );""")
+    con.execute("""INSERT INTO course
+                       VALUES (
+                           2,
+                           'Operating System',
+                           'pokemon'
+                       );""")
+    con.execute("""INSERT INTO course
+                       VALUES (
+                           3,
+                           'Software Engineering',
+                           'joining2'
+                       );""")
     con.execute("""INSERT INTO course_registration
                         VALUES (
                             1,
@@ -1167,10 +1179,30 @@ def initdb_command():
                        'prof',
                        '$pbkdf2-sha256$29000$FsI4p7S2du6917q3FqK0tg$xW.BfqRgLLGFWTo9.32dT1BZLfufMFa6pVKk9glk7ps'
                    );""")
+    con.execute("""INSERT INTO instructor
+                   VALUES (
+                       2,
+                       'farnan@gmail.com',
+                       'Farnan',
+                       'Nicholas',
+                       0,
+                       'gym leader',
+                       '$pbkdf2-sha256$29000$FsI4p7S2du6917q3FqK0tg$xW.BfqRgLLGFWTo9.32dT1BZLfufMFa6pVKk9glk7ps'
+                   );""")
     con.execute("""INSERT INTO instructs_course
                                  VALUES (
                                      1,
                                      1
+                                 );""")
+    con.execute("""INSERT INTO instructs_course
+                                 VALUES (
+                                     2,
+                                     2
+                                 );""")
+    con.execute("""INSERT INTO instructs_course
+                                 VALUES (
+                                     1,
+                                     3
                                  );""")
     con.execute("""INSERT INTO schedule
                      VALUES (
