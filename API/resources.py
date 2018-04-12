@@ -589,7 +589,8 @@ class SearchCourse(Resource):
             course_id = data['course_id']
             course_name = data['course_name']
             instructor_name = data['instructor_name']
-            if(course_id != None):
+
+            if course_id:
                 courses = Course.query.filter(Course.course_id==course_id).all()
                 course_list =[]
                 for course in courses:
@@ -607,7 +608,7 @@ class SearchCourse(Resource):
                     course_list.append(course_dict)
                 return course_list
 
-            elif(course_name != None and instructor_name != None):
+            elif course_name and instructor_name:
                 instructor_split = instructor_name.split(" ")
                 instructor_fname = instructor_split[0]
                 instructor_lname = instructor_split[1]
@@ -630,7 +631,7 @@ class SearchCourse(Resource):
                     course_list.append(course_dict)
                 return course_list
 
-            elif(course_name != None):
+            elif course_name:
                 courses = Course.query.filter(Course.course_name == course_name).all()
                 course_list =[]
                 for course in courses:
@@ -648,7 +649,7 @@ class SearchCourse(Resource):
                     course_list.append(course_dict)
                 return course_list
 
-            elif(instructor_name != None):
+            elif instructor_name:
                 instructor_split = instructor_name.split(" ")
                 instructor_fname = instructor_split[0]
                 instructor_lname = instructor_split[1]
