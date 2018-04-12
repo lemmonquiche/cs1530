@@ -10,6 +10,27 @@ var server = new Pretender(function(){
     return [200, {}, 'echo: ' + request.requestBody];
   });
 
+  this.post('/api/student/classes/search', function (request) {
+    var res = [
+      {
+        id: 1,
+        course: 'a',
+        instructors: [{ name: 'A' }]
+      },
+      {
+        id: 2,
+        course: 'b',
+        instructors: [{ name: 'B' }]
+      },
+      {
+        id: 3,
+        course: 'c',
+        instructors: [{ name: 'C' }]
+      },
+    ];
+    return [200, {"Content-Type": "application/json"}, JSON.stringify(res)];
+  })
+
   this.get('/api/profile', function (request) {
     var response = { name: 'Test', username: 'test', email: 'test@example.com' };
     return new Promise(function(resolve) {

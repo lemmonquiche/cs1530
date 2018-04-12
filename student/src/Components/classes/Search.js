@@ -33,6 +33,10 @@ class Search extends Component {
 
   updateAvailableQuery() {
     console.log('tracing');
+    if (!this.state.id && !this.state.courseName && !this.state.instructorName) {
+      return;
+    }
+    
     $.ajax({
       url: '/api/student/classes/search',
       method: 'post',
@@ -44,9 +48,19 @@ class Search extends Component {
         instructor_name: this.state.instructorName
       }),
       error: function (jQReq, status, error) {
+        console.log("error");
         this.setState({ error: error });
       }.bind(this),
       success: function (data, status, req) {
+        data = data.map(function (course) {
+          course.instructors = course.instructors.map(function (i) {
+            return i.name;
+          }).join(" ");
+          console.log(course);
+          return course;
+        });
+
+        console.log("data", data)
         this.setState({ rows: data, error: '' });
       }.bind(this)
     });

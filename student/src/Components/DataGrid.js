@@ -110,6 +110,11 @@ class DataGrid extends Component {
     }
 
         // remote
+    console.log(this.state.items);
+    if (!this.state.items) {
+      return <p>Data is loading.</p>;
+    }
+
     return (
        <BootstrapTable
         data={this.state.items}
@@ -122,9 +127,8 @@ class DataGrid extends Component {
         condensed
       >
         <TableHeaderColumn dataField="id" isKey dataFormat={viewLink} width='10%' dataAlign="center">View</TableHeaderColumn>
-        <TableHeaderColumn dataField="id"       dataFormat={remove}   width='10%' dataAlign="center">Remove</TableHeaderColumn>
-        <TableHeaderColumn dataField="course"     width='40%' dataAlign="center">Course</TableHeaderColumn>
-        <TableHeaderColumn dataField="instructor" width='40%' dataAlign="center">Instructor</TableHeaderColumn>
+        <TableHeaderColumn dataField="course"     width='45%' dataAlign="center">Course</TableHeaderColumn>
+        <TableHeaderColumn dataField="instructors" width='45%' dataAlign="center">Instructor</TableHeaderColumn>
       </BootstrapTable>
     );
   }

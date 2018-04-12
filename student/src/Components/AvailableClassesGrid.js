@@ -10,8 +10,6 @@ class DataGrid extends Component {
     super(props);
 
     this.state = {
-      items: [],
-      totalSize: 0,
       page: 1,
       sizePerPage: 10,
     };
@@ -56,11 +54,12 @@ class DataGrid extends Component {
       </button>
     }
 
+    console.log(this.props.rows)
     return (
        <BootstrapTable
-        data={this.state.items}
-        options={ { onSearchChange: this.props.onSearchChange, clearSearch: true } }
-        fetchInfo={{dataTotalSize: this.state.totalSize}}
+        data={this.props.rows}
+        options={{ onSearchChange: this.props.onSearchChange, clearSearch: true }}
+        fetchInfo={{ dataTotalSize: this.props.rows.length }}
         version='4'
         pagination
         striped
@@ -71,7 +70,7 @@ class DataGrid extends Component {
       >
         <TableHeaderColumn dataField="id" isKey dataFormat={add} width='10%' dataAlign="center">Add</TableHeaderColumn>
         <TableHeaderColumn dataField="course"     width='50%' dataAlign="center">Course</TableHeaderColumn>
-        <TableHeaderColumn dataField="instructor" width='50%' dataAlign="center">Instructor</TableHeaderColumn>
+        <TableHeaderColumn dataField="instructors" width='50%' dataAlign="center">Instructor</TableHeaderColumn>
       </BootstrapTable>
     );
   }
