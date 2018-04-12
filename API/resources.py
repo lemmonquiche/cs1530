@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from flask import g, session, jsonify
+from flask import session, jsonify
 from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
 from ..models.models import Student, Instructor, RevokedTokenModel, Course, Instructor, Group, GroupMembership, Course_Registration, Schedule
 from ..scheduler import *
@@ -32,9 +32,9 @@ add_course_parser.add_argument('name',        help='This field cannot be blank',
 code_parser         = reqparse.RequestParser()
 code_parser.add_argument('code',              help='This field cannot be blank', required=True )
 
-added_classes       = reqparse.RequestParser()
-added_classes.add_argument('page',            help='This field cannot be blank', required=True )
-added_classes.add_argument('sizePerPage',     help='This field cannot be blank', required=True )
+limit_offset_parser = reqparse.RequestParser()
+limit_offset_parser.add_argument('page',            help='This field cannot be blank', required=True )
+limit_offset_parser.add_argument('sizePerPage',     help='This field cannot be blank', required=True )
 
 course_parser       = reqparse.RequestParser()
 course_parser.add_argument('course_id',       help='This field cannot be blank', required=True )
@@ -176,9 +176,9 @@ class StudentClasses(Resource):
         if not session['student_id']:
             return{'err': 'Not a student'}
 
-        data = added_classes.parse_args()
+        data = limit_offset_parser.parse_args()
         limit = data['sizePerPage']
-        offset = data['page']
+        offset = data['page'] * int(limit)
 
         query = """select
                         c.course_id as id,
@@ -227,6 +227,41 @@ class StudentAddClassCode(Resource):
                        values (?, ?);"""
             result = db.execute(query, session['student_id'], course_id)
             
+            return { 'status': 'success' }
+        except:
+            return { 'error': True }
+
+
+class StudentPendingClass(Resource):
+    def post(self):
+        if not session['student_id']:
+            return{'err': 'Not a student'}
+
+        data = limit_offset_parser.parse_args()
+        limit = data['sizePerPage']
+        offset = data['page'] * int(limit)
+
+        try:
+            query = """select c.course_name as name,
+                              i.lname as l,
+                              i.fname as f
+                       from course_pending cp
+                       join course c on cp.course_id = c.course_id
+                       join instructs_course ic on ic.course_id = c.course_id
+                       join instructor i on i.instructor_id = ic.instructor_id
+                       where cp.student_id = ?
+                       limit ?
+                       offset ?;"""
+            r = db.execute(query, session['student_id'], data[''], data[''])
+            rs = r.fetchall()
+            
+            def make_course_dict(row):
+            return {
+                'id':         row['id'],
+                'course':     row['name'],
+                'instructor': row['f'] + ' ' + row['l']
+            }
+
             return { 'status': 'success' }
         except:
             return { 'error': True }

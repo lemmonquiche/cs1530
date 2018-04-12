@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import 'react-tabs/style/react-tabs.css';
 
 import DataGrid from '../Components/DataGrid';
+import Pending from '../Components/Pending';
 import AddByCode from '../Components/AddByCode';
 // import EditableDataGrid from '../Components/EditableDataGrid';
 
@@ -41,73 +42,29 @@ class Classes extends Component {
               <Tab>Pending</Tab>
             </TabList>
             <TabPanel>
+
               <h6 className="card-subtitle mb-2 text-muted">Classes you are in.</h6>
               <DataGrid />
-              {/*<table className="table table-bordered table-hover">
-                <thead>
-                  <tr>
-                    <th>View Group Status</th>
-                    <th>Cancel</th>
-                    <th>Course</th>
-                    <th>Professor</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><Link to={'/joined/' + index}>[==]</Link></td>
-                    <td>-</td>
-                    <td>CS 1530</td>
-                    <td>SK</td>
-                  </tr>
-                </tbody>
-              </table>*/}
+
             </TabPanel>
             <TabPanel>
+
+              {/* UI for Searching for Classes */}
               <Search />
-              {/*<table className="table table-bordered table-hover">
-                <thead>
-                  <tr>
-                    <th>Add</th>
-                    <th>Withdraw</th>
-                    <th>Course</th>
-                    <th>Instructor</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>+</td>
-                    <td>-</td>
-                    <td>CS 1530</td>
-                    <td>SK</td>
-                  </tr>
-                </tbody>
-              </table>*/}
+
             </TabPanel>
               
             <TabPanel>
-              <h6 className="card-subtitle mb-2 text-muted">Join a class by entering its code.</h6>
 
+              <h6 className="card-subtitle mb-2 text-muted">Join a class by entering its code.</h6>
               <AddByCode />
+
             </TabPanel>
             <TabPanel>
-              <h6 className="card-subtitle mb-2 text-muted">See classes pending instructor's approval.</h6>
 
-              <table className="table table-bordered table-hover">
-                <thead>
-                  <tr>
-                    <th>Cancel</th>
-                    <th>Name</th>
-                    <th>Professor</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>-</td>
-                    <td>CS 1530</td>
-                    <td>SK</td>
-                  </tr>
-                </tbody>
-              </table>
+              <h6 className="card-subtitle mb-2 text-muted">See classes pending instructor's approval.</h6>
+              <Pending />
+
             </TabPanel>
           </Tabs>
         </div>
