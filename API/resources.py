@@ -168,10 +168,10 @@ class StudentSchedule(Resource):
             if not s: 
                 s = Schedule (
                     student_id = session['student_id'],
-                    available_hour_week = ''
+                    available_hour_week = '0'*196
                 )
                 s.save_to_db()
-                return {'schedule':''}
+                return {'schedule':'0'*196}
             return {'schedule': s.available_hour_week}
                
     def post(self):
@@ -180,6 +180,8 @@ class StudentSchedule(Resource):
         else:
             s_id = Schedule.query.filter_by(student_id = session['student_id']).first()
             if s_id:
+                if len(s_id) != 196:
+                    raise
                 data = schedule_parser.parse_args()
                 sched = Schedule.matrix_to_bitstring(loads(data['schedule']))
                 statement = text("UPDATE schedule SET available_hour_week='{}' WHERE student_id='{}'".format(sched, session['student_id']))

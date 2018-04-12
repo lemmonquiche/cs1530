@@ -48,15 +48,25 @@ class Schedule extends Component {
     this.save = this.save.bind(this);
   }
 
+  componentDidCatch(error, info) {
+    console.log("componentDidCatch", error, info);
+  }
+
   componentDidMount() {
     var that = this;
 
     function bitstringToArray(str) {
-      return str.match(/.{7}/g)
-        .map(function(row) {
-          return [false].concat(row.match(/.{1}/g)
-            .map(function(value) {return value === "1" ? true : false; }));
-        });
+      console.log("str is ", str);
+      try {
+        return str.match(/.{7}/g)
+          .map(function(row) {
+            return [false].concat(row.match(/.{1}/g)
+              .map(function(value) {return value === "1" ? true : false; }));
+          });
+      } catch (e) {
+        console.log(e);
+        alert("error", str);
+      }
     }
 
     if (!this.state.loaded) {
@@ -64,6 +74,7 @@ class Schedule extends Component {
         method: 'get',
         url: '/api/student/schedule',
         success: function (data) {
+          console.log("API CALL to /api/student/schedule returned:", data, arguments);
           that.setState({ loaded: true, cells: bitstringToArray(data.schedule), loaded: true });
         }
       });
@@ -78,11 +89,14 @@ class Schedule extends Component {
 
     var that = this;
     function adaptArray() {
-      return that.state.cells.map(function (row) {
+      var result = that.state.cells.map(function (row) {
         return row.slice(1).map(function (value) {
           return value ? '1' : '0';
         });
       });
+
+      console.log("result length", result.length);
+      return result;
     }
 
     this.setState({ loaded: false });
