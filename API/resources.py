@@ -359,6 +359,7 @@ class InstructorDashBoard(Resource):
             info_dict = {}
             info_dict["course_name"] = course.course_name
             info_dict["course_id"] = course.course_id
+            info_dict["passcode"] = course.passcode
             # pending_students = []
             # for student in course.pending_students:
             #     student_dict = {}
@@ -393,11 +394,11 @@ class InstructorAddCourse(Resource):
             result = db.execute(("insert into "
                 "instructs_course (instructor_id, course_id) "
                 "values (?, ?)"), iid, last_id)
-            last_id = result.inserted_primary_key[0]
+            # WTF IS THIS RESULT VARIABLE
 
-            return { 'status': 'success', 'id': last_id }
+            return { 'status': 'success'}#, 'id': last_id }
         except Exception as e:
-            raise e
+            # raise e
             return { 'error': 'Python Error: ' + e.message }
 
 
