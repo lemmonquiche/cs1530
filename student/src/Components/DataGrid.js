@@ -2,19 +2,24 @@ import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import _ from 'lodash';
+import $ from 'jquery';
 
-const dataTable = _.range(1, 50).map(x => ({
-  id: x, course: `Course ${x}`, instructor: `Professor ${x}`
-}));
+var dataTable = [];
+var fakeDataFetcher = function() {};
+if (process.env.NODE_ENV === 'development') {
+  dataTable = _.range(1, 50).map(x => ({
+    id: x, course: `Course ${x}`, instructor: `Professor ${x}`
+  }));
 
-// Simulates the call to the server to get the data
-const fakeDataFetcher = {
-  fetch(page, size) {
-    return new Promise((resolve, reject) => {
-      resolve({items: _.slice(dataTable, (page-1)*size, ((page-1)*size) + size), total: dataTable.length});
-    });
-  }
-};
+  // Simulates the call to the server to get the data
+  fakeDataFetcher = {
+    fetch(page, size) {
+      return new Promise((resolve, reject) => {
+        resolve({items: _.slice(dataTable, (page-1)*size, ((page-1)*size) + size), total: dataTable.length});
+      });
+    }
+  };
+}
 
 class DataGrid extends Component {
   constructor(props) {
@@ -36,10 +41,29 @@ class DataGrid extends Component {
   }
 
   fetchData(page = this.state.page, sizePerPage = this.state.sizePerPage) {
-    fakeDataFetcher.fetch(page, sizePerPage)
-      .then(data => {
-        this.setState({items: data.items, totalSize: data.total, page, sizePerPage});
-      });
+    if (process.env.NODE_ENV === 'development') {
+      fakeDataFetcher.fetch(page, sizePerPage)
+        .then(data => {
+          this.setState({items: data.items, totalSize: data.total, page, sizePerPage});
+        });
+    } else {
+      $.ajax({
+        url: '/api/student/classes/added',
+        method: 'post',
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify({
+          page, sizePerPage
+        }),
+        error: function (jQReq, status, error) {
+          console.log('Error fetching /api/student/classes/added')
+        }.bind(this),
+        success: function (data, status, jQReq) {
+          console.log(data);
+          this.setState({ items: data.courses })
+        }.bind(this),
+      })
+    }
   }
 
   handlePageChange(page, sizePerPage) {
@@ -85,13 +109,13 @@ class DataGrid extends Component {
       </button>
     }
 
+        // remote
     return (
        <BootstrapTable
         data={this.state.items}
         options={options}
         fetchInfo={{dataTotalSize: this.state.totalSize}}
         version='4'
-        remote
         pagination
         striped
         hover

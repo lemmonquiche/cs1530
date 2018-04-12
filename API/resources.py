@@ -29,6 +29,13 @@ user_parser.add_argument('username',          help='This field cannot be blank',
 add_course_parser   = reqparse.RequestParser()
 add_course_parser.add_argument('name',        help='This field cannot be blank', required=True )
 
+code_parser         = reqparse.RequestParser()
+code_parser.add_argument('code',              help='This field cannot be blank', required=True )
+
+added_classes       = reqparse.RequestParser()
+added_classes.add_argument('page',            help='This field cannot be blank', required=True )
+added_classes.add_argument('sizePerPage',     help='This field cannot be blank', required=True )
+
 course_parser       = reqparse.RequestParser()
 course_parser.add_argument('course_id',       help='This field cannot be blank', required=True )
 course_parser.add_argument('instructor_id',   help='This field cannot be blank', required=True )
@@ -162,6 +169,67 @@ class GroupGenerate(Resource):
             return{'message':'groups generated'}
         else:
             return{'err':'could not generate group'}
+
+
+class StudentClasses(Resource):
+    def post(self):
+        if not session['student_id']:
+            return{'err': 'Not a student'}
+
+        data = added_classes.parse_args()
+        limit = data['sizePerPage']
+        offset = data['page']
+
+        query = """select
+                        c.course_id as id,
+                        c.course_name as name,
+                        i.fname as f,
+                        i.lname as l
+                   from student s
+                   join course_registration cr on s.student_id = cr.student_id
+                   join course c               on cr.course_id = c.course_id
+                   join instructs_course ic    on ic.course_id = c.course_id
+                   join instructor i           on i.instructor_id = ic.instructor_id
+                   where s.student_id = ?
+                   limit ?
+                   offset ?;"""
+
+        result = db.execute(query, session['student_id'], limit, offset)
+        rows = result.fetchall()
+
+        def make_course_dict(row):
+            return {
+                'id':         row['id'],
+                'course':     row['name'],
+                'instructor': row['f'] + ' ' + row['l']
+            }
+
+        courses = [make_course_dict(row) for row in rows]
+        return { 'courses': courses }
+
+class StudentAddClassCode(Resource):
+    def post(self):
+        if not session['student_id']:
+            return{'err': 'Not a student'}
+
+        data = code_parser.parse_args()
+
+        try:
+            # get the course from the passcode
+            query = """select c.course_id
+                       from course c
+                       where c.passcode = ?;"""
+            result = db.execute(query, data['code'])
+            row = result.fetchone()
+            course_id = row['course_id']
+
+            query = """insert into course_registration (student_id, course_id)
+                       values (?, ?);"""
+            result = db.execute(query, session['student_id'], course_id)
+            
+            return { 'status': 'success' }
+        except:
+            return { 'error': True }
 
 
 class StudentSchedule(Resource):
