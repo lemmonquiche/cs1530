@@ -37,8 +37,8 @@ course_pending = db.Table('course_pending',
 class Course_Registration(db.Model):
     __tablename__ = 'course_registration'
     id = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.Integer, db.ForeignKey('student.student_id'), unique=True)
-    course_id = db.Column(db.Integer, db.ForeignKey('course.course_id'), unique=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('student.student_id'))
+    course_id = db.Column(db.Integer, db.ForeignKey('course.course_id'))
 
     def __init__(self, student_id, course_id, schedule_id):
         self.student_id = student_id

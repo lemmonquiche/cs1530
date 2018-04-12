@@ -161,17 +161,17 @@ class Profile(Resource):
 
 class GroupGenerate(Resource):
     def post(self):
-        data = course_parser.parse_args()
+        data = just_course.parse_args()
         cid = data['course_id']
         if not session['instructor_id']:
             return{'err':'Not an instructor'}
-        elif iid:
-            groups = gen_groups(cid)
-            if not groups:
-                return{'err':'could not generate groups'}
-            return{'message':'groups generated'}
-        else:
-            return{'err':'could not generate group'}
+
+        groups = gen_groups(cid)
+
+        if not groups:
+            return { 'error': 'could not generate groups' }
+
+        return { 'message': 'groups generated' }
 
 
 class StudentClasses(Resource):
@@ -708,14 +708,14 @@ class SearchCourse(Resource):
                     course_list.append(course_dict)
                 return course_list
             else:
-                return {'err':'Please provide search parameters'}
+                return []
 
 
 class RetrieveGroups(Resource):
     def post(self):
         if not session['instructor_id']:
              return {'err': 'Not an instructor'}
-        data = course_parser.parse_args()
+        data = just_course.parse_args()
         course_id = data['course_id']
 
         all_students = []

@@ -20,6 +20,7 @@ class Class extends Component {
     };
 
     this.loadInitial = this.loadInitial.bind(this);
+    this.callRandomize = this.callRandomize.bind(this);
   }
 
   loadInitial(loadId) {
@@ -29,7 +30,7 @@ class Class extends Component {
       url: '/api/instructor/course/groups',
       contentType: 'application/json',
       data: JSON.stringify({
-        class_id: loadId
+        course_id: loadId
       }),
       dataType: 'json',
       error: function (jQReq, status, error) {
@@ -96,6 +97,18 @@ class Class extends Component {
     return false;
   }
 
+  callRandomize() {
+    var that = this;
+    $.ajax({
+      url: '/api/instructor/course/generategroup',
+      method: 'post',
+      contentType: 'application/json',
+      dataType: 'json',
+      data: JSON.stringify({ course_id: that.props.match.params.id }),
+      success: function() { alert("success"); }
+    });
+  }
+
   render() {
     if (!this.state.loaded) {
       return <div className="loading-spinner"></div>
@@ -113,6 +126,28 @@ class Class extends Component {
             })}
           </div>
 
+          <p>Class {this.props.match.params.id} Roster</p>
+          <button
+            onClick={this.callRandomize}
+            onTouchStart={this.callRandomize}
+            type="button"
+            class="btn btn-success">Randomize</button>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              {this.state.students.map(function (student) {
+                return <tr>
+                  <th scope="row">{student.id}</th>
+                  <td>{student.fname + ' ' + student.lname}</td>
+                </tr>;
+              })}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>;

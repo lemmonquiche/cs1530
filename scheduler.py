@@ -28,7 +28,8 @@ def gen_groups(course_id):
 
     ss = [r for (r, ) in result]
 
-    sched_matrix = np.empty((0, 196), int)
+    #sched_matrix = np.empty((0, 196), int)
+    sched_matrix = None
     #print(sched_matrix.shape)
 
     #get schedules for all students
@@ -41,7 +42,14 @@ def gen_groups(course_id):
             con.close()
             return
         sch = np.array(map(int, sched[0]))
-        sched_matrix = np.vstack((sched_matrix, sch))
+        print(sch.size)
+        if(sch.size != 196):
+            print("correcting len")
+            sch = '0'*196
+        if(sched_matrix == None):
+            sched_matrix = sch
+        else:
+            sched_matrix = np.vstack((sched_matrix, sch))
 
     #generate groups
     gid = con.execute('SELECT max(group_id) FROM \'group\'')

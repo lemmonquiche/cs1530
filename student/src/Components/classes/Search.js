@@ -33,9 +33,9 @@ class Search extends Component {
 
   updateAvailableQuery() {
     console.log('tracing');
-    if (!this.state.id && !this.state.courseName && !this.state.instructorName) {
+    /*if (!this.state.id && !this.state.courseName && !this.state.instructorName) {
       return;
-    }
+    }*/
     
     $.ajax({
       url: '/api/student/classes/search',
@@ -83,8 +83,8 @@ class Search extends Component {
         onSubmit={this.updateParams}
         reset={this.reset}
         idChange={(e) => this.setState({ id: e.target.value })}
-        courseChange={(e) => this.setState({ course: e.target.value })}
-        instructorChange={(e) => this.setState({ instructor: e.target.value })}
+        courseChange={(e) => this.setState({ courseName: e.target.value })}
+        instructorChange={(e) => this.setState({ instructorName: e.target.value })}
         />
       <AvailableClassesGrid rows={this.state.rows} updatePages={this.updatePages}/>
     </div>;

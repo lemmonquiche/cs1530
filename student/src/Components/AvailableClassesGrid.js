@@ -70,7 +70,6 @@ class DataGrid extends Component {
       </button>
     }
 
-    console.log(this.props.rows)
     return (
        <BootstrapTable
         data={this.props.rows}

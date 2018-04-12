@@ -35,7 +35,6 @@ var defaultCells = [
   [false, false, false, false, false, false, false, false],
   [false, false, false, false, false, false, false, false],  // 9
   [false, false, false, false, false, false, false, false],
-  [false, false, false, false, false, false, false, false],
 ];
 
 class Schedule extends Component {
@@ -421,19 +420,7 @@ class Schedule extends Component {
           <td />
           <td />
         </tr>
-        <tr>
-          <td disabled>21:30</td>
-          <td />
-          <td />
-          <td />
-          <td />
-          <td />
-          <td />
-          <td />
-        </tr>
-
       </TableDragSelect>
-
       </div>
     </div>;
   }
