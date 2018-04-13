@@ -29,6 +29,11 @@ user_parser.add_argument('username',          help='This field cannot be blank',
 add_course_parser   = reqparse.RequestParser()
 add_course_parser.add_argument('name',        help='This field cannot be blank', required=True )
 
+student_course_parser = reqparse.RequestParser()
+student_course_parser.add_argument('student_id', help='This field cannot be blank', required=True )
+student_course_parser.add_argument('course_id',  help='This field cannot be blank', required=True )
+student_course_parser.add_argument('outcome',    help='This field cannot be blank', required=True )
+
 code_parser         = reqparse.RequestParser()
 code_parser.add_argument('code',              help='This field cannot be blank', required=True )
 
