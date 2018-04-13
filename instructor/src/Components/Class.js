@@ -84,10 +84,6 @@ class Class extends Component {
       return true;
     }
 
-    // console.log("********8")
-    // console.log(this.props.match.params.id);
-    // console.log(nextProps.match.params.id);
-
     // if the id changes, load new and update
     if (this.props.match.params.id !== nextProps.match.params.id) {
       this.loadInitial(nextProps.match.params.id);
