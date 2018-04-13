@@ -41,15 +41,12 @@ def gen_groups(course_id):
         if not sched:
             con.close()
             return
-        sch = np.array(map(int, sched[0]))
-        print(sch.size)
-        if(sch.size != 196):
-            print("correcting len")
-            sch = '0'*196
-        if(sched_matrix == None):
-            sched_matrix = sch
-        else:
-            sched_matrix = np.vstack((sched_matrix, sch))
+
+        # for review, strings must be normalized/filled
+        empty = '0' * 196
+        sch = np.array(map(lambda avail_hour_week: int(avail_hour_week) if avail_hour_week and len(avail_hour_week) == 196 else empty, sched[0]))
+
+        sched_matrix = np.vstack((sched_matrix, sch))
 
     #generate groups
     gid = con.execute('SELECT max(group_id) FROM \'group\'')
