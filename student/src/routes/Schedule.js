@@ -62,10 +62,6 @@ class Schedule extends Component {
           return [false].concat(row.match(/.{1}/g)
             .map(function(value) {return value === "1" ? true : false; }));
         });
-      // try {
-      // } catch (e) {
-      //   return defaultCells;
-      // }
     }
 
     if (!this.state.loaded) {
