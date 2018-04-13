@@ -66,6 +66,33 @@ var server = new Pretender(function(){
     var student_id = JSON.parse(request.requestBody)['student_id'];
     return [200, {'Content-Type': 'application/json'}, JSON.stringify({  })];
   });  
+
+  this.post('/api/instructor/course/pending', function (request) {
+    return new Promise(function (resolve) {
+      setTimeout(function() {
+        resolve([
+          200, {"Content-Type": "application/json"}, JSON.stringify([
+            {
+              student_id: 1,
+              fname: 'Foo',
+              lname: 'Yes'
+            },
+            {
+              student_id: 2,
+              fname: 'Bar',
+              lname: 'No'
+            },
+            {
+              student_id: 3,
+              fname: 'Baz',
+              lname: 'Nope'
+            },
+          ])
+        ]);
+      }.bind(this), 500);
+    });
+  })
+
   this.post('/api/instructor/course/groups', function (request) {
     var class_id = JSON.parse(request.requestBody)['class_id'];
 
@@ -153,6 +180,45 @@ var server = new Pretender(function(){
     console.log("API CALL: /api/instructor/course");
 
     var result = { courses };
+    return new Promise(function (resolve) {
+      setTimeout(function() {
+        resolve([
+          200, {"Content-Type": "application/json"}, JSON.stringify(result)
+        ]);
+      }.bind(this), 100);
+    });
+  });
+
+
+  this.post('/api/instructor/course/pending/outcome', function (request) {
+    console.log("API CALL: /api/instructor/course/outcome");
+    alert("API CALL: /api/instructor/course/outcome " + request.requestBody);
+
+    return new Promise(function (resolve) {
+      setTimeout(function() {
+        resolve([
+          200, {"Content-Type": "application/json"}, JSON.stringify(null)
+        ]);
+      }.bind(this), 100);
+    });
+  });
+
+  this.get('/api/instructor/course/pending', function (request) {
+    console.log("API CALL: /api/instructor/course/pending");
+
+    var result = [
+      {
+        student_id: '1',
+        fname: 'First',
+        lname: 'Last'
+      },
+      {
+        student_id: '2',
+        fname: 'Two',
+        lname: 'Dos'
+      },
+    ];
+
     return new Promise(function (resolve) {
       setTimeout(function() {
         resolve([
