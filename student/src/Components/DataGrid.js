@@ -57,7 +57,7 @@ class DataGrid extends Component {
         }),
         error: function (jQReq, status, error) {
           console.log('Error fetching /api/student/classes/added')
-        }.bind(this),
+        }/*.bind(this)*/,
         success: function (data, status, jQReq) {
           console.log(data);
           this.setState({ items: data.courses })
@@ -99,7 +99,7 @@ class DataGrid extends Component {
       </Link>;
     };
 
-    function remove(row, cell) {
+    /*function remove(row, cell) {
       var onClick = function () {
         console.log("deleting this students course number" + cell.id);
       };
@@ -107,7 +107,7 @@ class DataGrid extends Component {
       return <button type="button" className="btn btn-primary btn-sm" onClick={onClick}>
         {cell.id}
       </button>
-    }
+    }*/
 
         // remote
     console.log(this.state.items);

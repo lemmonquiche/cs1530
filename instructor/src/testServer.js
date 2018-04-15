@@ -62,11 +62,6 @@ var server = new Pretender(function(){
     return [200, {"Content-Type": "application/json"}, JSON.stringify({count: 3})];
   });
 
-  this.post('/api/instructor/course/groups/student', function (request) {
-    var student_id = JSON.parse(request.requestBody)['student_id'];
-    return [200, {'Content-Type': 'application/json'}, JSON.stringify({  })];
-  });  
-
   this.post('/api/instructor/course/pending/get', function (request) {
     return new Promise(function (resolve) {
       setTimeout(function() {

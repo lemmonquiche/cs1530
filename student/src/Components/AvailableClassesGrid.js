@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 // import { Link } from 'react-router-dom';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-import _ from 'lodash';
 import $ from 'jquery';
 
 
@@ -37,12 +36,12 @@ class DataGrid extends Component {
   }
 
   render() {
-    var options = {
+    /*var options = {
       onPageChange: this.handlePageChange,
       onSizePerPageList: this.handleSizePerPageChange,
       page: this.state.page,
       sizePerPage: this.state.sizePerPage,
-    };
+    }*/;
 
     var that = this;
     function add(row, cell) {
@@ -60,7 +59,7 @@ class DataGrid extends Component {
           }.bind(that),
           success: function (data, success, jqReq) {
             alert("successfully added");
-          }.bind(that)
+          }/*.bind(that)*/
         });
       };
 

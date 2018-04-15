@@ -69,7 +69,7 @@ class Schedule extends Component {
         method: 'get',
         url: '/api/student/schedule',
         success: function (data) {
-          that.setState({ loaded: true, cells: bitstringToArray(data.schedule), loaded: true });
+          that.setState({ loaded: true, cells: bitstringToArray(data.schedule) });
         }
       });
     }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import 'react-tabs/style/react-tabs.css';
 
 import DataGrid from '../Components/DataGrid';
@@ -25,8 +25,6 @@ class Classes extends Component {
     if (!this.state.loaded) {
       return <div className="loading-spinner"></div>
     }
-
-    var index = 1;
 
     return <div className="card">
       <div className="card-body">
