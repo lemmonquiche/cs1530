@@ -116,17 +116,6 @@ def gen_groups(course_id):
                 con.execute('INSERT INTO group_membership(student_id, group_id, randomized) VALUES(:student_id, :group_id, :randomized)', {'student_id':stud, 'group_id':group_id, 'randomized':1})
                 #remove student from ss and their schedule from sched_matrix
                 ss.remove(stud)
-        #elif len(ss) == 4:
-        #    group_id += 1
-        #    groups.append(group_id)
-        #    con.execute('INSERT INTO \'group\' VALUES(:group, :course)', {'group':group_id, 'course':course_id})
-        #
-        #    #generate the group with first 5 students
-        #    for x in range(0, 4):
-        #        stud = ss[x]
-        #        con.execute('INSERT INTO group_membership(student_id, group_id, randomized) VALUES(:student_id, :group_id, :randomized)', {'student_id':stud, 'group_id':group_id, 'randomized':1})
-        #        #remove student from ss and their schedule from sched_matrix
-        #        ss.remove(stud)
         else:
             #if there is not enough students to form a group
 
