@@ -155,31 +155,6 @@ def initdb_command():
     """Creates the database tables."""
     db.drop_all()
     db.create_all()
-    # add for debuggin
-    #new_user = Instructor(
-    #    username = 'prof',
-#        password = Instructor.generate_hash('password'),
-#        lname = 'Rahimov',
-#        fname = 'Daler',
-#        email = 'daler@gmail.com'
-#    )
-#    new_user.save_to_db()
-#    new_user = Student(
-#        username = 'test',
-#        password = Instructor.generate_hash('pwd'),
-#        lname = 'Testing',
-#        fname = 'Testing',
-#        email = 'test@gmail.com'
-#    )
-#    new_user.save_to_db()
-#    new_user = Student(
-#        username = 'username',
-#        password = Student.generate_hash('password'),
-#        lname = 'Rahimov',
-#        fname = 'Daler',
-#        email = 'daler@gmail.com'
-#    )
-#    new_user.save_to_db()
 
     con = engine.connect()
     con.execute("""INSERT INTO student
@@ -1249,6 +1224,51 @@ def initdb_command():
                         23,
                         1
                     );""")
+    con.execute("""INSERT INTO course_pending
+                    VALUES (
+                        24,
+                        1
+                    )""")
+    con.execute("""INSERT INTO course_pending
+                    VALUES (
+                        25,
+                        1
+                    )""")
+    con.execute("""INSERT INTO course_pending
+                    VALUES (
+                        26,
+                        1
+                    )""")
+    con.execute("""INSERT INTO course_pending
+                    VALUES (
+                        27,
+                        1
+                    )""")
+    con.execute("""INSERT INTO course_pending
+                    VALUES (
+                        28,
+                        1
+                    )""")
+    con.execute("""INSERT INTO course_pending
+                    VALUES (
+                        29,
+                        1
+                    )""")
+    con.execute("""INSERT INTO course_pending
+                    VALUES (
+                        30,
+                        1
+                    )""")
+    con.execute("""INSERT INTO course_pending
+                    VALUES (
+                        31,
+                        1
+                    )""")
+    con.execute("""INSERT INTO course_pending
+                    VALUES (
+                        32,
+                        1
+                    )""")
     con.execute("""INSERT INTO instructor
                    VALUES (
                        1,
@@ -1423,6 +1443,61 @@ def initdb_command():
                              NULL,
                              '0000001110100100001110010011010101000001001111101101100010000000111100110001000001000101100001011000001000100100010001001001001010010111110010111000010000110010010100001010100010011110100011010011'
                          );""")
+    con.execute("""INSERT INTO schedule
+                     VALUES (
+                         24,
+                         NULL,
+                         '1010001010000000100011000011011100000101110001110011101100010011000011011101111000111010111100110011100011001111101100110110000101110011111111000011100010000110011001101110000000111111001010011011'
+                     );""")
+    con.execute("""INSERT INTO schedule
+                         VALUES (
+                             25,
+                             NULL,
+                             '0110001110011010100101010111100110110111101010001010111000011010000100100000001100010101001110001011000111100101101010001001100100000100011001010001001000101010010010001000111010111011011100101101'
+                         );""")
+    con.execute("""INSERT INTO schedule
+                         VALUES (
+                             26,
+                             NULL,
+                             '0000000110000011100101111101000000001001000010111111011001000000111110011111101110011101011101110101010100010001010001111110101111011101001000110111111101010100011100110010000000111101100100011100'
+                         );""")
+    con.execute("""INSERT INTO schedule
+                         VALUES (
+                             27,
+                             NULL,
+                             '1101010100010000101111110111100111101101000100100111001001110010101010100101010110110101011101001111100000100010100010000100101010111111011111111011110101011011011101000111011011001101110000011011'
+                         );""")
+    con.execute("""INSERT INTO schedule
+                         VALUES (
+                             28,
+                             NULL,
+                             '1110110100011110100001000001000110001110010111000000111100111101011011000011100100011011110011111000111001010111110111011011101010101100010011011011101101110001000101000011101000011010001110110101'
+                         );""")
+    con.execute("""INSERT INTO schedule
+                         VALUES (
+                             29,
+                             NULL,
+                             '1111101011100011111000000001000011001010111010001001010011111011111011010111010110110101010111001111100010000001010001011011011110110011100000010000110001101001000100111001111111001110101101111001'
+                         );""")
+    con.execute("""INSERT INTO schedule
+                         VALUES (
+                             30,
+                             NULL,
+                             '1111100001101000000000101001001101111100011111010100010101110000100010001111001010110111110111001001010011100101000110000110001010000011010010100110110111010001000101111011110000100001000001011100'
+                         );""")
+    con.execute("""INSERT INTO schedule
+                     VALUES (
+                         31,
+                         NULL,
+                         '1010100100100100001010101000001101111110010110110101110100001001100101111111000011010110101101101001011010001000010000101101001000000101100000101010011011010100100000010101110100010000110001000110'
+                     );""")
+    con.execute("""INSERT INTO schedule
+                         VALUES (
+                             32,
+                             NULL,
+                             '1011010100001111110111011100110010100100011001010000010011011101011110101101101011100000011001111110001101011010010010110100001000001001110110100100010010101101110111110011101010000110111000011100'
+                         );""")
+
     con.close()
     db.session.commit()
     print('Initialized the database.')

@@ -249,7 +249,6 @@ class StudentAddClassCode(Resource):
             query = """insert into course_registration (student_id, course_id)
                        values (?, ?);"""
             result = db.execute(query, session['student_id'], course_id)
-            
             return { 'status': 'success' }
         except:
             return { 'error': True }
@@ -276,7 +275,7 @@ class StudentPendingClass(Resource):
                    where cp.student_id = ?"""
         r = db.execute(query, session['student_id'])
         rs = r.fetchall()
-        
+
         def make_course_dict(row):
             return {
                 'id':         row['id'],
@@ -496,16 +495,6 @@ class StudentDashBoard(Resource):
             return group_info
 
 
-class PendingReqs(Resource):
-    def post(self):
-        if not session['instructor_id']:
-            return {'err':'Not an instructor'}
-
-class PendingReqsOutcome(Resource):
-    def post(self):
-        if not session['instructor_id']:
-            return {'err':'Not an instructor'}
-
 class InstructorDashBoard(Resource):
     def get(self):
         if not session['instructor_id']:
@@ -541,7 +530,7 @@ class InstructorAddCourse(Resource):
             return {'err': 'Not an instructor'}
 
         iid = session['instructor_id']
-        
+
         name = data['name']
         code = id_generator()
         try:

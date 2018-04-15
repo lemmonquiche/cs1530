@@ -70,6 +70,16 @@ class Student(db.Model):
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
+    
+    def serialize(self):
+        return {
+            'student_id': self.student_id, 
+            'username': self.username,
+            'lname': self.lname,
+            'fname': self.fname,
+            'email': self.email,
+            'is_reg_confirmed': self.is_reg_confirmed
+        }
 
     @classmethod
     def find_by_username(cls, username):

@@ -57,6 +57,8 @@ def gen_groups(course_id):
     else:
         group_id = int(group_i[0])
 
+    group_start = group_id
+
     #if no gid is return, start at 0
     groups = []
 
@@ -113,16 +115,31 @@ def gen_groups(course_id):
                 con.execute('INSERT INTO group_membership(student_id, group_id, randomized) VALUES(:student_id, :group_id, :randomized)', {'student_id':stud, 'group_id':group_id, 'randomized':1})
                 #remove student from ss and their schedule from sched_matrix
                 ss.remove(stud)
+        elif len(ss) == 4:
+            group_id += 1
+            groups.append(group_id)
+            con.execute('INSERT INTO \'group\' VALUES(:group, :course)', {'group':group_id, 'course':course_id})
+
+            #generate the group with first 5 students
+            for x in range(0, 4):
+                stud = ss[x]
+                con.execute('INSERT INTO group_membership(student_id, group_id, randomized) VALUES(:student_id, :group_id, :randomized)', {'student_id':stud, 'group_id':group_id, 'randomized':1})
+                #remove student from ss and their schedule from sched_matrix
+                ss.remove(stud)
         else:
             #if there is not enough students to form a group
+            group_num = group_start
             for stud in ss:
-                g = len(groups) - 1
-                num = random.randint(0, g)
-                group_num = groups[num]
-                con.execute('INSERT INTO group_membership(student_id, group_id, randomized) VALUES(:student_id, :group_id, :randomized)', {'student_id':stud, 'group_id':group_id, 'randomized':1})
+                #g = len(groups) - 1
+                group_num += 1
+                if(group_num > group_id):
+                    group_num = group_start + 1
+                #num = random.randint(0, g)
+                #group_num = groups[num] + group_start
+                con.execute('INSERT INTO group_membership(student_id, group_id, randomized) VALUES(:student_id, :group_id, :randomized)', {'student_id':stud, 'group_id':group_num, 'randomized':1})
                 ss.remove(stud)
                 #somehow indicate group might not be optimal
     con.close()
-    for g in groups:
-        print("group id: ", g)
+    #for g in groups:
+    #    print("group id: ", g)
     return groups

@@ -18,6 +18,12 @@ def sumColumn(m, column):
 def gen_groups(course_id):
     con = engine.connect()
     #get all students from course
+    cur_groups = con.execute('SELECT group_id FROM \'group\' WHERE course = :course_id', {'course_id':course_id})
+    cur_groups_id = [r for (r, ) in cur_groups]
+    for c in cur_groups_id:
+        con.execute('DELETE FROM group_membership WHERE group_id = :group', {'group':c})
+    con.execute('DELETE FROM \'group\' WHERE course = :course_id', {'course_id':course_id})
+
     result = con.execute('SELECT student_id FROM course_registration WHERE course_id = :course', {'course':course_id})
 
     ss = [r for (r, ) in result]
@@ -50,6 +56,8 @@ def gen_groups(course_id):
         group_id = 0
     else:
         group_id = int(group_i[0])
+
+    group_start = group_id
 
     #if no gid is return, start at 0
     groups = []
@@ -92,7 +100,6 @@ def gen_groups(course_id):
                     #if student not groupable, go to next student
                     snum += 1
 
-    #print(len(ss))
     #if there are students leftover
     while ss:
         if len(ss) >= 5:
@@ -104,23 +111,37 @@ def gen_groups(course_id):
 
             #generate the group with first 5 students
             for x in range(0, 5):
-                #print (x)
-                #print(ss[x])
+                stud = ss[x]
+                con.execute('INSERT INTO group_membership(student_id, group_id, randomized) VALUES(:student_id, :group_id, :randomized)', {'student_id':stud, 'group_id':group_id, 'randomized':1})
+                #remove student from ss and their schedule from sched_matrix
+                ss.remove(stud)
+        elif len(ss) == 4:
+            group_id += 1
+            groups.append(group_id)
+            con.execute('INSERT INTO \'group\' VALUES(:group, :course)', {'group':group_id, 'course':course_id})
+
+            #generate the group with first 5 students
+            for x in range(0, 4):
                 stud = ss[x]
                 con.execute('INSERT INTO group_membership(student_id, group_id, randomized) VALUES(:student_id, :group_id, :randomized)', {'student_id':stud, 'group_id':group_id, 'randomized':1})
                 #remove student from ss and their schedule from sched_matrix
                 ss.remove(stud)
         else:
             #if there is not enough students to form a group
+            group_num = group_start
             for stud in ss:
-                g = len(groups) - 1
-                num = random.randint(0, g)
-                group_num = groups[num]
-                con.execute('INSERT INTO group_membership(student_id, group_id, randomized) VALUES(:student_id, :group_id, :randomized)', {'student_id':stud, 'group_id':group_id, 'randomized':1})
+                #g = len(groups) - 1
+                group_num += 1
+                if(group_num > group_id)
+                    group_num = group_start + 1
+                #num = random.randint(0, g)
+                #group_num = groups[num] + group_start
+                con.execute('INSERT INTO group_membership(student_id, group_id, randomized) VALUES(:student_id, :group_id, :randomized)', {'student_id':stud, 'group_id':group_num, 'randomized':1})
                 ss.remove(stud)
                 #somehow indicate group might not be optimal
     con.close()
     for g in groups:
         print("group id: ", g)
+    return groups
 
 gen_groups(1)
