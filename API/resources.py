@@ -132,14 +132,15 @@ class Profile(Resource):
     def post(self):
         data = edit_profile_parser.parse_args()
 
-        if (not session['student_id'] and not session['instructor_id']):
+        if (not session.has_key('student_id') and not session.has_key('instructor_id')):
             return {'err': 'not logged in'}
 
-        if session['student_id']:
+        if session.has_key('student_id'):
             s = Student.query.filter_by(student_id = session['student_id']).first()
             if data.fname: s.fname = data.fname
             if data.lname: s.lname = data.lname
             if data.email: s.email = data.email
+            if data.username: s.username = data.username
             if data.password: s.password= Student.generate_hash(data.password)
             try:
                 s.save_to_db()
@@ -147,11 +148,12 @@ class Profile(Resource):
             except exc.IntegrityError:
                 return {'err': 'user alredy exit'}
 
-        if session['instructor_id']:
+        if session.has_key('instructor_id'):
             s = Instructor.query.filter_by(student_id = session['instructor_id']).first()
             if data.fname: s.fname = data.fname
             if data.lname: s.lname = data.lname
             if data.email: s.email = data.email
+            if data.username: s.username = data.username
             if data.password: s.password= Instructor.generate_hash(data.password)
             try:
                 s.save_to_db()
