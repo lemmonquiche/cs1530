@@ -64,6 +64,8 @@ api.add_resource(resources.Registration,        '/api/login/signup')
 api.add_resource(resources.InstructorDashBoard, '/api/instructor/course')
 api.add_resource(resources.GroupGenerate,       '/api/instructor/course/generategroup')
 api.add_resource(resources.RetrieveGroups,      '/api/instructor/course/groups')
+api.add_resource(resources.PendingReqs,         '/api/instructor/course/pending/get')
+api.add_resource(resources.PendingReqsOutcome,  '/api/instructor/course/pending/outcome')
 api.add_resource(resources.InstructorAddCourse, '/api/instructor/addCourse')
 
 app.config['JWT_BLACKLIST_ENABLED'] = True

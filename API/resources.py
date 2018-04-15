@@ -1,3 +1,5 @@
+from __future__ import print_function # In python 2.7
+import sys
 from flask_restful import Resource, reqparse
 from flask import session, jsonify
 from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
@@ -499,6 +501,37 @@ class StudentDashBoard(Resource):
                 info_dict["members"] = group_members
                 group_info.append(info_dict)
             return group_info
+
+pending_req_parser = reqparse.RequestParser()
+pending_req_parser.add_argument('course_id', help='This field cannot be blank', required=True )
+from flask import jsonify
+class PendingReqs(Resource):
+    def post(self):
+        ps_arr = []
+        data = pending_req_parser.parse_args()
+#         if not session['instructor_id']:
+        if False:
+            return {'err':'Not an instructor'}
+        else:
+            course = Course.query.filter(Course.course_id == data['course_id'] ).first()
+            print (course.course_name, file = sys.stderr)
+            if not hasattr(course, 'pending_students'):
+                return {}
+            else :
+                return jsonify([e.serialize() for e in course.pending_students])
+
+#             print(pending_students, file = stderr)
+
+
+
+student_course_parser = reqparse.RequestParser()
+student_course_parser.add_argument('student_id', help='This field cannot be blank', required=True )
+student_course_parser.add_argument('course_id',  help='This field cannot be blank', required=True )
+student_course_parser.add_argument('outcome',    help='This field cannot be blank', required=True )
+class PendingReqsOutcome(Resource):
+    def post(self):
+        if not session['instructor_id']:
+            return {'err':'Not an instructor'}
 
 
 class InstructorDashBoard(Resource):
