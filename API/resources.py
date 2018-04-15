@@ -1,5 +1,3 @@
-from __future__ import print_function # In python 2.7
-import sys
 from flask_restful import Resource, reqparse
 from flask import session, jsonify
 from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
@@ -31,6 +29,10 @@ user_parser.add_argument('username',          help='This field cannot be blank',
 add_course_parser   = reqparse.RequestParser()
 add_course_parser.add_argument('name',        help='This field cannot be blank', required=True )
 
+student_course_parser = reqparse.RequestParser()
+student_course_parser.add_argument('student_id', help='This field cannot be blank', required=True )
+student_course_parser.add_argument('course_id',  help='This field cannot be blank', required=True )
+student_course_parser.add_argument('outcome',    help='This field cannot be blank', required=True )
 
 code_parser         = reqparse.RequestParser()
 code_parser.add_argument('code',              help='This field cannot be blank', required=True )
@@ -110,7 +112,7 @@ edit_profile_parser.add_argument('password', help='This field can be blank',    
 
 class Profile(Resource):
     def get (self):
-        if session.has_key('student_id'):
+        if session['student_id']:
             u = Student.query.filter_by(student_id=session['student_id']).first()
             return {
                 'username': u.username
@@ -119,8 +121,8 @@ class Profile(Resource):
                 , 'email' : u.email
                 , 'password': Student.generate_hash(u.password)
                 }
-        elif session.has_key('instructor_id'):
-            u = Instructor.query.filter_by(instructor_id=session['instructor_id']).first()
+        elif session['instructor_id']:
+            u = Instructor.query.filter_by(student_id=session['instructor_id']).first()
             return {
                 'username': u.username
                 , 'fname' : u.fname
@@ -223,9 +225,14 @@ class StudentAddRequest(Resource):
             query = """insert into course_pending (student_id, course_id)
                        values (?, ?)"""
             result = db.execute(query, session['student_id'], data['course_id'])
+            print("db has executed")
+            print(dir(result))
+            print(result.lastrowid)
             return { 'status': 'success' }
         except:
             return { 'error': True }
+
+
 
 
 class StudentAddClassCode(Resource):
@@ -247,7 +254,7 @@ class StudentAddClassCode(Resource):
             query = """insert into course_registration (student_id, course_id)
                        values (?, ?);"""
             result = db.execute(query, session['student_id'], course_id)
-            
+
             return { 'status': 'success' }
         except:
             return { 'error': True }
@@ -274,7 +281,7 @@ class StudentPendingClass(Resource):
                    where cp.student_id = ?"""
         r = db.execute(query, session['student_id'])
         rs = r.fetchall()
-        
+
         def make_course_dict(row):
             return {
                 'id':         row['id'],
@@ -494,37 +501,6 @@ class StudentDashBoard(Resource):
             return group_info
 
 
-pending_req_parser = reqparse.RequestParser()
-pending_req_parser.add_argument('course_id', help='This field cannot be blank', required=True )
-from flask import jsonify
-class PendingReqs(Resource):
-    def post(self):
-        ps_arr = []
-        data = pending_req_parser.parse_args()
-#         if not session['instructor_id']:
-        if False: 
-            return {'err':'Not an instructor'}
-        else:
-            course = Course.query.filter(Course.course_id == data['course_id'] ).first()
-            print (course.course_name, file = sys.stderr)
-            if not hasattr(course, 'pending_students'):
-                return {}
-            else : 
-                return jsonify([e.serialize() for e in course.pending_students])
-                
-#             print(pending_students, file = stderr)
-            
-
-
-student_course_parser = reqparse.RequestParser()
-student_course_parser.add_argument('student_id', help='This field cannot be blank', required=True )
-student_course_parser.add_argument('course_id',  help='This field cannot be blank', required=True )
-student_course_parser.add_argument('outcome',    help='This field cannot be blank', required=True )
-class PendingReqsOutcome(Resource):
-    def post(self):
-        if not session['instructor_id']:
-            return {'err':'Not an instructor'}
-
 class InstructorDashBoard(Resource):
     def get(self):
         if not session['instructor_id']:
@@ -560,7 +536,7 @@ class InstructorAddCourse(Resource):
             return {'err': 'Not an instructor'}
 
         iid = session['instructor_id']
-        
+
         name = data['name']
         code = id_generator()
         try:
@@ -743,6 +719,7 @@ class SearchCourse(Resource):
 class RetrieveGroups(Resource):
     def post(self):
         if not session['instructor_id']:
+        #if False:
              return {'err': 'Not an instructor'}
         data = just_course.parse_args()
         course_id = data['course_id']
