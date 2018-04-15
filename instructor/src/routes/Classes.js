@@ -40,11 +40,19 @@ class Classes extends Component {
       .then(function (data) {
         this.setState({ /*loaded: true,*/ courses: data.courses });
       }.bind(this))
-      .fail(function(r, test, e) { this.setState({ error: e }); }.bind(this))
+      .fail(function(r, test, e) {
+        /*this.setState({ error: e });*/
+        throw e;
+      }.bind(this))
       .always(function() {
         console.log("AJAX always on all classes (noargs)");
         this.setState({ loaded: true });
       }.bind(this));
+  }
+
+  componentDidCatch() {
+    /*console.log("this is running")*/
+    this.setState({ error: true });
   }
 
   render() {
