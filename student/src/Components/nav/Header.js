@@ -21,15 +21,15 @@ export default function Header(props) {
       </button>
       <div className="collapse navbar-collapse" id="navbarResponsive">
         <ul className="navbar-nav ml-auto">
-          {/*<li className="nav-item">
-            <a className="nav-link js-scroll-trigger" href="#about">About</a>
+          <li className="nav-item">
+            <a className="nav-link js-scroll-trigger" href="/#about">About</a>
           </li>
           <li className="nav-item">
-            <a className="nav-link js-scroll-trigger" href="#services">Services</a>
+            <a className="nav-link js-scroll-trigger" href="/#services">Services</a>
           </li>
           <li className="nav-item">
-            <a className="nav-link js-scroll-trigger" href="#contact">Contact</a>
-          </li>*/}
+            <a className="nav-link js-scroll-trigger" href="/#contact">Contact</a>
+          </li>
           
           <li className="nav-item" >
             <div className="dropdown show">
