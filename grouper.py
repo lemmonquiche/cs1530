@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory, redirect, url_for, request, g, render_template, make_response, Blueprint,session
+from flask import Flask, send_from_directory, redirect, url_for, request, g, render_template, make_response, Blueprint,session, jsonify
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import *
@@ -100,6 +100,14 @@ def page_not_found(e):
 
     return redirect(url_for('signin'))
 
+@app.route('/whoami')
+def whoami():
+    if g.student:
+        response = jsonify(me=session['student_id'])
+    elif g.instructor:
+        response = jsonify(me=session['instructor_id'])
+
+    return response
 @app.route('/signin')
 def signin():
     if g.student:
