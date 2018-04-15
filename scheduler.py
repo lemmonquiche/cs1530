@@ -118,21 +118,12 @@ def gen_groups(course_id):
                 ss.remove(stud)
         else:
             #if there is not enough students to form a group
-
-#            print(group_id)
-#            print(group_start)
             for stud in ss:
-                #g = len(groups) - 1
                 group_num += 1
-#                print(group_num)
                 if(group_num > group_id):
                     group_num = group_start + 1
-#                print(group_num)
-                #num = random.randint(0, g)
-                #group_num = groups[num] + group_start
                 con.execute('INSERT INTO group_membership(student_id, group_id, randomized) VALUES(:student_id, :group_id, :randomized)', {'student_id':stud, 'group_id':group_num, 'randomized':1})
                 ss.remove(stud)
-                #somehow indicate group might not be optimal
     con.close()
 #    for g in groups:
 #        print("group id: ", g)
