@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import _ from 'lodash';
 import $ from 'jquery';
@@ -57,7 +57,7 @@ class DataGrid extends Component {
         }),
         error: function (jQReq, status, error) {
           console.log('Error fetching /api/student/classes/added')
-        }.bind(this),
+        }/*.bind(this)*/,
         success: function (data, status, jQReq) {
           console.log(data);
           this.setState({ items: data.courses })
@@ -84,13 +84,13 @@ class DataGrid extends Component {
     };
 
 
-    function viewLink(row, cell) {
+    /*function viewLink(row, cell) {
       return <Link to={'/joined/' + cell.id}>
         <button type="button" className="btn btn-primary btn-sm">
           {cell.id}
         </button>
       </Link>;
-    };
+    };*/
 
     var that = this;
     function remove(row, cell) {

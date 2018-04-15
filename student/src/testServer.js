@@ -59,8 +59,11 @@ var server = new Pretender(function(){
     return [200, {"Content-Type": "application/json"}, JSON.stringify(res)];
   })
 
+  this.get('/whoami', function () {
+    return [200, {'Content-Type': 'application/json'}, JSON.stringify({me: 1})];
+  });
+
   this.post('/api/student/joined/view', function (request) {
-    var response = { name: 'Test', username: 'test', email: 'test@example.com' };
     return new Promise(function(resolve) {
       setTimeout(function() {
         resolve([200, {"Content-Type": "application/json"}, JSON.stringify(classViewData)]);

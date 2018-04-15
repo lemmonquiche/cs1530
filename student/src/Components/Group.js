@@ -28,12 +28,16 @@ class Group extends Component {
             </thead>
             <tbody>
               {this.props.group.students.map(function (student) {
-                return <tr key={student.id}>
+                var style = {};
+                if (this.props.me === student.id)
+                  style['background'] = 'goldenrod';
+
+                return <tr key={student.id} style={style} >
                   <th scope="row">{student.id}</th>
                   <td>{student.name}</td>
                   <td>{student.id}</td>
                 </tr>;
-              })}
+              }.bind(this))}
             </tbody>
           </table>
         </div>
