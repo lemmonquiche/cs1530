@@ -132,10 +132,10 @@ class Profile(Resource):
     def post(self):
         data = edit_profile_parser.parse_args()
 
-        if (not session.has_key('student_id') and not session.has_key('instructor_id')):
+        if (not session['student_id'] and not session['instructor_id']):
             return {'err': 'not logged in'}
 
-        if session.has_key('student_id'):
+        if session['student_id']:
             s = Student.query.filter_by(student_id = session['student_id']).first()
             if data.fname: s.fname = data.fname
             if data.lname: s.lname = data.lname
@@ -147,7 +147,7 @@ class Profile(Resource):
             except exc.IntegrityError:
                 return {'err': 'user alredy exit'}
 
-        if session.has_key('instructor_id'):
+        if session['instructor_id']:
             s = Instructor.query.filter_by(student_id = session['instructor_id']).first()
             if data.fname: s.fname = data.fname
             if data.lname: s.lname = data.lname
@@ -803,13 +803,15 @@ just_course.add_argument('course_id',         help='This field cannot be blank',
 class JoinedView(Resource):
     def post(self):
         data = just_course.parse_args()
+        if not session.has_key('student_id'):
+            return {'err':'Not a student'}            
         query = """
             select s.Student_id as sid, s.fname as f, s.lname as l, g.group_id as gid
             from "group" g
             join group_membership gm on gm.group_id = g.group_id
             join student s on s.student_id = gm.student_id
             where g.course = ?;"""
-        result = db.execute(query, 1) #data['course_id']
+        result = db.execute(query, data['course_id']) #data['course_id']
         rows = result.fetchall()
         
         students_in_groups = [(lambda row: {
@@ -817,15 +819,15 @@ class JoinedView(Resource):
             'name': row['f'] + ' ' + row['l'],
             'group': row['gid']
         })(row) for row in rows]
-        print("students_in_groups")
-        print(students_in_groups)
+        print("students_in_groups", file = sys.stderr)
+        print(students_in_groups, file = sys.stderr)
         
         query = """
             select s.Student_id as sid, s.fname as f, s.lname as l
             from student s
             join course_registration cr on cr.student_id = s.student_id
             where cr.course_id = ?;"""
-        result = db.execute(query, 1) #data['course_id']
+        result = db.execute(query, data['course_id']) #data['course_id']
         rows = result.fetchall()
         
         students_in_course = [(lambda row: {
