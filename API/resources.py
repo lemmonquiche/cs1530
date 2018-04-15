@@ -110,7 +110,7 @@ edit_profile_parser.add_argument('password', help='This field can be blank',    
 
 class Profile(Resource):
     def get (self):
-        if session['student_id']:
+        if session.has_key('student_id'):
             u = Student.query.filter_by(student_id=session['student_id']).first()
             return {
                 'username': u.username
@@ -119,8 +119,8 @@ class Profile(Resource):
                 , 'email' : u.email
                 , 'password': Student.generate_hash(u.password)
                 }
-        elif session['instructor_id']:
-            u = Instructor.query.filter_by(student_id=session['instructor_id']).first()
+        elif session.has_key('instructor_id'):
+            u = Instructor.query.filter_by(instructor_id=session['instructor_id']).first()
             return {
                 'username': u.username
                 , 'fname' : u.fname

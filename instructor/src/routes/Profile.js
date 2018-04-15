@@ -1,25 +1,69 @@
 import React, { Component } from 'react';
+import $ from 'jquery';
 
 class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
+      fname: '',
+      lname: '',
       email: '',
       username: '',
       password: '',
-      loaded: false
+      loaded: false,
+      error: ''
     };
 
     this.formSubmit = this.formSubmit.bind(this);
-    setTimeout(function() {this.setState({loaded: true});}.bind(this), 1000);
+    this.fetchOld = this.fetchOld.bind(this);
+
+    this.fetchOld();
+  }
+
+  fetchOld() {
+    $.get('/api/profile', function (data) {
+      this.setState({
+        loaded: true,
+        fname: data.fname,
+        lname: data.lname,
+        username: data.username,
+        email: data.email
+      });
+    }.bind(this));
   }
 
   formSubmit(e) {
     e.preventDefault();
-    console.log(this.state);
-    this.setState({ loaded: false });
-    setTimeout(function() { this.setState({ loaded: true }); }.bind(this), 500);
+    $.ajax({
+      method: 'post',
+      url: '/api/profile',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        username: this.state.username,
+        fname: this.state.fname,
+        lname: this.state.lname,
+        email: this.state.email,
+        role: this.state.role === 0 ? 'student' : 'instructor',
+        password: this.state.password,
+      }),
+      dataType: 'json',
+      error: function (jQReq, status, error) {
+        this.setState({ error });
+        console.log(arguments);
+      }.bind(this),
+      success: function (data, status, jQReq) {
+        console.log('success', data, arguments);
+        if (!data.err) {
+          // return this.props.result({ success: data });
+          console.log('Email sent, now refresh page.');
+          this.setState({ loaded: true, error: '' });
+        }
+        
+        this.setState({ error: data.err })
+      }.bind(this)
+    });
+
+    this.setState({ password: '', loaded: false });
   }
 
   render() {
@@ -27,88 +71,61 @@ class Profile extends Component {
       return <div className="loading-spinner"></div>
     }
 
+    var errorUI = null;
+    if (this.state.error) {
+      errorUI = <div className="col-md-6">
+        <p>Error: {this.state.error}</p>
+      </div>;
+    }
+
     return <div className="card">
       <div className="card-body">
-          <h1>Edit Profile</h1>
-          <hr />
+        <h5 className="card-title">Edit Profile</h5>
+        <h6 className="card-subtitle mb-2 text-muted">Update your profile information.</h6>
+        <hr />
         <div className="row">
-            {/*<!-- left column -->*/}
-            <div className="col-md-3">
-              <div className="text-center">
-                <img src="//placehold.it/100" className="avatar img-circle" alt="avatar" />
-                <h6>Upload a different photo...</h6>
-                
-                <input type="file" className="form-control" />
+          <div className="col-md-6 personal-info">
+            <h3>Personal info</h3>
+            <form className="form-horizontal" onSubmit={this.formSubmit}>
+              <TextFormGroup
+                label='First Name:'
+                value={this.state.fname}
+                onChange={(e) => this.setState({fname: e.target.value})} />
+              <TextFormGroup
+                label='Last Name:'
+                value={this.state.lname}
+                onChange={(e) => this.setState({lname: e.target.value})} />
+              <TextFormGroup
+                label='Email:'
+                value={this.state.email}
+                onChange={(e) => this.setState({email: e.target.value})} />
+              <TextFormGroup
+                label='Username:'
+                value={this.state.username}
+                onChange={(e) => this.setState({username: e.target.value})} />
+
+              <PwdFormGroup
+                label='Password:'
+                value={this.state.password}
+                onChange={(e) => this.setState({password: e.target.value})} />
+
+              <div className="form-group">
+                <label className="col-md-3 control-label"></label>
+                <div className="col-md-8">
+                  <input type="submit" className="btn btn-primary" value="Save Changes" />
+                  <button
+                    className="btn btn-default"
+                    value="Cancel"
+                    onClick={this.fetchOld}
+                    onTouchStart={this.fetchOld}
+                    >
+                    Cancel
+                  </button>
+                </div>
               </div>
-            </div>
-            
-            {/*<!-- edit form column -->*/}
-            <div className="col-md-9 personal-info">
-              {/*<div className="alert alert-info alert-dismissable">
-                <a className="panel-close close" data-dismiss="alert">×</a> 
-                <i className="fa fa-coffee"></i>
-                <strong>Hey</strong> - be alerted.
-              </div>*/}
-              <h3>Personal info</h3>
-              
-              <form className="form-horizontal" onSubmit={this.formSubmit}>
-                <div className="form-group">
-                  <label className="col-lg-3 control-label">Name:</label>
-                  <div className="col-lg-8">
-                    <input className="form-control" type="text" value={this.state.name} onChange={(e) => this.setState({name: e.target.value})} />
-                  </div>
-                </div>
-                {/*<div className="form-group">
-                  <label className="col-lg-3 control-label">Company:</label>
-                  <div className="col-lg-8">
-                    <input className="form-control" type="text" value="" />
-                  </div>
-                </div>*/}
-                <div className="form-group">
-                  <label className="col-lg-3 control-label">Email:</label>
-                  <div className="col-lg-8">
-                    <input className="form-control" type="text" value={this.state.email} onChange={(e) => this.setState({email: e.target.value})} />
-                  </div>
-                </div>
-                {/*<div className="form-group">
-                  <label className="col-lg-3 control-label">Time Zone:</label>
-                  <div className="col-lg-8">
-                    <div className="ui-select">
-                      <select id="user_time_zone" className="form-control">
-                        <option value="Hawaii">(GMT-10:00) Hawaii</option>
-                        <option value="Alaska">(GMT-09:00) Alaska</option>
-                        <option value="Pacific Time (US &amp; Canada)">(GMT-08:00) Pacific Time (US &amp; Canada)</option>
-                        <option value="Arizona">(GMT-07:00) Arizona</option>
-                        <option value="Mountain Time (US &amp; Canada)">(GMT-07:00) Mountain Time (US &amp; Canada)</option>
-                        <option value="Central Time (US &amp; Canada)">(GMT-06:00) Central Time (US &amp; Canada)</option>
-                        <option value="Eastern Time (US &amp; Canada)" defaultValue="selected">(GMT-05:00) Eastern Time (US &amp; Canada)</option>
-                        <option value="Indiana (East)">(GMT-05:00) Indiana (East)</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>*/}
-                <div className="form-group">
-                  <label className="col-md-3 control-label">Username:</label>
-                  <div className="col-md-8">
-                    <input className="form-control" type="text" value={this.state.username} onChange={(e) => this.setState({username: e.target.value})} />
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label className="col-md-3 control-label">Password:</label>
-                  <div className="col-md-8">
-                    <input className="form-control" type="password" value={this.state.password} onChange={(e) => this.setState({password: e.target.value})} />
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label className="col-md-3 control-label"></label>
-                  <div className="col-md-8">
-                    <input type="submit" className="btn btn-primary" value="Save Changes" />
-                    <span></span>
-                    <input type="reset" className="btn btn-default" value="Cancel" />
-                  </div>
-                </div>
-              </form>
-            </div>
+            </form>
+          </div>
+          {errorUI}
         </div>
       </div>
       <hr />
@@ -117,3 +134,22 @@ class Profile extends Component {
 }
 
 export default Profile;
+
+function TextFormGroup(props) {
+  return <div className="form-group">
+    <label className=" control-label">{props.label}</label>
+    <div className="">
+      <input className="form-control" type="text" value={props.value} onChange={props.onChange} />
+    </div>
+  </div>;
+}
+
+function PwdFormGroup(props) {
+  return <div className="form-group">
+    <label className=" control-label">{props.label}</label>
+    <div className="">
+      <input className="form-control" type="password" value={props.value} onChange={props.onChange} />
+    </div>
+  </div>;
+}
+
