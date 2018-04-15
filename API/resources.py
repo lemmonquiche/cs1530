@@ -804,6 +804,7 @@ class JoinedView(Resource):
     def post(self):
         data = just_course.parse_args()
         if not session.has_key('student_id'):
+#         if False:
             return {'err':'Not a student'}            
         query = """
             select s.Student_id as sid, s.fname as f, s.lname as l, g.group_id as gid
@@ -819,8 +820,8 @@ class JoinedView(Resource):
             'name': row['f'] + ' ' + row['l'],
             'group': row['gid']
         })(row) for row in rows]
-        print("students_in_groups", file = sys.stderr)
-        print(students_in_groups, file = sys.stderr)
+#         print("students_in_groups", file = sys.stderr)
+#         print(students_in_groups, file = sys.stderr)
         
         query = """
             select s.Student_id as sid, s.fname as f, s.lname as l
@@ -834,4 +835,8 @@ class JoinedView(Resource):
             'id':   row['sid'],
             'name': row['f'] + ' ' + row['l']
         })(row) for row in rows]
-        print(students_in_course)
+#         print("students_in_course")
+#         print(students_in_course, file = sys.stderr)
+        return {"students_in_course": students_in_course, "students_in_groups": students_in_groups}
+    
+    
