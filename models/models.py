@@ -40,7 +40,11 @@ class Course_Registration(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey('student.student_id'))
     course_id = db.Column(db.Integer, db.ForeignKey('course.course_id'))
 
-    def __init__(self, student_id, course_id, schedule_id):
+    def add(self):
+        db.session.add(self)
+        db.session.commit()
+        
+    def __init__(self, student_id, course_id):
         self.student_id = student_id
         self.course_id = course_id
 

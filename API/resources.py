@@ -523,13 +523,31 @@ student_course_parser.add_argument('outcome',    help='This field cannot be blan
 class PendingReqsOutcome(Resource):
     def post(self):
         data = student_course_parser.parse_args()
-        if not session['instructor_id']:
+#         if not session['instructor_id']:
+        if False:
             return {'err':'Not an instructor'}
         if data['outcome']: # if student request for a class is exepted 
-            pass
-        
+            try:
+                db.execute(("DELETE FROM course_pending "
+                    +"WHERE student_id=? and course_id = ?"), data['student_id'], data['course_id']) 
+                # insert into course registration 
+                cr = Course_Registration(student_id = data['student_id'], course_id = data['course_id'])
+                cr.add()
+                return {'result': 'success'}
+            except TypeError:
+                e = sys.exc_info()[0]
+                print (TypeError.message, file = sys.stderr) 
+                return {'err': 'Delete from course_pending or insert into course_registation failed'}
         else : # if student request rejected by the instructor 
-            
+            try:
+                # delete from pending 
+                db.execute(("DELETE FROM course_pending "
+                    +"WHERE student_id=? and course_id = ?"), data['student_id'], data['course_id']) 
+                return {'result': 'success'}
+            except:
+                e = sys.exc_info()[0]
+                print (e, file = sys.stderr) 
+                return {'err': 'Delete from course_pending failed'}            
 
 
 class InstructorDashBoard(Resource):
