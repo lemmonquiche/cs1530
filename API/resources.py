@@ -509,8 +509,7 @@ class PendingReqs(Resource):
     def post(self):
         ps_arr = []
         data = pending_req_parser.parse_args()
-#         if not session['instructor_id']:
-        if False:
+        if not session['instructor_id']:
             return {'err':'Not an instructor'}
         else:
             course = Course.query.filter(Course.course_id == data['course_id'] ).first()
@@ -519,8 +518,6 @@ class PendingReqs(Resource):
                 return {}
             else :
                 return jsonify([e.serialize() for e in course.pending_students])
-
-#             print(pending_students, file = stderr)
 
 
 
