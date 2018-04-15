@@ -516,10 +516,10 @@ from sqlalchemy import exc
 class PendingReqsOutcome(Resource):
     def post(self):
         data = student_course_parser.parse_args()
-#         if not session['instructor_id']:
-        if False:
+        if not session.has_key('instructor_id'):
             return {'err':'Not an instructor'}
-        if data['outcome']: # if student's request for a class is exepted 
+
+        if data['outcome'] == u'True': # if student's request for a class is exepted 
             try:
                 db.execute(("DELETE FROM course_pending "
                     +"WHERE student_id=? and course_id = ?"), data['student_id'], data['course_id']) 
