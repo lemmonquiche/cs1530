@@ -31,10 +31,6 @@ user_parser.add_argument('username',          help='This field cannot be blank',
 add_course_parser   = reqparse.RequestParser()
 add_course_parser.add_argument('name',        help='This field cannot be blank', required=True )
 
-student_course_parser = reqparse.RequestParser()
-student_course_parser.add_argument('student_id', help='This field cannot be blank', required=True )
-student_course_parser.add_argument('course_id',  help='This field cannot be blank', required=True )
-student_course_parser.add_argument('outcome',    help='This field cannot be blank', required=True )
 
 code_parser         = reqparse.RequestParser()
 code_parser.add_argument('code',              help='This field cannot be blank', required=True )
@@ -507,13 +503,12 @@ pending_req_parser.add_argument('course_id', help='This field cannot be blank', 
 from flask import jsonify
 class PendingReqs(Resource):
     def post(self):
-        ps_arr = []
         data = pending_req_parser.parse_args()
         if not session['instructor_id']:
             return {'err':'Not an instructor'}
         else:
             course = Course.query.filter(Course.course_id == data['course_id'] ).first()
-            print (course.course_name, file = sys.stderr)
+#             print (course.course_name, file = sys.stderr)
             if not hasattr(course, 'pending_students'):
                 return {}
             else :
@@ -527,8 +522,14 @@ student_course_parser.add_argument('course_id',  help='This field cannot be blan
 student_course_parser.add_argument('outcome',    help='This field cannot be blank', required=True )
 class PendingReqsOutcome(Resource):
     def post(self):
+        data = student_course_parser.parse_args()
         if not session['instructor_id']:
             return {'err':'Not an instructor'}
+        if data['outcome']: # if student request for a class is exepted 
+            pass
+        
+        else : # if student request rejected by the instructor 
+            
 
 
 class InstructorDashBoard(Resource):
