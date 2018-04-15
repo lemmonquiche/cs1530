@@ -80,7 +80,8 @@ class Profile extends Component {
 
     return <div className="card">
       <div className="card-body">
-        <h1>Edit Profile</h1>
+        <h5 className="card-title">Edit Profile</h5>
+        <h6 className="card-subtitle mb-2 text-muted">Update your profile information.</h6>
         <hr />
         <div className="row">
           <div className="col-md-6 personal-info">
