@@ -64,8 +64,6 @@ api.add_resource(resources.Registration,        '/api/login/signup')
 api.add_resource(resources.InstructorDashBoard, '/api/instructor/course')
 api.add_resource(resources.GroupGenerate,       '/api/instructor/course/generategroup')
 api.add_resource(resources.RetrieveGroups,      '/api/instructor/course/groups')
-api.add_resource(resources.PendingReqs,         '/api/instructor/course/pending/get')
-api.add_resource(resources.PendingReqsOutcome,  '/api/instructor/course/pending/outcome')
 api.add_resource(resources.InstructorAddCourse, '/api/instructor/addCourse')
 
 app.config['JWT_BLACKLIST_ENABLED'] = True
@@ -1173,6 +1171,84 @@ def initdb_command():
                         10,
                         1
                     );""")
+    con.execute("""INSERT INTO course_registration
+                    VALUES (
+                        11,
+                        11,
+                        1
+                    );""")
+    con.execute("""INSERT INTO course_registration
+                    VALUES (
+                        12,
+                        12,
+                        1
+                    );""")
+    con.execute("""INSERT INTO course_registration
+                    VALUES (
+                        13,
+                        13,
+                        1
+                    );""")
+    con.execute("""INSERT INTO course_registration
+                    VALUES (
+                        14,
+                        14,
+                        1
+                    );""")
+    con.execute("""INSERT INTO course_registration
+                    VALUES (
+                        15,
+                        15,
+                        1
+                    );""")
+    con.execute("""INSERT INTO course_registration
+                    VALUES (
+                        16,
+                        16,
+                        1
+                    );""")
+    con.execute("""INSERT INTO course_registration
+                    VALUES (
+                        17,
+                        17,
+                        1
+                    );""")
+    con.execute("""INSERT INTO course_registration
+                    VALUES (
+                        18,
+                        18,
+                        1
+                    );""")
+    con.execute("""INSERT INTO course_registration
+                    VALUES (
+                        19,
+                        19,
+                        1
+                    );""")
+    con.execute("""INSERT INTO course_registration
+                    VALUES (
+                        20,
+                        20,
+                        1
+                    );""")
+    con.execute("""INSERT INTO course_registration
+                    VALUES (
+                        21,
+                        21,
+                        1
+                    );""")
+    con.execute("""INSERT INTO course_registration
+                    VALUES (
+                        22,
+                        22,
+                        1
+                    );""")
+    con.execute("""INSERT INTO course_registration
+                    VALUES (
+                        23,
+                        23,
+                        1
+                    );""")
     con.execute("""INSERT INTO instructor
                    VALUES (
                        1,
@@ -1269,6 +1345,84 @@ def initdb_command():
                         10,
                         '1010001010000000100011000011011100000101110001110011101100010011000011011101111000111010111100110011100011001111101100110110000101110011111111000011100010000110011001101110000000111111001010011011'
                     );""")
+    con.execute("""INSERT INTO schedule
+                         VALUES (
+                             11,
+                             11,
+                             '1011110010111000001011000000100111101000001000111000100100100100001010010101000101001110001100010110001011110001111010011011100111101101111000000000000101111011101100011101101110110000011010010011'
+                         );""")
+    con.execute("""INSERT INTO schedule
+                         VALUES (
+                             12,
+                             12,
+                             '1011010100001111110111011100110010100100011001010000010011011101011110101101101011100000011001111110001101011010010010110100001000001001110110100100010010101101110111110011101010000110111000011100'
+                         );""")
+    con.execute("""INSERT INTO schedule
+                         VALUES (
+                             13,
+                             13,
+                             '0000000110000011100101111101000000001001000010111111011001000000111110011111101110011101011101110101010100010001010001111110101111011101001000110111111101010100011100110010000000111101100100011100'
+                         );""")
+    con.execute("""INSERT INTO schedule
+                         VALUES (
+                             14,
+                             14,
+                             '1110001110010101111111010010100011011000011011110011011000010100101100111101000100010011011011101110001111000110010001011111100101001001100100011110100010100111011101000010101111001110101011110110'
+                         );""")
+    con.execute("""INSERT INTO schedule
+                         VALUES (
+                             15,
+                             15,
+                             '1110110100011110100001000001000110001110010111000000111100111101011011000011100100011011110011111000111001010111110111011011101010101100010011011011101101110001000101000011101000011010001110110101'
+                         );""")
+    con.execute("""INSERT INTO schedule
+                         VALUES (
+                             16,
+                             16,
+                             '1101011111000011100010011111111101111011101100000010101111110101110010110010111000110101010011001011110111001000011010110001000000011110111100100111101110110000010010100101001001010110100111000001'
+                         );""")
+    con.execute("""INSERT INTO schedule
+                         VALUES (
+                             17,
+                             17,
+                             '0001110011001110101110001011100000001111110101010011100001011111000010100110001101101001111000011110010011011000110100001001010100000011100101000000010111111110110010011000010111000010110110111101'
+                         );""")
+    con.execute("""INSERT INTO schedule
+                         VALUES (
+                             18,
+                             18,
+                             '1010001010100010010010101111100110000010100111110100000010100001101110010110100000101111011111001111111101110001100001101011101000000001101000100001011000000001000101111001100011010000101110001110'
+                         );""")
+    con.execute("""INSERT INTO schedule
+                         VALUES (
+                             19,
+                             19,
+                             '1111101011100011111000000001000011001010111010001001010011111011111011010111010110110101010111001111100010000001010001011011011110110011100000010000110001101001000100111001111111001110101101111001'
+                         );""")
+    con.execute("""INSERT INTO schedule
+                         VALUES (
+                             20,
+                             20,
+                             '1110100011000000000110011110111100101101011100000100111101010110111110010000101101100101000010010101110110101011001101001100100011110001011010001110101100110011111001110110101011000110000101101011'
+                         );""")
+    con.execute("""INSERT INTO schedule
+                         VALUES (
+                             21,
+                             NULL,
+                             '1101010100010000101111110111100111101101000100100111001001110010101010100101010110110101011101001111100000100010100010000100101010111111011111111011110101011011011101000111011011001101110000011011'
+                         );""")
+    con.execute("""INSERT INTO schedule
+                         VALUES (
+                             22,
+                             NULL,
+                             '0110001110011010100101010111100110110111101010001010111000011010000100100000001100010101001110001011000111100101101010001001100100000100011001010001001000101010010010001000111010111011011100101101'
+                         );""")
+    con.execute("""INSERT INTO schedule
+                         VALUES (
+                             23,
+                             NULL,
+                             '0000001110100100001110010011010101000001001111101101100010000000111100110001000001000101100001011000001000100100010001001001001010010111110010111000010000110010010100001010100010011110100011010011'
+                         );""")
     con.close()
     db.session.commit()
     print('Initialized the database.')
