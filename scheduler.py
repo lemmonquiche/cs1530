@@ -28,9 +28,9 @@ def gen_groups(course_id):
 
     ss = [r for (r, ) in result]
 
-    #sched_matrix = np.empty((0, 196), int)
-    sched_matrix = None
+    sched_matrix = np.empty((0, 196), int)
     #print(sched_matrix.shape)
+    empty = np.zeros((196,), dtype=int)
 
     #get schedules for all students
     con.close()
@@ -38,15 +38,16 @@ def gen_groups(course_id):
     for s in ss:
         result = con.execute('SELECT available_hour_week FROM schedule WHERE schedule_id = :st', {'st':s})
         sched = [r for (r, ) in result]
+        #print(sched)
         if not sched:
             con.close()
             return
-
-        # for review, strings must be normalized/filled
-        empty = '0' * 196
-        sch = np.array(map(lambda avail_hour_week: int(avail_hour_week) if avail_hour_week and len(avail_hour_week) == 196 else empty, sched[0]))
-
-        sched_matrix = np.vstack((sched_matrix, sch))
+        #print(len(sched))
+        sch = np.array(map(int, sched[0]))
+        if len(sch) != 196:
+            sched_matrix = np.vstack((sched_matrix, empty))
+        else:
+            sched_matrix = np.vstack((sched_matrix, sch))
 
     #generate groups
     gid = con.execute('SELECT max(group_id) FROM \'group\'')

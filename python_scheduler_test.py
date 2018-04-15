@@ -24,6 +24,7 @@ def gen_groups(course_id):
 
     sched_matrix = np.empty((0, 196), int)
     #print(sched_matrix.shape)
+    empty = np.zeros((196,), dtype=int)
 
     #get schedules for all students
     con.close()
@@ -31,11 +32,16 @@ def gen_groups(course_id):
     for s in ss:
         result = con.execute('SELECT available_hour_week FROM schedule WHERE schedule_id = :st', {'st':s})
         sched = [r for (r, ) in result]
+        #print(sched)
         if not sched:
             con.close()
             return
+        #print(len(sched))
         sch = np.array(map(int, sched[0]))
-        sched_matrix = np.vstack((sched_matrix, sch))
+        if len(sch) != 196:
+            sched_matrix = np.vstack((sched_matrix, empty))
+        else:
+            sched_matrix = np.vstack((sched_matrix, sch))
 
     #generate groups
     gid = con.execute('SELECT max(group_id) FROM \'group\'')
@@ -86,6 +92,7 @@ def gen_groups(course_id):
                     #if student not groupable, go to next student
                     snum += 1
 
+    #print(len(ss))
     #if there are students leftover
     while ss:
         if len(ss) >= 5:
@@ -97,6 +104,8 @@ def gen_groups(course_id):
 
             #generate the group with first 5 students
             for x in range(0, 5):
+                #print (x)
+                #print(ss[x])
                 stud = ss[x]
                 con.execute('INSERT INTO group_membership(student_id, group_id, randomized) VALUES(:student_id, :group_id, :randomized)', {'student_id':stud, 'group_id':group_id, 'randomized':1})
                 #remove student from ss and their schedule from sched_matrix
