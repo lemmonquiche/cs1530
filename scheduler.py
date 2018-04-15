@@ -101,6 +101,7 @@ def gen_groups(course_id):
                     snum += 1
 
     #if there are students leftover
+    group_num = group_start
     while ss:
         if len(ss) >= 5:
             #just make these students into a group
@@ -115,31 +116,35 @@ def gen_groups(course_id):
                 con.execute('INSERT INTO group_membership(student_id, group_id, randomized) VALUES(:student_id, :group_id, :randomized)', {'student_id':stud, 'group_id':group_id, 'randomized':1})
                 #remove student from ss and their schedule from sched_matrix
                 ss.remove(stud)
-        elif len(ss) == 4:
-            group_id += 1
-            groups.append(group_id)
-            con.execute('INSERT INTO \'group\' VALUES(:group, :course)', {'group':group_id, 'course':course_id})
-
-            #generate the group with first 5 students
-            for x in range(0, 4):
-                stud = ss[x]
-                con.execute('INSERT INTO group_membership(student_id, group_id, randomized) VALUES(:student_id, :group_id, :randomized)', {'student_id':stud, 'group_id':group_id, 'randomized':1})
-                #remove student from ss and their schedule from sched_matrix
-                ss.remove(stud)
+        #elif len(ss) == 4:
+        #    group_id += 1
+        #    groups.append(group_id)
+        #    con.execute('INSERT INTO \'group\' VALUES(:group, :course)', {'group':group_id, 'course':course_id})
+        #
+        #    #generate the group with first 5 students
+        #    for x in range(0, 4):
+        #        stud = ss[x]
+        #        con.execute('INSERT INTO group_membership(student_id, group_id, randomized) VALUES(:student_id, :group_id, :randomized)', {'student_id':stud, 'group_id':group_id, 'randomized':1})
+        #        #remove student from ss and their schedule from sched_matrix
+        #        ss.remove(stud)
         else:
             #if there is not enough students to form a group
-            group_num = group_start
+
+#            print(group_id)
+#            print(group_start)
             for stud in ss:
                 #g = len(groups) - 1
                 group_num += 1
+#                print(group_num)
                 if(group_num > group_id):
                     group_num = group_start + 1
+#                print(group_num)
                 #num = random.randint(0, g)
                 #group_num = groups[num] + group_start
                 con.execute('INSERT INTO group_membership(student_id, group_id, randomized) VALUES(:student_id, :group_id, :randomized)', {'student_id':stud, 'group_id':group_num, 'randomized':1})
                 ss.remove(stud)
                 #somehow indicate group might not be optimal
     con.close()
-    #for g in groups:
-    #    print("group id: ", g)
+#    for g in groups:
+#        print("group id: ", g)
     return groups
