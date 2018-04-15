@@ -28,6 +28,12 @@
 6. Running Flask App
    - `python -m flask initdb`
    - `flask run --host 0.0.0.0 -p 5000` (Runs the service on `http://localhost:5000`)
+7. Logging in as student
+   - username: `test` 
+   - password: `pwd` 
+9. Logging in as instructor
+   - username: `prof`
+   - password: `password`
 
 ## Database Load Mode
 1. Initialize new database with all the data: 
@@ -38,10 +44,7 @@
    - `python -m flask loaddb`
 
 ## Database administration
-1. Login to the backend 
-2. Open sqlite3 and open db by running:
-   - `sqlite3 grouper.db`
-3. From here all the db maintenance can be performed   
+1.    
 
 ## In case Installation Instraction does not work
 1.  apt install pip
