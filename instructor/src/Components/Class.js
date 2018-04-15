@@ -157,7 +157,7 @@ class Class extends Component {
                   error: function() { alert("could not submit"); },
                   success: function(data, status, req) {
                     alert("ok");
-                    this.loadInitial();
+                    this.loadInitial(this.props.match.params.id);
                   }.bind(this)
                 });
               }
