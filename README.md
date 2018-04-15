@@ -11,7 +11,7 @@
 4. Install virtualenv by running 
    - `pip install virtualenv`
 
-### Compelation/Execution 
+### Compilation/Execution 
 
 1. Create a virtual environment for Python and activate:
    - `virtualenv [env-dir]` (env-dir - is a directory that will be created and where all virtual env will be localed)
