@@ -46,7 +46,7 @@ class Class extends Component {
 
             that.setState({
               loaded: true,
-              studentsInClass: data.students_in_class,
+              studentsInClass: data.students_in_course,
               studentsInGroups: data.students_in_groups
             });
           }
