@@ -164,7 +164,7 @@ class GroupGenerate(Resource):
     def post(self):
         data = just_course.parse_args()
         cid = data['course_id']
-        if not session['instructor_id']:
+        if not session.has_key('instructor_id'):
             return{'err':'Not an instructor'}
 
         groups = gen_groups(cid)
@@ -177,7 +177,7 @@ class GroupGenerate(Resource):
 
 class StudentClasses(Resource):
     def post(self):
-        if not session['student_id']:
+        if not session.has_key('student_id'):
             return{'err': 'Not a student'}
 
         data = limit_offset_parser.parse_args()
@@ -212,7 +212,7 @@ class StudentClasses(Resource):
 
 class StudentAddRequest(Resource):
     def post(self):
-        if not session['student_id']:
+        if not session.has_key('student_id'):
             return { 'err': 'Not a student' }
 
         try:
@@ -228,7 +228,7 @@ class StudentAddRequest(Resource):
 
 class StudentAddClassCode(Resource):
     def post(self):
-        if not session['student_id']:
+        if not session.has_key('student_id'):
             return{'err': 'Not a student'}
 
         data = code_parser.parse_args()
@@ -252,7 +252,7 @@ class StudentAddClassCode(Resource):
 
 class StudentPendingClass(Resource):
     def post(self):
-        if not session['student_id']:
+        if not session.has_key('student_id'):
             return{'err': 'Not a student'}
 
         data = limit_offset_parser.parse_args()
@@ -288,7 +288,7 @@ class StudentPendingClass(Resource):
 
 class StudentPendingRm(Resource):
     def post(self):
-        if not session['student_id']:
+        if not session.has_key('student_id'):
             return{'err': 'Not a student'}
 
         data = just_course.parse_args()
@@ -303,7 +303,7 @@ class StudentPendingRm(Resource):
 class StudentSchedule(Resource):
     def get(self):
         # return{'err': 'Not a student', 'sid': str(session['student_id'])}
-        if not session['student_id']:
+        if not session.has_key('student_id'):
             return{'err': 'Not a student'}
         else:
             s = Schedule.query.filter_by(student_id = session['student_id']).first()
@@ -317,7 +317,7 @@ class StudentSchedule(Resource):
             return {'schedule': s.available_hour_week}
 
     def post(self):
-        if not session['student_id']:
+        if not session.has_key('student_id'):
             return{'err': 'Not a student'}
         else:
             s_id = Schedule.query.filter_by(student_id = session['student_id']).first()
@@ -461,7 +461,7 @@ class SecretResource(Resource):
 
 class StudentDashBoard(Resource):
     def get(self):
-        if not session['student_id']:
+        if not session.has_key('student_id'):
             return{'err':'Not a student'}
         else:
             student = Student.query.filter(Student.student_id==session['student_id']).first()
@@ -496,7 +496,7 @@ from flask import jsonify
 class PendingReqs(Resource):
     def post(self):
         data = pending_req_parser.parse_args()
-        if not session['instructor_id']:
+        if not session.has_key('instructor_id'):
             return {'err':'Not an instructor'}
         else:
             course = Course.query.filter(Course.course_id == data['course_id'] ).first()
@@ -547,7 +547,7 @@ class PendingReqsOutcome(Resource):
 
 class InstructorDashBoard(Resource):
     def get(self):
-        if not session['instructor_id']:
+        if not session.has_key('instructor_id'):
             return {'err':'Not an instructor'}
 
         courses = Course.query.filter(Course.instructors.any(instructor_id=session['instructor_id'])).all()
@@ -576,7 +576,7 @@ class InstructorDashBoard(Resource):
 class InstructorAddCourse(Resource):
     def post(self):
         data = add_course_parser.parse_args()
-        if not session['instructor_id']:
+        if not session.has_key('instructor_id'):
             return {'err': 'Not an instructor'}
 
         iid = session['instructor_id']
@@ -605,7 +605,7 @@ class InstructorAddCourse(Resource):
 class RegisterForCourse(Resource):
     def post(self):
         data = user_parser.parse_args()
-        if not session['student_id']:
+        if not session.has_key('student_id'):
             return {'err': 'Not a student'}
         else:
 
@@ -631,7 +631,7 @@ class RegisterForCourse(Resource):
 
 class ConfirmCourse(Resource):
     def post(self):
-        if not session['instructor_id']:
+        if not session.has_key('instructor_id'):
             return {'err': 'Not an instructor'}
         else:
             data = user_parser.parse_args()
@@ -650,7 +650,7 @@ class ConfirmCourse(Resource):
 class CreateCourse(Resource):
     def post(self):
         data = user_parser.parse_args()
-        if not session['instructor_id']:
+        if not session.has_key('instructor_id'):
             return {'err': 'Not an instructor'}
         else:
             course_name = data['course_name']
@@ -669,7 +669,7 @@ class CreateCourse(Resource):
 class SearchCourse(Resource):
     def post(self):
         data = search_parser.parse_args()
-        if not session['student_id']:
+        if not session.has_key('student_id'):
             return {'err': 'Not a student'}
         else:
             course_id = data['course_id']
@@ -762,7 +762,7 @@ class SearchCourse(Resource):
 
 class RetrieveGroups(Resource):
     def post(self):
-        if not session['instructor_id']:
+        if not session.has_key('instructor_id'):
              return {'err': 'Not an instructor'}
         data = just_course.parse_args()
         course_id = data['course_id']
