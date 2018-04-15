@@ -28,7 +28,7 @@ class Class extends Component {
     this.setState({ loaded: false });
     $.ajax({
       method: 'post',
-      url: '/api/instructor/course/pending',
+      url: '/api/instructor/course/pending/get',
       contentType: 'application/json',
       dataType: 'json',
       data: JSON.stringify({ course_id: loadId }),
@@ -117,7 +117,7 @@ class Class extends Component {
       contentType: 'application/json',
       dataType: 'json',
       data: JSON.stringify({ course_id: that.props.match.params.id }),
-      success: function() { alert("success"); }
+      success: function() { alert("success"); that.loadInitial(that.props.match.params.id); }
     });
   }
 
@@ -127,7 +127,7 @@ class Class extends Component {
     }
 
     var pending = null;
-    if (this.state.pending) {
+    if (this.state.pending && this.state.pending.length) {
       pending = <div>
         <h2>Class {this.props.match.params.id} Pending</h2>
 

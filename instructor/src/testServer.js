@@ -67,7 +67,7 @@ var server = new Pretender(function(){
     return [200, {'Content-Type': 'application/json'}, JSON.stringify({  })];
   });  
 
-  this.post('/api/instructor/course/pending', function (request) {
+  this.post('/api/instructor/course/pending/get', function (request) {
     return new Promise(function (resolve) {
       setTimeout(function() {
         resolve([
