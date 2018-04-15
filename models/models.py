@@ -5,6 +5,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from passlib.hash import pbkdf2_sha256 as sha256
 import numpy as np
+from sqlalchemy import UniqueConstraint
 
 db = SQLAlchemy()
 
@@ -39,7 +40,7 @@ class Course_Registration(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('student.student_id'))
     course_id = db.Column(db.Integer, db.ForeignKey('course.course_id'))
-
+    __table_args__ = (UniqueConstraint('student_id', 'course_id', name='_student_course_uc'),)
     def add(self):
         db.session.add(self)
         db.session.commit()

@@ -39,8 +39,6 @@ limit_offset_parser = reqparse.RequestParser()
 limit_offset_parser.add_argument('page',            help='This field cannot be blank', required=True )
 limit_offset_parser.add_argument('sizePerPage',     help='This field cannot be blank', required=True )
 
-just_course         = reqparse.RequestParser()
-just_course.add_argument('course_id',         help='This field cannot be blank', required=True )
 
 course_parser       = reqparse.RequestParser()
 course_parser.add_argument('course_id',       help='This field cannot be blank', required=True )
@@ -514,13 +512,14 @@ student_course_parser = reqparse.RequestParser()
 student_course_parser.add_argument('student_id', help='This field cannot be blank', required=True )
 student_course_parser.add_argument('course_id',  help='This field cannot be blank', required=True )
 student_course_parser.add_argument('outcome',    help='This field cannot be blank', required=True )
+from sqlalchemy import exc
 class PendingReqsOutcome(Resource):
     def post(self):
         data = student_course_parser.parse_args()
 #         if not session['instructor_id']:
         if False:
             return {'err':'Not an instructor'}
-        if data['outcome']: # if student request for a class is exepted 
+        if data['outcome']: # if student's request for a class is exepted 
             try:
                 db.execute(("DELETE FROM course_pending "
                     +"WHERE student_id=? and course_id = ?"), data['student_id'], data['course_id']) 
@@ -528,7 +527,9 @@ class PendingReqsOutcome(Resource):
                 cr = Course_Registration(student_id = data['student_id'], course_id = data['course_id'])
                 cr.add()
                 return {'result': 'success'}
-            except TypeError:
+            except exc.IntegrityError:
+                return {'err': 'Integrity Constraint err. Student may be alredy registred to this course'}
+            except:
                 e = sys.exc_info()[0]
                 print (TypeError.message, file = sys.stderr) 
                 return {'err': 'Delete from course_pending or insert into course_registation failed'}
@@ -794,3 +795,41 @@ class RetrieveGroups(Resource):
             group_dict["students"] = student_list
             group_list.append(group_dict)
         return {'group_list': group_list, 'students': all_students}
+    
+
+## DalerTODO: make it work 
+just_course         = reqparse.RequestParser()
+just_course.add_argument('course_id',         help='This field cannot be blank', required=True )
+class JoinedView(Resource):
+    def post(self):
+        data = just_course.parse_args()
+        query = """
+            select s.Student_id as sid, s.fname as f, s.lname as l, g.group_id as gid
+            from "group" g
+            join group_membership gm on gm.group_id = g.group_id
+            join student s on s.student_id = gm.student_id
+            where g.course = ?;"""
+        result = db.execute(query, 1) #data['course_id']
+        rows = result.fetchall()
+        
+        students_in_groups = [(lambda row: {
+            'id':   row['sid'],
+            'name': row['f'] + ' ' + row['l'],
+            'group': row['gid']
+        })(row) for row in rows]
+        print("students_in_groups")
+        print(students_in_groups)
+        
+        query = """
+            select s.Student_id as sid, s.fname as f, s.lname as l
+            from student s
+            join course_registration cr on cr.student_id = s.student_id
+            where cr.course_id = ?;"""
+        result = db.execute(query, 1) #data['course_id']
+        rows = result.fetchall()
+        
+        students_in_course = [(lambda row: {
+            'id':   row['sid'],
+            'name': row['f'] + ' ' + row['l']
+        })(row) for row in rows]
+        print(students_in_course)
