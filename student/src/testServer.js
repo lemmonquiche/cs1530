@@ -1,6 +1,34 @@
 import Pretender from 'pretender';
 
 if (process.env.NODE_ENV === 'development') {
+
+var classViewData = {
+  "students_in_groups": [
+    {"group": 1, "id": 3, "name": "Betteann Allicock"},
+    {"group": 1, "id": 4, "name": "Lory Keeri"},
+    {"group": 1, "id": 5, "name": "Vanda Solan"},
+    {"group": 1, "id": 6, "name": "Melessa Craythorn"},
+    {"group": 1, "id": 7, "name": "Alessandra Bahls"},
+    {"group": 2, "id": 1, "name": "Testing1 Testing"},
+    {"group": 2, "id": 2, "name": "Daler Rahimov"},
+    {"group": 2, "id": 8, "name": "Gizela Pay"},
+    {"group": 2, "id": 9, "name": "Willamina Jirak"},
+    {"group": 2, "id": 10, "name": "Alberta Dimitrescu"}
+  ],
+  "students_in_class": [
+    {"id": 1, "name": "Testing1 Testing"},
+    {"id": 2, "name": "Daler Rahimov"},
+    {"id": 3, "name": "Betteann Allicock"},
+    {"id": 4, "name": "Lory Keeri"},
+    {"id": 5, "name": "Vanda Solan"},
+    {"id": 6, "name": "Melessa Craythorn"},
+    {"id": 7, "name": "Alessandra Bahls"},
+    {"id": 8, "name": "Gizela Pay"},
+    {"id": 9, "name": "Willamina Jirak"},
+    {"id": 10, "name": "Alberta Dimitrescu"},
+  ]
+};
+
 var server = new Pretender(function(){
   this.get('/test', function () {
     return [200, {}, 'ok'];
@@ -30,6 +58,15 @@ var server = new Pretender(function(){
     ];
     return [200, {"Content-Type": "application/json"}, JSON.stringify(res)];
   })
+
+  this.post('/api/student/joined/view', function (request) {
+    var response = { name: 'Test', username: 'test', email: 'test@example.com' };
+    return new Promise(function(resolve) {
+      setTimeout(function() {
+        resolve([200, {"Content-Type": "application/json"}, JSON.stringify(classViewData)]);
+      }, 200);
+    });    
+  });
 
   this.get('/api/profile', function (request) {
     var response = { name: 'Test', username: 'test', email: 'test@example.com' };
