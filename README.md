@@ -11,7 +11,7 @@
 1. Install virtualenv by running 
    - `pip install virtualenv`
 
-### Compelation/Execution 
+### Compilation/Execution 
 
 1. Create a virtual environment for Python and activate:
    - `virtualenv [env-dir]` (env-dir - is a directory that will be created and where all virtual env will be localed)
@@ -28,6 +28,12 @@
 1. Running Flask App
    - `python -m flask initdb`
    - `flask run --host 0.0.0.0 -p 5000` (Runs the service on `http://localhost:5000`)
+7. Logging in as student
+   - username: `test` 
+   - password: `pwd` 
+9. Logging in as instructor
+   - username: `prof`
+   - password: `password`
 
 ## Database Load Mode
 1. Initialize new database with all the data: 
