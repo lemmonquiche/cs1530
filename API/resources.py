@@ -225,14 +225,9 @@ class StudentAddRequest(Resource):
             query = """insert into course_pending (student_id, course_id)
                        values (?, ?)"""
             result = db.execute(query, session['student_id'], data['course_id'])
-            print("db has executed")
-            print(dir(result))
-            print(result.lastrowid)
             return { 'status': 'success' }
         except:
             return { 'error': True }
-
-
 
 
 class StudentAddClassCode(Resource):
@@ -500,6 +495,16 @@ class StudentDashBoard(Resource):
                 group_info.append(info_dict)
             return group_info
 
+
+class PendingReqs(Resource):
+    def post(self):
+        if not session['instructor_id']:
+            return {'err':'Not an instructor'}
+
+class PendingReqsOutcome(Resource):
+    def post(self):
+        if not session['instructor_id']:
+            return {'err':'Not an instructor'}
 
 class InstructorDashBoard(Resource):
     def get(self):
