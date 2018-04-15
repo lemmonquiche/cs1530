@@ -67,6 +67,7 @@ api.add_resource(resources.RetrieveGroups,      '/api/instructor/course/groups')
 api.add_resource(resources.PendingReqs,         '/api/instructor/course/pending/get')
 api.add_resource(resources.PendingReqsOutcome,  '/api/instructor/course/pending/outcome')
 api.add_resource(resources.InstructorAddCourse, '/api/instructor/addCourse')
+api.add_resource(resources.JoinedView, '/api/student/joined/view')
 
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
