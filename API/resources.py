@@ -797,7 +797,6 @@ class RetrieveGroups(Resource):
         return {'group_list': group_list, 'students': all_students}
     
 
-## DalerTODO: make it work 
 just_course         = reqparse.RequestParser()
 just_course.add_argument('course_id',         help='This field cannot be blank', required=True )
 class JoinedView(Resource):

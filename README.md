@@ -1,25 +1,47 @@
 # grouper-flask-react 
 
 ## Intallation/Compilation/Execution Instruction 
+### Installation
+1. Install python 2.7 by running:
+   - `sudo apt install python2.7 python-pip`
+2. Install yarn by running: 
+   - `sudo apt install yarn -g` 
+3. Install pip by running:
+   - `sudo apt install pip` 
+4. Install virtualenv by running 
+   - `pip install virtualenv`
 
-1. Create a virtual environment for Python.
-   - apt install pip
-   - pip install virtualenv
-   - virtualenv [env-dir]
-   - source [env-dir]/bin/activate
-2. From the root of the repository run `pip install -r requirements.txt`
-3. Install/Build react app 
-   - sudo apt install npm 
-   - cd [react_app_dir] 
-   - npm install
-   - npm run build 
-4. Add the `FLASK_APP` variable to your path. 
-   - cd [app-root-dir]
-   - export FLASK_APP=grouper.py
-5. Running Flask App
-   - python -m flask initdb
-   - flask run --host 0.0.0.0 -p 5000 (Runs the service on `http://localhost:5000`)
+### Compelation/Execution 
 
+1. Create a virtual environment for Python and activate:
+   - `virtualenv [env-dir]` (env-dir - is a directory that will be created and where all virtual env will be localed)
+   - `source [env-dir]/bin/activate` 
+2. Copy the repo: 
+   - `git clone https://github.com/lemmonquiche/cs1530`
+3. To install all requirements to virtual env from the root of the repository run: 
+   - `pip install -r requirements.txt`
+4. Install/Build react app by running script from root of the repository
+   - `./build.sh`
+5. Add the `FLASK_APP` variable to your path. 
+   - `cd [app-root-dir]`
+   - `export FLASK_APP=grouper.py`
+6. Running Flask App
+   - `python -m flask initdb`
+   - `flask run --host 0.0.0.0 -p 5000` (Runs the service on `http://localhost:5000`)
+
+## Database Load Mode
+1. Initialize new database with all the data: 
+   - `python -m flask initdb` 
+2. Dump the database into a dump.sql file 
+   - `python -m flask dumpdb` 
+3. Load the database from dump.sql file 
+   - `python -m flask loaddb`
+
+## Database administration
+1. Login to the backend 
+2. Open sqlite3 and open db by running:
+   - `sqlite3 grouper.db`
+3. From here all the db maintenance can be performed   
 
 ## In case Installation Instraction does not work
 1.  apt install pip

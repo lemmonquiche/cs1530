@@ -13,6 +13,11 @@ app = Flask(__name__)
 app.register_blueprint(Blueprint('static_bp', __name__, static_folder='assets', static_url_path=''), url_prefix='/assets')
 
 api = Api(app)
+app.config.update(dict(
+    DEBUG=True,
+    SECRET_KEY='development key',
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(app.root_path, 'flask_api.db')
+))
 app.config.update(dict(SEND_FILE_MAX_AGE_DEFAULT=0))
 
 # configuration
@@ -153,12 +158,39 @@ def email_post():
           message=request.form.get('message'))
     return redirect(url_for(email_get.__name__, success=['true']))
 
+import sqlite3
+@app.cli.command('dumpdb')
+def dumpdb_command():
+    con = sqlite3.connect('grouper.db')
+    with open('dump.sql', 'w') as f:
+        for line in con.iterdump():
+            f.write('%s\n' % line)
+    print ("db is dumped in to dump.sql")
+
+import os.path
+@app.cli.command('loaddb')
+def loaddb_command():
+    if os.path.isfile('dump.sql'):
+        db.drop_all()
+        # file exists
+        con = sqlite3.connect('grouper.db')
+        f = open('dump.sql','r')
+        str = f.read()
+        cur = con.cursor()
+        cur.executescript(str)
+        con.close()
+        db.session.commit()
+        print('db loaded from dump.sql.')
+    else: 
+        print('dump.sql does not exist')
+        
+
 @app.cli.command('initdb')
 def initdb_command():
     """Creates the database tables."""
     db.drop_all()
     db.create_all()
-
+    
     con = engine.connect()
     con.execute("""INSERT INTO student
                     VALUES (
