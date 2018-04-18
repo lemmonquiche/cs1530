@@ -22,12 +22,6 @@ class App extends Component {
     };
   }
 
-  componentDidMount () {
-    var $this = $(ReactDOM.findDOMNode(this));
-    window.thing = $this.find('.full-height');
-    // window.thing.height($(window).height() - 66);
-  }
-
   render() {
     return <div>
       <div id="page-top"></div>
