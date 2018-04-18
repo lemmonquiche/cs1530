@@ -23,6 +23,7 @@ class PasswordForm extends Component {
   }
 
   componentDidMount() {
+    jQuery('.popover.fade.bs-popover-right.show').remove();
     jQuery('[data-toggle="popover"]').popover('hide');
     jQuery('[data-toggle="popover"]').popover({
       container: 'body',

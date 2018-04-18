@@ -19,6 +19,7 @@ class UserForm extends Component {
   }
 
   componentDidMount() {
+    jQuery('.popover.fade.bs-popover-right.show').remove();
     jQuery('[data-toggle="popover"]').popover({
       container: 'body',
       trigger: 'manual'
@@ -65,8 +66,8 @@ class UserForm extends Component {
       if (!(that.refs && that.refs.input && that.refs.form))
         return;
 
-      that.refs.input.value = 'test';
-      // that.refs.input.value = 'nope';
+      // that.refs.input.value = 'test';
+      that.refs.input.value = 'nope';
       ReactTestUtils.Simulate.change(that.refs.input);
       ReactTestUtils.Simulate.submit(that.refs.form);
 

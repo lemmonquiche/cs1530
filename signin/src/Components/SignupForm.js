@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import jQuery from 'jquery';
+import FontAwesome from 'react-fontawesome';
 
 import ReactTestUtils from 'react-dom/test-utils'; // ES6
 
@@ -16,6 +17,8 @@ class SignupForm extends Component {
       role: 0
     };
 
+    this.helpEnabled = localStorage.getItem("grouperHelpEnabled") === 'true';
+
     this.usernameChange = this.usernameChange.bind(this);
     this.fnameChange = this.fnameChange.bind(this);
     this.lnameChange = this.lnameChange.bind(this);
@@ -27,6 +30,20 @@ class SignupForm extends Component {
     this.backBtn = this.backBtn.bind(this);
     this.submitBtn = this.submitBtn.bind(this);
     this.render = this.render.bind(this);
+  }
+
+  componentDidMount() {
+    jQuery('.popover.fade.bs-popover-right.show').remove();
+    jQuery('[data-toggle="popover"]').popover('hide');
+    jQuery('[data-toggle="popover"]').popover({
+      container: 'body',
+      trigger: 'manual'
+    });
+
+    jQuery('[data-toggle="popover"]').popover('show');
+    setTimeout(function() {
+      jQuery('[data-toggle="popover"]').popover('hide');
+    }, 1300);
   }
 
   usernameChange(event) { this.setState({username: event.target.value}); }
@@ -73,6 +90,7 @@ class SignupForm extends Component {
 
   submitBtn(event) {
     if (this.refs.form) {
+      jQuery('[data-toggle="popover"]').popover('hide');
       ReactTestUtils.Simulate.submit(this.refs.form);
     }
   }
@@ -107,7 +125,19 @@ class SignupForm extends Component {
 
         <form className="form-horizontal" onSubmit={this.signupFormSubmit} ref='form'>
           <div className="form-group">
-            <label className="col-sm-2 control-label" htmlFor="signup-form-username">Username:</label>
+            <label className="col-sm-2 control-label" htmlFor="signup-form-username">
+              Username:
+              {this.helpEnabled
+                ? <FontAwesome name="info-circle" style={{ display: 'inline', margin: '0 5px' }}
+                    data-container="body"
+                    data-toggle="popover"
+                    data-placement="right"
+                    data-content="Select the username you will use to log into the system."
+                    onMouseOver={(e) => jQuery(e.target).popover('show')}
+                    onMouseOut={(e) => jQuery(e.target).popover('hide')}
+                    />
+                : null}
+            </label>
             <div className="col-sm-10">
               <input
                 tabIndex="1"
@@ -122,7 +152,19 @@ class SignupForm extends Component {
             </div>
           </div>
           <div className="form-group">
-            <label className="col-sm-2 control-label" htmlFor="signup-form-fname">First Name:</label>
+            <label className="col-sm-2 control-label" htmlFor="signup-form-fname">
+              First Name:
+              {this.helpEnabled
+                ? <FontAwesome name="info-circle" style={{ display: 'inline', margin: '0 5px' }}
+                    data-container="body"
+                    data-toggle="popover"
+                    data-placement="right"
+                    data-content="Enter your First Name as it will appear everywhere, including to the instructor."
+                    onMouseOver={(e) => jQuery(e.target).popover('show')}
+                    onMouseOut={(e) => jQuery(e.target).popover('hide')}
+                    />
+                : null}
+            </label>
             <div className="col-sm-10">
               <input
                 id="signup-form-fname"
@@ -136,7 +178,19 @@ class SignupForm extends Component {
             </div>
           </div>
           <div className="form-group">
-            <label className="col-sm-2 control-label" htmlFor="signup-form-lname">Last Name:</label>
+            <label className="col-sm-2 control-label" htmlFor="signup-form-lname">
+              Last Name:
+              {this.helpEnabled
+                ? <FontAwesome name="info-circle" style={{ display: 'inline', margin: '0 5px' }}
+                    data-container="body"
+                    data-toggle="popover"
+                    data-placement="right"
+                    data-content="Enter your Last Name as it will appear everywhere, including to the instructor."
+                    onMouseOver={(e) => jQuery(e.target).popover('show')}
+                    onMouseOut={(e) => jQuery(e.target).popover('hide')}
+                    />
+                : null}
+            </label>
             <div className="col-sm-10">
               <input
                 id="signup-form-lname"
@@ -150,7 +204,19 @@ class SignupForm extends Component {
             </div>
           </div>
           <div className="form-group">
-            <label className="col-sm-2 control-label" htmlFor="signup-form-email">Email:</label>
+            <label className="col-sm-2 control-label" htmlFor="signup-form-email">
+              Email:
+              {this.helpEnabled
+                ? <FontAwesome name="info-circle" style={{ display: 'inline', margin: '0 5px' }}
+                    data-container="body"
+                    data-toggle="popover"
+                    data-placement="right"
+                    data-content="Enter an email you will use to communicate with your team members."
+                    onMouseOver={(e) => jQuery(e.target).popover('show')}
+                    onMouseOut={(e) => jQuery(e.target).popover('hide')}
+                    />
+                : null}
+            </label>
             <div className="col-sm-10">
               <input
                 id="signup-form-email"
@@ -164,7 +230,19 @@ class SignupForm extends Component {
             </div>
           </div>
           <div className="form-group">
-            <label className="col-sm-2 control-label" htmlFor="signup-form-password">Password:</label>
+            <label className="col-sm-2 control-label" htmlFor="signup-form-password">
+              Password:
+              {this.helpEnabled
+                ? <FontAwesome name="info-circle" style={{ display: 'inline', margin: '0 5px' }}
+                    data-container="body"
+                    data-toggle="popover"
+                    data-placement="right"
+                    data-content="Select a password for logging into the system, and record it somewhere for safe keeping."
+                    onMouseOver={(e) => jQuery(e.target).popover('show')}
+                    onMouseOut={(e) => jQuery(e.target).popover('hide')}
+                    />
+                : null}
+            </label>
             <div className="col-sm-10">
               <input
                 id="signup-form-password"
