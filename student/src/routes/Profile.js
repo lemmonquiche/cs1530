@@ -23,6 +23,26 @@ class Profile extends Component {
     this.fetchOld();
   }
 
+  componentDidMount() {
+    (function animationFrameCallBack() {
+      if (jQuery('[data-toggle="popover"]').length === 0) {
+        window.requestAnimationFrame(animationFrameCallBack);
+      } else {
+        jQuery('.popover.fade.bs-popover-right.show').remove();
+        jQuery('[data-toggle="popover"]').popover('hide');
+        jQuery('[data-toggle="popover"]').popover({
+          container: 'body',
+          trigger: 'manual'
+        });
+
+        jQuery('[data-toggle="popover"]').popover('show');
+        setTimeout(function() {
+          jQuery('[data-toggle="popover"]').popover('hide');
+        }, 1300);
+      }
+    })();
+  }
+
   fetchOld() {
     jQuery.get('/api/profile', function (data) {
       this.setState({
@@ -91,23 +111,32 @@ class Profile extends Component {
             <h3>Personal info</h3>
             <form className="form-horizontal" onSubmit={this.formSubmit}>
               <TextFormGroup
+                helpEnabled={this.helpEnabled}
+                helpMessage="Change your first name in “First Name”."
                 label='First Name:'
                 value={this.state.fname}
                 onChange={(e) => this.setState({fname: e.target.value})} />
               <TextFormGroup
+                helpEnabled={this.helpEnabled}
+                helpMessage="Modify your last name in “Last Name”."
                 label='Last Name:'
                 value={this.state.lname}
                 onChange={(e) => this.setState({lname: e.target.value})} />
               <TextFormGroup
+                helpEnabled={this.helpEnabled}
+                helpMessage="Update your email in “Email”."
                 label='Email:'
                 value={this.state.email}
                 onChange={(e) => this.setState({email: e.target.value})} />
               <TextFormGroup
+                helpEnabled={this.helpEnabled}
+                helpMessage="Pick a new username in “Username”."
                 label='Username:'
                 value={this.state.username}
                 onChange={(e) => this.setState({username: e.target.value})} />
 
               <PwdFormGroup
+                helpEnabled={this.helpEnabled}
                 label='Password:'
                 value={this.state.password}
                 onChange={(e) => this.setState({password: e.target.value})} />
@@ -162,7 +191,19 @@ export default Profile;
 
 function TextFormGroup(props) {
   return <div className="form-group">
-    <label className=" control-label">{props.label}</label>
+    <label className=" control-label">
+      {props.label}
+      {props.helpEnabled
+        ? <FontAwesome name="info-circle" style={{ display: 'inline', margin: '0 5px' }}
+            data-container="body"
+            data-toggle="popover"
+            data-placement="right"
+            data-content={props.helpMessage}
+            onMouseOver={(e) => jQuery(e.target).popover('show')}
+            onMouseOut={(e) => jQuery(e.target).popover('hide')}
+            />
+        : null}
+    </label>
     <div className="">
       <input className="form-control" type="text" value={props.value} onChange={props.onChange} />
     </div>
@@ -171,7 +212,19 @@ function TextFormGroup(props) {
 
 function PwdFormGroup(props) {
   return <div className="form-group">
-    <label className=" control-label">{props.label}</label>
+    <label className=" control-label">
+      {props.label}
+      {props.helpEnabled
+        ? <FontAwesome name="info-circle" style={{ display: 'inline', margin: '0 5px' }}
+            data-container="body"
+            data-toggle="popover"
+            data-placement="right"
+            data-content="Pick a new password for security at “Password”."
+            onMouseOver={(e) => jQuery(e.target).popover('show')}
+            onMouseOut={(e) => jQuery(e.target).popover('hide')}
+            />
+        : null}
+    </label>
     <div className="">
       <input className="form-control" type="password" value={props.value} onChange={props.onChange} />
     </div>
