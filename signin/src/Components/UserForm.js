@@ -36,6 +36,7 @@ class UserForm extends Component {
 
   userFormSubmit(event) {
     event.preventDefault();
+    jQuery('[data-toggle="popover"]').popover('hide');
     var username = this.state.username;
     
     jQuery.ajax({
@@ -49,7 +50,7 @@ class UserForm extends Component {
         console.log(arguments);
       }.bind(this),
       success: function (data, status, jQReq) {
-        console.log('success', data, arguments);
+        // console.log('success', data, arguments);
         if (!data.err) {
           return this.props.result({ success: data });
         }
@@ -63,8 +64,6 @@ class UserForm extends Component {
     setTimeout(function() {
       if (!(that.refs && that.refs.input && that.refs.form))
         return;
-
-      jQuery('[data-toggle="popover"]').popover('hide');
 
       that.refs.input.value = 'test';
       // that.refs.input.value = 'nope';
@@ -84,14 +83,16 @@ class UserForm extends Component {
           <div className="form-group">
             <label className="col-sm-2 control-label" htmlFor="user-form-username">
               Username:
-              <FontAwesome name="info-circle" style={{ display: 'inline', margin: '0 5px' }}
-                data-container="body"
-                data-toggle="popover"
-                data-placement="right"
-                data-content="Enter your username in the field below “Username”"
-                onMouseOver={(e) => jQuery('[data-toggle="popover"]').popover('show')}
-                onMouseOut={(e) => jQuery('[data-toggle="popover"]').popover('hide')}
-                />
+              {this.helpEnabled
+                ? <FontAwesome name="info-circle" style={{ display: 'inline', margin: '0 5px' }}
+                    data-container="body"
+                    data-toggle="popover"
+                    data-placement="right"
+                    data-content="Enter your username in the field below “Username”"
+                    onMouseOver={(e) => jQuery('[data-toggle="popover"]').popover('show')}
+                    onMouseOut={(e) => jQuery('[data-toggle="popover"]').popover('hide')}
+                    />
+                : null}
             </label>
             <div className="col-sm-10">
               <input

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import jQuery from 'jquery';
+import FontAwesome from 'react-fontawesome';
 
 import ReactTestUtils from 'react-dom/test-utils'; // ES6
 
@@ -15,8 +16,23 @@ class PasswordForm extends Component {
       error: false
     };
 
+    this.helpEnabled = localStorage.getItem("grouperHelpEnabled") === 'true';
+
     this.passwordChange = this.passwordChange.bind(this);
     this.passwordFormSubmit = this.passwordFormSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    jQuery('[data-toggle="popover"]').popover('hide');
+    jQuery('[data-toggle="popover"]').popover({
+      container: 'body',
+      trigger: 'manual'
+    });
+
+    jQuery('[data-toggle="popover"]').popover('show');
+    setTimeout(function() {
+      jQuery('[data-toggle="popover"]').popover('hide');
+    }, 1300);
   }
 
   passwordChange(event) {
@@ -24,9 +40,10 @@ class PasswordForm extends Component {
   }
 
   passwordFormSubmit(event) {
+    event.preventDefault();
+    jQuery('[data-toggle="popover"]').popover('hide');
     var username = this.props.userData.username;
     var password = this.state.password;
-    event.preventDefault();
     
     jQuery.ajax({
       method: 'post',
@@ -38,17 +55,13 @@ class PasswordForm extends Component {
         console.log("error", arguments);
       }.bind(this),
       success: function (data, status, jQReq) {
-        // console.log('success', data, arguments);
         if (!data.err) {
-//          alert(data.user_type); 
           if (data.user_type === 'Student'){
               window.location.assign("/student")
           }
           if (data.user_type === 'Instructor'){
               window.location.assign("/instructor")
           }
-          console.log(data)
-//          window.location.assign("/instructor")
  
           success = true;
           window.location.href = '/' + (data.role || 'student');
@@ -90,23 +103,35 @@ class PasswordForm extends Component {
           <div className="media-left" style={{ ...space }}>
             {/*<a href=""></a>*/}
               {/*data-src="holder.js/64x64"*/}
-            <img
+            {/*<img
               alt="64x64"
               className="media-object"
               src={image}
               data-holder-rendered="true"
-              style={{ width: '64px', height: '64px', ...space }} />
+              style={{ width: '64px', height: '64px', ...space }} />*/}
           </div>
           <div className="media-body" style={{ ...space }}>
             <h4 className="media-heading">{this.props.userData.name}</h4>
             <h4 className="media-heading" style={{ fontSize: '1em' }}>{this.props.userData.username}</h4>
-            { this.props.userData.info }
+            {/*{ this.props.userData.info }*/}
           </div>
         </div>
         <p>{err}</p>
         <form className="form-horizontal" ref='form' onSubmit={this.passwordFormSubmit}>
           <div className="form-group">
-            <label className="col-sm-2 control-label" htmlFor="user-form-password">Password:</label>
+            <label className="col-sm-2 control-label" htmlFor="user-form-password">
+              Password:
+              {this.helpEnabled
+                ? <FontAwesome name="info-circle" style={{ display: 'inline', margin: '0 5px' }}
+                    data-container="body"
+                    data-toggle="popover"
+                    data-placement="right"
+                    data-content="Enter your password in the field below “Password”"
+                    onMouseOver={(e) => jQuery('[data-toggle="popover"]').popover('show')}
+                    onMouseOut={(e) => jQuery('[data-toggle="popover"]').popover('hide')}
+                    />
+                : null}
+            </label>
             <div className="col-sm-10">
               <input
                 tabIndex="1"
