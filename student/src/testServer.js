@@ -15,7 +15,7 @@ var classViewData = {
     {"group": 2, "id": 9, "name": "Willamina Jirak"},
     {"group": 2, "id": 10, "name": "Alberta Dimitrescu"}
   ],
-  "students_in_class": [
+  "students_in_course": [
     {"id": 1, "name": "Testing1 Testing"},
     {"id": 2, "name": "Daler Rahimov"},
     {"id": 3, "name": "Betteann Allicock"},
