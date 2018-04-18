@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import $ from 'jquery';
+import jQuery from 'jquery';
+import FontAwesome from 'react-fontawesome';
 
 class Profile extends Component {
   constructor(props) {
@@ -14,6 +15,8 @@ class Profile extends Component {
       error: ''
     };
 
+    this.helpEnabled = localStorage.getItem("grouperHelpEnabled") === 'true';
+
     this.formSubmit = this.formSubmit.bind(this);
     this.fetchOld = this.fetchOld.bind(this);
 
@@ -21,7 +24,7 @@ class Profile extends Component {
   }
 
   fetchOld() {
-    $.get('/api/profile', function (data) {
+    jQuery.get('/api/profile', function (data) {
       this.setState({
         loaded: true,
         fname: data.fname,
@@ -34,7 +37,7 @@ class Profile extends Component {
 
   formSubmit(e) {
     e.preventDefault();
-    $.ajax({
+    jQuery.ajax({
       method: 'post',
       url: '/api/profile',
       contentType: 'application/json',
@@ -112,7 +115,19 @@ class Profile extends Component {
               <div className="form-group">
                 <label className="col-md-3 control-label"></label>
                 <div className="col-md-8">
-                  <input type="submit" className="btn btn-primary" value="Save Changes" />
+                  <button type="submit" className="btn btn-primary">
+                    Save Changes
+                    {this.helpEnabled
+                      ? <FontAwesome name="info-circle" style={{ display: 'inline', margin: '0 5px' }}
+                          data-container="body"
+                          data-toggle="popover"
+                          data-placement="right"
+                          data-content="Click “Save Changes” to finish the update to your profile."
+                          onMouseOver={(e) => jQuery(e.target).popover('show')}
+                          onMouseOut={(e) => jQuery(e.target).popover('hide')}
+                          />
+                      : null}
+                  </button>
                   <button
                     className="btn btn-default"
                     value="Cancel"
@@ -120,6 +135,16 @@ class Profile extends Component {
                     onTouchStart={this.fetchOld}
                     >
                     Cancel
+                    {this.helpEnabled
+                      ? <FontAwesome name="info-circle" style={{ display: 'inline', margin: '0 5px' }}
+                          data-container="body"
+                          data-toggle="popover"
+                          data-placement="right"
+                          data-content="Click “Cancel” to revert back."
+                          onMouseOver={(e) => jQuery(e.target).popover('show')}
+                          onMouseOut={(e) => jQuery(e.target).popover('hide')}
+                          />
+                      : null}
                   </button>
                 </div>
               </div>
