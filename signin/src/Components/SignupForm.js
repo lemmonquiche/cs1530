@@ -113,10 +113,21 @@ class SignupForm extends Component {
     }
 
     return (
-      <div style={{ width: '500px', minHeight: 650, margin: 'auto', position: 'relative', padding: 20 }}>
+      <div style={{ width: 500, minHeight: 680, margin: 'auto', position: 'relative', padding: 20 }}>
         <div style={{ position: 'absolute', bottom: 8, left: 8 }}>
           <button id='template-editor-submit' ref='back' type='button' className='btn btn-danger' onClick={this.backBtn}>
-            <span className="glyphicon glyphicon-send"></span> Back
+            <span className="glyphicon glyphicon-send"></span>
+            {this.helpEnabled
+              ? <FontAwesome name="info-circle" style={{ display: 'inline', margin: '0 5px 0 0' }}
+                  data-container="body"
+                  data-toggle="popover"
+                  data-placement="right"
+                  data-content="Return to the beginning of the login process."
+                  onMouseOver={(e) => jQuery(e.target).popover('show')}
+                  onMouseOut={(e) => jQuery(e.target).popover('hide')}
+                  />
+              : null}
+            Back
           </button>
         </div>
 
@@ -255,7 +266,19 @@ class SignupForm extends Component {
                 onChange={this.passwordChange} />
             </div>
           </div>
-          <p>I am a: </p>
+          <p>
+            I am a:
+            {this.helpEnabled
+              ? <FontAwesome name="info-circle" style={{ display: 'inline', margin: '0 5px' }}
+                  data-container="body"
+                  data-toggle="popover"
+                  data-placement="right"
+                  data-content="Select which type of account to create: Student or Instructor."
+                  onMouseOver={(e) => jQuery(e.target).popover('show')}
+                  onMouseOut={(e) => jQuery(e.target).popover('hide')}
+                  />
+              : null}
+          </p>
           <div className="btn-group btn-group-toggle" data-toggle="buttons">
             <label className="btn btn-secondary" onClick={() => { console.log(this.state); this.setState({ role: 0 }) }} >
               <input type="radio" name="options" id="option1" defaultChecked autoComplete="off"  />
@@ -270,7 +293,18 @@ class SignupForm extends Component {
 
         <div style={{ position: 'absolute', bottom: 8, right: 8 }}>
           <button id="template-editor-submit" ref="submit" type="button" className="btn btn-success" onClick={this.submitBtn}>
-            <span className="glyphicon glyphicon-send"></span> Submit
+            <span className="glyphicon glyphicon-send"></span>
+            Submit
+            {this.helpEnabled
+              ? <FontAwesome name="info-circle" style={{ display: 'inline', margin: '0 0 0 5px' }}
+                  data-container="body"
+                  data-toggle="popover"
+                  data-placement="right"
+                  data-content="Create your account and return to the beginning of the login process."
+                  onMouseOver={(e) => jQuery(e.target).popover('show')}
+                  onMouseOut={(e) => jQuery(e.target).popover('hide')}
+                  />
+              : null}
           </button>
         </div>
       </div>
