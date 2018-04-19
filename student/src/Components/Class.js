@@ -107,7 +107,6 @@ class Class extends Component {
               <tr>
                 <th scope="col">Id</th>
                 <th scope="col">Name</th>
-                <th scope="col">Contact</th>
               </tr>
             </thead>
             <tbody>
@@ -119,7 +118,6 @@ class Class extends Component {
                 return <tr key={student.id} style={style} >
                   <th scope="row">{student.id}</th>
                   <td>{student.name}</td>
-                  <td>{student.email}</td>
                 </tr>;
               }.bind(this))}
             </tbody>

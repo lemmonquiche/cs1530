@@ -825,7 +825,7 @@ class JoinedView(Resource):
 #         print(students_in_groups, file = sys.stderr)
         
         query = """
-            select s.Student_id as sid, s.fname as f, s.lname as l, s.email as email
+            select s.Student_id as sid, s.fname as f, s.lname as l
             from student s
             join course_registration cr on cr.student_id = s.student_id
             where cr.course_id = ?;"""
@@ -834,8 +834,7 @@ class JoinedView(Resource):
         
         students_in_course = [(lambda row: {
             'id':   row['sid'],
-            'name': row['f'] + ' ' + row['l'],
-            'email': row['email']
+            'name': row['f'] + ' ' + row['l']
         })(row) for row in rows]
 #         print("students_in_course")
 #         print(students_in_course, file = sys.stderr)
