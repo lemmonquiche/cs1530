@@ -140,7 +140,19 @@ class Classes extends Component {
             : null}
         </TableHeaderColumn>
         <TableHeaderColumn dataField="course_name"                           width='45%' dataAlign="center">Name</TableHeaderColumn>
-        <TableHeaderColumn dataField="passcode"                              width='45%' dataAlign="center">Code</TableHeaderColumn>
+        <TableHeaderColumn dataField="passcode"                              width='45%' dataAlign="center">
+          Code
+          {this.helpEnabled
+            ? <FontAwesome name="info-circle" style={{ display: 'inline', margin: '0 5px' }}
+                data-container="body"
+                data-toggle="popover"
+                data-placement="right"
+                data-content="Share this code with students during Course Registration."
+                onMouseOver={(e) => jQuery(e.target).popover('show')}
+                onMouseOut={(e) => jQuery(e.target).popover('hide')}
+                />
+            : null}
+          </TableHeaderColumn>
 
       </BootstrapTable>
       <Route path="/classes/:id" component={Class}/>

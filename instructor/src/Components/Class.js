@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-import $ from 'jquery';
+import jQuery from 'jquery';
+import FontAwesome from 'react-fontawesome';
+
 import Group from './Group';
-// import Groups from './Groups';
 
 /**
  * Single class interface
@@ -20,13 +21,15 @@ class Class extends Component {
       pending: []
     };
 
+    this.helpEnabled = localStorage.getItem("grouperHelpEnabled") === 'true';
+
     this.loadInitial = this.loadInitial.bind(this);
     this.callRandomize = this.callRandomize.bind(this);
   }
 
   loadInitial(loadId) {
     this.setState({ loaded: false });
-    $.ajax({
+    jQuery.ajax({
       method: 'post',
       url: '/api/instructor/course/pending/get',
       contentType: 'application/json',
@@ -41,7 +44,7 @@ class Class extends Component {
         this.setState({ pending: data });
       }.bind(this)
     });
-    $.ajax({
+    jQuery.ajax({
       method: 'post',
       url: '/api/instructor/course/groups',
       contentType: 'application/json',
@@ -56,7 +59,7 @@ class Class extends Component {
 
       }.bind(this),
       success: function (data, status, jQReq) {
-        console.log('Successfully fetched Single Class', this.props.match.params.id, ':', data, arguments);
+        console.log('Successfully fetched Single Class', this.props.match.params.id, ':', data);
 
         if (!data.err) {
           console.log('Successfully fetched Single Class w/Success response');
@@ -83,11 +86,24 @@ class Class extends Component {
   componentDidMount() {
     console.log("src/Components/Class.js#componentDidMount");
     this.loadInitial(this.props.match.params.id);
-  }
 
-  componentWillUpdate() {
-    console.log("src/Components/Class.js#componentWillUpdate");
-    // this.loadInitial();
+    (function animationFrameCallBack() {
+      if (jQuery('[data-toggle="popover"]').length === 0) {
+        window.requestAnimationFrame(animationFrameCallBack);
+      } else {
+        jQuery('.popover.fade.bs-popover-right.show').remove();
+        jQuery('[data-toggle="popover"]').popover('hide');
+        jQuery('[data-toggle="popover"]').popover({
+          container: 'body',
+          trigger: 'manual'
+        });
+
+        jQuery('[data-toggle="popover"]').popover('show');
+        setTimeout(function() {
+          jQuery('[data-toggle="popover"]').popover('hide');
+        }, 1300);
+      }
+    })();
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -107,13 +123,16 @@ class Class extends Component {
 
   callRandomize() {
     var that = this;
-    $.ajax({
+    jQuery.ajax({
       url: '/api/instructor/course/generategroup',
       method: 'post',
       contentType: 'application/json',
       dataType: 'json',
       data: JSON.stringify({ course_id: that.props.match.params.id }),
-      success: function() { alert("success"); that.loadInitial(that.props.match.params.id); }
+      success: function() {
+        console.log("callRandomize success");
+        that.loadInitial(that.props.match.params.id);
+      }
     });
   }
 
@@ -125,7 +144,19 @@ class Class extends Component {
     var pending = null;
     if (this.state.pending && this.state.pending.length) {
       pending = <div>
-        <h2>Class {this.props.match.params.id} Pending</h2>
+        <h2>
+          Class {this.props.match.params.id} Pending
+          {this.helpEnabled
+            ? <FontAwesome name="info-circle" style={{ display: 'inline', margin: '0 10px' }}
+                data-container="body"
+                data-toggle="popover"
+                data-placement="right"
+                data-content="To accept or reject a pending student, either click accept or deny."
+                onMouseOver={(e) => jQuery(e.target).popover('show')}
+                onMouseOut={(e) => jQuery(e.target).popover('hide')}
+                />
+            : null}
+        </h2>
 
         <table className="table table-bordered table-hover">
           <thead>
@@ -138,9 +169,8 @@ class Class extends Component {
           </thead>
           <tbody>
             {this.state.pending.map(function (request) {
-              console.log("insidemap");
               var apiCall = function (outcome) {
-                $.ajax({
+                jQuery.ajax({
                   url: '/api/instructor/course/pending/outcome',
                   method: 'post',
                   contentType: 'application/json',
@@ -152,11 +182,11 @@ class Class extends Component {
                   }),
                   error: function() { alert("could not submit"); },
                   success: function(data, status, req) {
-                    alert("ok");
                     this.loadInitial(this.props.match.params.id);
                   }.bind(this)
                 });
-              }
+              };
+
               var accept = apiCall.bind(this, true);
               var deny = apiCall.bind(this, false);
 
@@ -199,7 +229,19 @@ class Class extends Component {
             onClick={this.callRandomize}
             onTouchStart={this.callRandomize}
             type="button"
-            className="btn btn-success">Randomize</button>
+            className="btn btn-success">
+            Randomize
+            {this.helpEnabled
+              ? <FontAwesome name="info-circle" style={{ display: 'inline', margin: '0 5px' }}
+                  data-container="body"
+                  data-toggle="popover"
+                  data-placement="right"
+                  data-content="To create groups, click on randomize. Groups will appear under this section. If groups are not what was wanted, hit randomize again to see a new grouping."
+                  onMouseOver={(e) => jQuery(e.target).popover('show')}
+                  onMouseOut={(e) => jQuery(e.target).popover('hide')}
+                  />
+              : null}
+          </button>
 
           <div className="card-columns">
             {this.state.groups.map(function (group) {

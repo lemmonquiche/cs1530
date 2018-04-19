@@ -216,8 +216,7 @@ var server = new Pretender(function(){
   });
 
   this.post('/api/instructor/course/pending/outcome', function (request) {
-    console.log("API CALL: /api/instructor/course/outcome");
-    alert("API CALL: /api/instructor/course/outcome " + request.requestBody);
+    console.log("API CALL: /api/instructor/course/outcome" + request.requestBody);
 
     return new Promise(function (resolve) {
       setTimeout(function() {
