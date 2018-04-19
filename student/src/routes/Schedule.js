@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 
 import TableDragSelect from "react-table-drag-select";
 import "react-table-drag-select/style.css";
+import FontAwesome from 'react-fontawesome';
 
-import $ from 'jquery';
+import jQuery from 'jquery';
 
 var defaultCells = [
   /* dis  mon    tues   wed    thurs  fri    sat    sun */
@@ -46,6 +47,8 @@ class Schedule extends Component {
       saved: true
     };
 
+    this.helpEnabled = localStorage.getItem("grouperHelpEnabled") === 'true';
+
     this.save = this.save.bind(this);
   }
 
@@ -65,7 +68,7 @@ class Schedule extends Component {
     }
 
     if (!this.state.loaded) {
-      $.ajax({
+      jQuery.ajax({
         method: 'get',
         url: '/api/student/schedule',
         success: function (data) {
@@ -73,6 +76,24 @@ class Schedule extends Component {
         }
       });
     }
+
+    (function animationFrameCallBack() {
+      if (jQuery('[data-toggle="popover"]').length === 0) {
+        window.requestAnimationFrame(animationFrameCallBack);
+      } else {
+        jQuery('.popover.fade.bs-popover-right.show').remove();
+        jQuery('[data-toggle="popover"]').popover('hide');
+        jQuery('[data-toggle="popover"]').popover({
+          container: 'body',
+          trigger: 'manual'
+        });
+
+        jQuery('[data-toggle="popover"]').popover('show');
+        setTimeout(function() {
+          jQuery('[data-toggle="popover"]').popover('hide');
+        }, 1300);
+      }
+    })();
   }
 
   handleChange = cells => { this.setState({ cells }); this.setState({ saved: false }); }
@@ -91,7 +112,7 @@ class Schedule extends Component {
     }
 
     this.setState({ loaded: false });
-    $.ajax({
+    jQuery.ajax({
       method: 'post',
       url: '/api/student/schedule',
       contentType: 'application/json',
@@ -128,7 +149,23 @@ class Schedule extends Component {
 
     return <div className="card">
       <div className="card-body">
-        <h5 className="card-title">Schedule</h5>
+        <h5 className="card-title">
+          Schedule
+          {this.helpEnabled
+            ? <FontAwesome name="info-circle" style={{ display: 'inline', margin: '0 5px' }}
+                data-container="body"
+                data-toggle="popover"
+                data-placement="right"
+                data-content={"Enter your availability to meet by clicking " +
+                  "and dragging times you are free. Light gray means you’re " +
+                  "busy and dark gray means you’re available. Remember to " +
+                  "enter this soon as possible so you can be matched to a " +
+                  "great group."}
+                onMouseOver={(e) => jQuery(e.target).popover('show')}
+                onMouseOut={(e) => jQuery(e.target).popover('hide')}
+                />
+            : null}
+        </h5>
         <h6 className="card-subtitle mb-2 text-muted">Enter your availability</h6>
         <p className="card-text">Click on the boxes to tell your teammates when you are available to meet.</p>
         <a className={saveClass} onClick={this.save} onTouchStart={this.save}>{saveMessage}</a>
