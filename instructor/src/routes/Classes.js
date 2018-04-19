@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-// import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { Link, Route } from 'react-router-dom';
 import 'react-tabs/style/react-tabs.css';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 
-
-import $ from 'jquery';
+import jQuery from 'jquery';
+import FontAwesome from 'react-fontawesome';
 
 import Class from '../Components/Class';
 import InstructorAddCourse from '../Components/InstructorAddCourse';
@@ -22,18 +21,36 @@ class Classes extends Component {
       classes: [],
       numClasses: 0,
       showNew: false
-    }
+    };
+
+    this.helpEnabled = localStorage.getItem("grouperHelpEnabled") === 'true';
 
     this.loadClasses = this.loadClasses.bind(this);
   }
 
   componentDidMount() {
-    // console.log("component did mount")
+    (function animationFrameCallBack() {
+      if (jQuery('[data-toggle="popover"]').length === 0) {
+        window.requestAnimationFrame(animationFrameCallBack);
+      } else {
+        jQuery('.popover.fade.bs-popover-right.show').remove();
+        jQuery('[data-toggle="popover"]').popover('hide');
+        jQuery('[data-toggle="popover"]').popover({
+          container: 'body',
+          trigger: 'manual'
+        });
+
+        jQuery('[data-toggle="popover"]').popover('show');
+        setTimeout(function() {
+          jQuery('[data-toggle="popover"]').popover('hide');
+        }, 1300);
+      }
+    })();
     this.loadClasses();
   }
 
   loadClasses () {
-    $.ajax({
+    jQuery.ajax({
       method: 'get',
       url: '/api/instructor/course',
     })
@@ -79,7 +96,7 @@ class Classes extends Component {
 
     return <ClassesCard
       title="Courses"
-      caption="Manage or Add courses for students to join."
+      caption="Manage or add new courses for students to join here."
     >
       <button
         onClick={() => { this.setState({ showNew: !this.state.showNew }); }}
@@ -88,6 +105,16 @@ class Classes extends Component {
         type="button"
         className="btn btn-success">
         {(this.state.showNew ? 'Hide' : 'Show') + ' New Course Form'}
+        {this.helpEnabled
+          ? <FontAwesome name="info-circle" style={{ display: 'inline', margin: '0 5px' }}
+              data-container="body"
+              data-toggle="popover"
+              data-placement="right"
+              data-content="To create a new course, go to “Show New Course Form”."
+              onMouseOver={(e) => jQuery(e.target).popover('show')}
+              onMouseOut={(e) => jQuery(e.target).popover('hide')}
+              />
+          : null}
       </button>
       {this.state.showNew ? <InstructorAddCourse refresh={this.loadClasses}/> : null}
       <BootstrapTable
@@ -99,7 +126,19 @@ class Classes extends Component {
         hover
         condensed
       >
-        <TableHeaderColumn dataField="course_id" isKey dataFormat={viewLink} width='10%' dataAlign="center">Id</TableHeaderColumn>
+        <TableHeaderColumn dataField="course_id" isKey dataFormat={viewLink} width='10%' dataAlign="center">
+          Id
+          {this.helpEnabled
+            ? <FontAwesome name="info-circle" style={{ display: 'inline', margin: '0 5px' }}
+                data-container="body"
+                data-toggle="popover"
+                data-placement="right"
+                data-content="To manage a course, click on the course ID."
+                onMouseOver={(e) => jQuery(e.target).popover('show')}
+                onMouseOut={(e) => jQuery(e.target).popover('hide')}
+                />
+            : null}
+        </TableHeaderColumn>
         <TableHeaderColumn dataField="course_name"                           width='45%' dataAlign="center">Name</TableHeaderColumn>
         <TableHeaderColumn dataField="passcode"                              width='45%' dataAlign="center">Code</TableHeaderColumn>
 
@@ -113,10 +152,6 @@ export default Classes;
 
 
 class ClassesCard extends Component {
-  // constructor(props) {
-  //   super(props);
-  // }
-
   render() {
     return <div className="card">
       <div className="card-body">
