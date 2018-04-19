@@ -43,7 +43,7 @@ class Classes extends Component {
       .fail(function(r, test, e) {
         /*this.setState({ error: e });*/
         throw e;
-      }.bind(this))
+      }/*.bind(this)*/)
       .always(function() {
         console.log("AJAX always on all classes (noargs)");
         this.setState({ loaded: true });

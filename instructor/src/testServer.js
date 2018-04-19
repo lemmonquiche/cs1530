@@ -49,6 +49,13 @@ var courses = [
   { course_id: 3, course_name: 'Advanced',     passcode: 'abc' }
 ];
 
+var profile = {
+  fname: 'Hello',
+  lname: 'World',
+  username: 'hworld',
+  email: 'helloworld@hello.wld'
+};
+
 var server = new Pretender(function(){
   this.get('/test', function () {
     return [200, {}, 'ok'];
@@ -56,6 +63,31 @@ var server = new Pretender(function(){
 
   this.post('/test', function (request) {
     return [200, {}, 'echo: ' + request.requestBody];
+  });
+
+  this.post('/api/profile', function (request) {
+    var body = JSON.parse(request.requestBody);
+    for (var key in body) {
+      if (body[key]) {
+        profile[key] = body[key];
+      }
+    }
+    return new Promise(function (resolve) {
+      setTimeout(function() {
+        resolve([
+          200, {"Content-Type": "application/json"}, JSON.stringify(profile)
+        ]);
+      }, 500);
+    });
+  });
+  this.get('/api/profile', function (request) {
+    return new Promise(function (resolve) {
+      setTimeout(function() {
+        resolve([
+          200, {"Content-Type": "application/json"}, JSON.stringify(profile)
+        ]);
+      }, 500);
+    });
   });
 
   this.post('/api/instructor/course/count', function (request) {
@@ -166,10 +198,9 @@ var server = new Pretender(function(){
         resolve([
           200, {"Content-Type": "application/json"}, JSON.stringify(response)
         ]);
-      }.bind(this), 500);
+      }, 500);
     });
   });
-
 
   this.get('/api/instructor/course', function (request) {
     console.log("API CALL: /api/instructor/course");
@@ -183,7 +214,6 @@ var server = new Pretender(function(){
       }.bind(this), 100);
     });
   });
-
 
   this.post('/api/instructor/course/pending/outcome', function (request) {
     console.log("API CALL: /api/instructor/course/outcome");

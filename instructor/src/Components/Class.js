@@ -61,10 +61,6 @@ class Class extends Component {
         if (!data.err) {
           console.log('Successfully fetched Single Class w/Success response');
 
-          var students = (data.group_list || []).reduce(function (list, group) {
-            return list.concat(group.students);
-          }, []);
-
           this.setState({
             loaded: true,
             error: '',

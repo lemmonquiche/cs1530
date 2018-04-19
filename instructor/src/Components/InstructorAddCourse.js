@@ -63,7 +63,7 @@ class InstructorAddCourse extends Component {
 
     var body = <div className="card-body">
       <p className="card-text">Sucessfully added.</p>
-      <a href="#" onClick={addAnother} onTouchStart={addAnother} className="btn btn-primary">Add another</a>
+      <button onClick={addAnother} onTouchStart={addAnother} className="btn btn-primary">Add another</button>
     </div>;
 
     if (!this.state.success) {
