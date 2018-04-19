@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import { /*Link,*/ Route } from 'react-router-dom';
 
-import $ from 'jquery';
 import 'bootstrap';
 
 import './App.css';

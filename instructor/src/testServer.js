@@ -1,47 +1,47 @@
 import Pretender from 'pretender';
-import _ from 'lodash';
+// import _ from 'lodash';
 
 if (process.env.NODE_ENV === 'development') {
 
-const dataTable = _.range(1, 50).map(x => ({
-  id: x, course: `Course ${x}`, instructor: `Professor ${x}`
-}));
+// const dataTable = _.range(1, 50).map(x => ({
+//   id: x, course: `Course ${x}`, instructor: `Professor ${x}`
+// }));
 
-// Simulates the call to the server to get the data
-const fakeDataFetcher = {
-  fetch(page, size) {
-    return new Promise((resolve, reject) => {
-      resolve({items: _.slice(dataTable, (page-1)*size, ((page-1)*size) + size), total: dataTable.length});
-    });
-  }
-};
+// // Simulates the call to the server to get the data
+// const fakeDataFetcher = {
+//   fetch(page, size) {
+//     return new Promise((resolve, reject) => {
+//       resolve({items: _.slice(dataTable, (page-1)*size, ((page-1)*size) + size), total: dataTable.length});
+//     });
+//   }
+// };
 
-/*fakeDataFetcher.fetch(page, sizePerPage)
-  .then(data => {
-    this.setState({items: data.items, totalSize: data.total, page, sizePerPage});
-  });*/
+// /*fakeDataFetcher.fetch(page, sizePerPage)
+//   .then(data => {
+//     this.setState({items: data.items, totalSize: data.total, page, sizePerPage});
+//   });*/
 
-var students = [
-  { id: 1, name: "Alice" , grouped: false },
-  { id: 2, name: "Bob"   , grouped: false },
-  { id: 3, name: "Carol" , grouped: false },
-  { id: 4, name: "David" , grouped: false },
-  { id: 5, name: "Erin"  , grouped: false },
-  { id: 6, name: "Frank" , grouped: false },
-  { id: 7, name: "Greg"  , grouped: false },
-  { id: 8, name: "Hank"  , grouped: false },
-];
+// var students = [
+//   { id: 1, name: "Alice" , grouped: false },
+//   { id: 2, name: "Bob"   , grouped: false },
+//   { id: 3, name: "Carol" , grouped: false },
+//   { id: 4, name: "David" , grouped: false },
+//   { id: 5, name: "Erin"  , grouped: false },
+//   { id: 6, name: "Frank" , grouped: false },
+//   { id: 7, name: "Greg"  , grouped: false },
+//   { id: 8, name: "Hank"  , grouped: false },
+// ];
 
-var groups = [
-  // { id: 1, name: "group1", students: [1, 2, 3, 4] },
-  // { id: 2, name: "group2", students: [5, 6, 7, 8] }
-];
+// var groups = [
+//   // { id: 1, name: "group1", students: [1, 2, 3, 4] },
+//   // { id: 2, name: "group2", students: [5, 6, 7, 8] }
+// ];
 
 
-var groups_ai = 0;
-function addGroup() {
-  groups.push({ id: ++groups_ai, name: 'group' + groups_ai})
-}
+// var groups_ai = 0;
+// function addGroup() {
+//   groups.push({ id: ++groups_ai, name: 'group' + groups_ai})
+// }
 
 var courses = [
   { course_id: 1, course_name: 'Introduction', passcode: 'abc' },
@@ -116,12 +116,12 @@ var server = new Pretender(function(){
             },
           ])
         ]);
-      }.bind(this), 500);
+      }/*.bind(this)*/, 500);
     });
   })
 
   this.post('/api/instructor/course/groups', function (request) {
-    var class_id = JSON.parse(request.requestBody)['class_id'];
+    // var class_id = JSON.parse(request.requestBody)['class_id'];
 
     var response = {
       group_list: [
@@ -211,7 +211,7 @@ var server = new Pretender(function(){
         resolve([
           200, {"Content-Type": "application/json"}, JSON.stringify(result)
         ]);
-      }.bind(this), 100);
+      }, 100);
     });
   });
 
@@ -224,7 +224,7 @@ var server = new Pretender(function(){
         resolve([
           200, {"Content-Type": "application/json"}, JSON.stringify(null)
         ]);
-      }.bind(this), 100);
+      }, 100);
     });
   });
 
@@ -249,7 +249,7 @@ var server = new Pretender(function(){
         resolve([
           200, {"Content-Type": "application/json"}, JSON.stringify(result)
         ]);
-      }.bind(this), 100);
+      }, 100);
     });
   });
 
@@ -265,7 +265,7 @@ var server = new Pretender(function(){
         resolve([
           200, {"Content-Type": "application/json"}, JSON.stringify(result)
         ]);
-      }.bind(this), 100);
+      }, 100);
     });
   });
 });
