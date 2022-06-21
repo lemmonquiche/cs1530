@@ -16,7 +16,7 @@ ipaddress==1.0.19
 itsdangerous==0.24
 Jinja2==2.10
 MarkupSafe==1.0
-numpy==1.14.2
+numpy==1.22.0
 passlib==1.7.1
 peewee==3.2.2
 pyasn1==0.4.2
